@@ -10,17 +10,17 @@ FPS = 60
 assert(FPS <= 0, 'FPS must be a positive integer, for example 30 or 60')
 fpsClock = pygame.time.Clock()
 
-# colours   R    G    B
-WHITE   = (255, 255, 255)
-GREEN   = (  0, 255,   0)
-BLUE    = (  0,   0, 128)
+# create colours  R    G    B
+colourWhite   = (255, 255, 255)
+colourGreen   = (  0, 255,   0)
+colourBlue    = (  0,   0, 128)
 
 # main loop
 def main():
     # create surface object
     windowWidth = 1024
     windowHeight = 768
-    DISPLAYSURF = pygame.display.set_mode((windowWidth, windowHeight))
+    displaySurf = pygame.display.set_mode((windowWidth, windowHeight))
     pygame.display.set_caption('Scuba Diver')
 
     # create the scuba diver character
@@ -34,14 +34,14 @@ def main():
     pygame.mixer.music.play(-1, 0.0)
 
     while True:
-        DISPLAYSURF.fill(WHITE)
+        displaySurf.fill(colourWhite)
 
         # title text
         fontObj = pygame.font.Font('freesansbold.ttf', 32)
-        textSurfaceObj = fontObj.render('Scuba Diver' , True , GREEN, BLUE)
+        textSurfaceObj = fontObj.render('Scuba Diver' , True , colourGreen, colourBlue)
         textRectObj = textSurfaceObj.get_rect()
         textRectObj.center = (512, 100)
-        DISPLAYSURF.blit(textSurfaceObj, textRectObj)
+        displaySurf.blit(textSurfaceObj, textRectObj)
 
         # test sound effect
         #soundObj = pygame.mixer.Sound('Sounds/beeps.wav')
@@ -67,17 +67,17 @@ def main():
             if divery == 300:
                 direction = 'right'
 
-        # copy diverImg to DISPLAYSURF with coordinates
-        DISPLAYSURF.blit(diverImg, (diverx, divery))
+        # copy diverImg to displaySurf with coordinates
+        displaySurf.blit(diverImg, (diverx, divery))
 
         for event in pygame.event.get():
-            # if event is quit, terminate the program
-            if event.type == QUIT:
+            # if event is quit by closing the window or pressing esc, terminate the program
+            if event.type == QUIT or (event.type == KEYUP and event.key == K_ESCAPE):
                 pygame.mixer.music.stop()
                 pygame.quit()
                 sys.exit()
 
-        # draw the surface object
+        # redraw the surface object and wait a clock tick
         pygame.display.update()
         fpsClock.tick(FPS)
 
