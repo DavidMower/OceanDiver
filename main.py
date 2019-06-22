@@ -3,25 +3,34 @@
 # Released under GNU General Public License v3.0 
 import pygame, sys, time
 from pygame.locals import *
-pygame.init()
 
-# frames per second setting
-FPS = 60
+# Initialisations
+FPS = 60 # frames per second setting
 assert(FPS <= 0, 'FPS must be a positive integer, for example 30 or 60')
-fpsClock = pygame.time.Clock()
+defaultFontSize = 32
 
 # create colours  R    G    B
-colourWhite   = (255, 255, 255)
-colourGreen   = (  0, 255,   0)
+colourBlack   = (  0,   0,   0)
 colourBlue    = (  0,   0, 128)
+colourGreen   = (  0, 255,   0)
+colourWhite   = (255, 255, 255)
+
+# terminates the game when called
+def terminate():
+    pygame.quit()
+    sys.exit()
 
 # main loop
 def main():
+    global displaySurf, fpsClock, defaultFont
     # create surface object
+    pygame.init()
+    fpsClock = pygame.time.Clock()
     windowWidth = 1024
     windowHeight = 768
     displaySurf = pygame.display.set_mode((windowWidth, windowHeight))
     pygame.display.set_caption('Scuba Diver')
+    defaultFont = pygame.font.Font('freesansbold.ttf', defaultFontSize)
 
     # create the scuba diver character
     diverImg = pygame.image.load('Images/ScubaDiver.png')
@@ -37,8 +46,7 @@ def main():
         displaySurf.fill(colourWhite)
 
         # title text
-        fontObj = pygame.font.Font('freesansbold.ttf', 32)
-        textSurfaceObj = fontObj.render('Scuba Diver' , True , colourGreen, colourBlue)
+        textSurfaceObj = defaultFont.render('Scuba Diver' , True , colourGreen, colourBlue)
         textRectObj = textSurfaceObj.get_rect()
         textRectObj.center = (512, 100)
         displaySurf.blit(textSurfaceObj, textRectObj)
@@ -74,8 +82,7 @@ def main():
             # if event is quit by closing the window or pressing esc, terminate the program
             if event.type == QUIT or (event.type == KEYUP and event.key == K_ESCAPE):
                 pygame.mixer.music.stop()
-                pygame.quit()
-                sys.exit()
+                terminate()
 
         # redraw the surface object and wait a clock tick
         pygame.display.update()
