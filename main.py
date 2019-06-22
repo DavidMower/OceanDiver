@@ -87,25 +87,27 @@ def runGameLoop():
 def showMainMenu():
     global newGameSurf, newGameRect, loadGameSurf, loadGameRect, saveGameSurf, saveGameRect, howToPlaySurf, howToPlayRect, optionsSurf, optionsRect, highScoresSurf, highScoresRect, quitSurf, quitRect
     
-    # main menu title text
-    titleFont = defaultFont.render('Scuba Diver' , True , colourGreen, colourBlue)
-    textRectObj = titleFont.get_rect()
-    textRectObj.center = (512, 100)
-    displaySurf.blit(titleFont, textRectObj)
-
     while True:
+        displaySurf.fill(colourWhite)
+
+        # main menu title text
+        titleFont = defaultFont.render('Scuba Diver' , True , colourGreen, colourBlue)
+        textRectObj = titleFont.get_rect()
+        textRectObj.center = (512, 150)
+        displaySurf.blit(titleFont, textRectObj)
+
         # store the main menu buttons and their rectangles
-        newGameSurf, newGameRect       = makeText('Start New Game', colourWhite, colourBlue, windowWidth - 612, windowHeight - 520)
-        loadameSurf, loadGameRect      = makeText('Load Game', colourBlack, colourBlue, windowWidth - 612, windowHeight - 470)
-        saveGameSurf, saveGameRect     = makeText('Save Game', colourBlack, colourBlue, windowWidth - 612, windowHeight - 420)
-        howToPlaySurf, howToPlayRect   = makeText('How to Play', colourBlack, colourBlue, windowWidth - 612, windowHeight - 370)
-        optionsSurf, optionsRect       = makeText('Options', colourBlack, colourBlue, windowWidth - 612, windowHeight - 320)
-        highScoresSurf, highScoresRect = makeText('High Scores', colourBlack, colourBlue, windowWidth - 612, windowHeight - 270)
-        quitSurf, quitRect             = makeText('Quit', colourBlack, colourBlue, windowWidth - 612, windowHeight - 220)
+        newGameSurf, newGameRect       = makeText('Start New Game', colourBlack, colourWhite, windowWidth - 612, windowHeight - 520)
+        loadGameSurf, loadGameRect     = makeText('Load Game', colourBlack, colourWhite, windowWidth - 612, windowHeight - 470)
+        saveGameSurf, saveGameRect     = makeText('Save Game', colourBlack, colourWhite, windowWidth - 612, windowHeight - 420)
+        howToPlaySurf, howToPlayRect   = makeText('How to Play', colourBlack, colourWhite, windowWidth - 612, windowHeight - 370)
+        optionsSurf, optionsRect       = makeText('Options', colourBlack, colourWhite, windowWidth - 612, windowHeight - 320)
+        highScoresSurf, highScoresRect = makeText('High Scores', colourBlack, colourWhite, windowWidth - 612, windowHeight - 270)
+        quitSurf, quitRect             = makeText('Quit', colourBlack, colourWhite, windowWidth - 612, windowHeight - 220)
 
         # draw the main menu buttons
         displaySurf.blit(newGameSurf, newGameRect)
-        displaySurf.blit(loadameSurf, loadGameRect)
+        displaySurf.blit(loadGameSurf, loadGameRect)
         displaySurf.blit(saveGameSurf, saveGameRect)
         displaySurf.blit(howToPlaySurf, howToPlayRect)
         displaySurf.blit(optionsSurf, optionsRect)
