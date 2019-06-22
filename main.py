@@ -1,29 +1,28 @@
 # Scuba Diver
-# by David Mower davidmower84@gmail.com
-# Released under GNUv3 license
-
+# by David Mower (davidmower84@gmail.com)
+# Released under GNU General Public License v3.0 
 import pygame, sys, time
 from pygame.locals import *
 pygame.init()
 
 # frames per second setting
 FPS = 60
+assert(FPS <= 0, 'FPS must be a positive integer, for example 30 or 60')
 fpsClock = pygame.time.Clock()
 
-# create surface object
-windowWidth = 1024
-windowHeight = 768
-DISPLAYSURF = pygame.display.set_mode((windowWidth, windowHeight))
-pygame.display.set_caption('Scuba Diver')
-
-# create the colours
-#         R    G    B
-WHITE = (255, 255, 255)
-GREEN = (  0, 255,   0)
-BLUE  = (  0,   0, 128)
+# colours   R    G    B
+WHITE   = (255, 255, 255)
+GREEN   = (  0, 255,   0)
+BLUE    = (  0,   0, 128)
 
 # main loop
 def main():
+    # create surface object
+    windowWidth = 1024
+    windowHeight = 768
+    DISPLAYSURF = pygame.display.set_mode((windowWidth, windowHeight))
+    pygame.display.set_caption('Scuba Diver')
+
     # create the scuba diver character
     diverImg = pygame.image.load('Images/ScubaDiver.png')
     diverx = 310
