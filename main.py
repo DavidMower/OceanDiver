@@ -13,16 +13,13 @@ defaultFontSize = 32
 colourBlack   = (  0,   0,   0)
 colourBlue    = (  0,   0, 128)
 colourGreen   = (  0, 255,   0)
+colourRed     = (155,   0,   0)
 colourWhite   = (255, 255, 255)
-
-# terminates the game when called
-def terminate():
-    pygame.quit()
-    sys.exit()
+colourYellow  = (155, 155,   0)
 
 # main loop
 def main():
-    global displaySurf, fpsClock, defaultFont
+    global displaySurf, fpsClock, defaultFont, windowHeight, windowWidth
     # create surface object
     pygame.init()
     fpsClock = pygame.time.Clock()
@@ -32,6 +29,11 @@ def main():
     pygame.display.set_caption('Scuba Diver')
     defaultFont = pygame.font.Font('freesansbold.ttf', defaultFontSize)
 
+    showMainMenu()
+    while True:
+        runGameLoop()
+
+def runGameLoop():
     # create the scuba diver character
     diverImg = pygame.image.load('Images/ScubaDiver.png')
     diverx = 310
@@ -44,12 +46,6 @@ def main():
 
     while True:
         displaySurf.fill(colourWhite)
-
-        # title text
-        textSurfaceObj = defaultFont.render('Scuba Diver' , True , colourGreen, colourBlue)
-        textRectObj = textSurfaceObj.get_rect()
-        textRectObj.center = (512, 100)
-        displaySurf.blit(textSurfaceObj, textRectObj)
 
         # test sound effect
         #soundObj = pygame.mixer.Sound('Sounds/beeps.wav')
@@ -87,5 +83,62 @@ def main():
         # redraw the surface object and wait a clock tick
         pygame.display.update()
         fpsClock.tick(FPS)
+
+def showMainMenu():
+    global newGameSurf, newGameRect, loadGameSurf, loadGameRect, saveGameSurf, saveGameRect, howToPlaySurf, howToPlayRect, optionsSurf, optionsRect, highScoresSurf, highScoresRect, quitSurf, quitRect
+    
+    # main menu title text
+    titleFont = defaultFont.render('Scuba Diver' , True , colourGreen, colourBlue)
+    textRectObj = titleFont.get_rect()
+    textRectObj.center = (512, 100)
+    displaySurf.blit(titleFont, textRectObj)
+
+    while True:
+        # store the main menu buttons and their rectangles
+        newGameSurf, newGameRect       = makeText('Start New Game', colourWhite, colourBlue, windowWidth - 612, windowHeight - 520)
+        loadameSurf, loadGameRect      = makeText('Load Game', colourBlack, colourBlue, windowWidth - 612, windowHeight - 470)
+        saveGameSurf, saveGameRect     = makeText('Save Game', colourBlack, colourBlue, windowWidth - 612, windowHeight - 420)
+        howToPlaySurf, howToPlayRect   = makeText('How to Play', colourBlack, colourBlue, windowWidth - 612, windowHeight - 370)
+        optionsSurf, optionsRect       = makeText('Options', colourBlack, colourBlue, windowWidth - 612, windowHeight - 320)
+        highScoresSurf, highScoresRect = makeText('High Scores', colourBlack, colourBlue, windowWidth - 612, windowHeight - 270)
+        quitSurf, quitRect             = makeText('Quit', colourBlack, colourBlue, windowWidth - 612, windowHeight - 220)
+
+        # draw the main menu buttons
+        displaySurf.blit(newGameSurf, newGameRect)
+        displaySurf.blit(loadameSurf, loadGameRect)
+        displaySurf.blit(saveGameSurf, saveGameRect)
+        displaySurf.blit(howToPlaySurf, howToPlayRect)
+        displaySurf.blit(optionsSurf, optionsRect)
+        displaySurf.blit(highScoresSurf, highScoresRect)
+        displaySurf.blit(quitSurf, quitRect)
+
+        if checkForKeyPress():
+            pygame.event.get() # clear event queue
+            return
+        pygame.display.update()
+        fpsClock.tick(FPS)
+
+# terminates the game when called
+def terminate():
+    pygame.quit()
+    sys.exit()
+
+def makeText(text, color, bgcolor, top, left):
+    # create the Surface and Rect objects for some text.
+    textSurf = defaultFont.render(text, True, color, bgcolor)
+    textRect = textSurf.get_rect()
+    textRect.topleft = (top, left)
+    return (textSurf, textRect)
+
+def checkForKeyPress():
+    if len(pygame.event.get(QUIT)) > 0:
+        terminate()
+
+    keyUpEvents = pygame.event.get(KEYUP)
+    if len(keyUpEvents) == 0:
+        return None
+    if keyUpEvents[0].key == K_ESCAPE:
+        terminate()
+    return keyUpEvents[0].key
 
 main()
