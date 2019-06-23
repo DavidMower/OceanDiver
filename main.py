@@ -6,8 +6,8 @@ from pygame.locals import *
 
 # Initialisations
 FPS = 60 # frames per second to update the screen
-windowWidth = 1200 # width of the program's window, in pixels
-windowHeight = 800 # height in pixels
+windowWidth = 1200 # width of the display surface in pixels
+windowHeight = 800 # height of the display surface in pixels
 halfWindowWidth = int(windowWidth / 2)
 halfWindowHeight = int(windowHeight / 2)
 UP = 'up'
@@ -22,7 +22,6 @@ cameraMoveSpeed = 5 # how many pixels per frame the camera moves
 maxHealthDiver = 75 # how much health the player starts with
 maxOxygenDiver = 75 # how much oxygen the player starts with
 outsideDecorationPCT = 20 # The percentage of outdoor tiles that have additional decoration on them, such as a tree or rock.
-
 # create the colours  R    G    B
 colourBlack       = (  0,   0,   0)
 colourBlue        = (  0,   0, 128)
@@ -38,52 +37,44 @@ textColour        = colourWhite
 def main():
     global FPSClock, displaySurf, environementImages, environementMapping, outsideDecoMapping, defaultFont, characterImages, currentImage
 
-    # Pygame initialization and basic set up of the global variables.
+    # pygame initialisation
     pygame.init()
     FPSClock = pygame.time.Clock()
-
-    # Because the Surface object stored in displaySurf was returned
-    # from the pygame.display.set_mode() function, this is the
-    # Surface object that is drawn to the actual computer screen
-    # when pygame.display.update() is called.
     displaySurf = pygame.display.set_mode((windowWidth, windowHeight))
     pygame.display.set_caption('Scuba Diver')
     
-    # set the default fonts
+    # font initialisation
     defaultFont = pygame.font.Font('freesansbold.ttf', defaultFontSize)
 
-    # A global dict value that will contain all the Pygame
-    # Surface objects returned by pygame.image.load().
+    # A global dictionary that'll contain all the Pygame Surface objects
     environementImages = {'uncovered goal': pygame.image.load('RedSelector.png'),
-                  'covered goal': pygame.image.load('Selector.png'),
-                  'star': pygame.image.load('Star.png'),
-                  'corner': pygame.image.load('Images/Dark_Rock_Block.png'),
-                  'wall': pygame.image.load('Images/Rock_Block.png'),
-                  'inside floor': pygame.image.load('Images/Sand_Block.png'),
-                  'outside floor': pygame.image.load('Images/Ocean_Block.png'),
-                  'title': pygame.image.load('star_title.png'),
-                  'solved': pygame.image.load('star_solved.png'),
-                  'princess': pygame.image.load('Images/Scuba_Diver.png'),
-                  'boy': pygame.image.load('boy.png'),
-                  'catgirl': pygame.image.load('catgirl.png'),
-                  'horngirl': pygame.image.load('horngirl.png'),
-                  'pinkgirl': pygame.image.load('pinkgirl.png'),
-                  'rock': pygame.image.load('Rock.png'),
-                  'short tree': pygame.image.load('Tree_Short.png'),
-                  'tall tree': pygame.image.load('Tree_Tall.png'),
-                  'ugly tree': pygame.image.load('Tree_Ugly.png')}
+                          'covered goal': pygame.image.load('Selector.png'),
+                          'star': pygame.image.load('Star.png'),
+                          'corner': pygame.image.load('Images/Dark_Rock_Block.png'),
+                          'wall': pygame.image.load('Images/Rock_Block.png'),
+                          'inside floor': pygame.image.load('Images/Sand_Block.png'),
+                          'outside floor': pygame.image.load('Images/Ocean_Block.png'),
+                          'title': pygame.image.load('star_title.png'),
+                          'solved': pygame.image.load('star_solved.png'),
+                          'princess': pygame.image.load('Images/Scuba_Diver.png'),
+                          'boy': pygame.image.load('boy.png'),
+                          'catgirl': pygame.image.load('catgirl.png'),
+                          'horngirl': pygame.image.load('horngirl.png'),
+                          'pinkgirl': pygame.image.load('pinkgirl.png'),
+                          'rock': pygame.image.load('Rock.png'),
+                          'short tree': pygame.image.load('Tree_Short.png'),
+                          'tall tree': pygame.image.load('Tree_Tall.png'),
+                          'ugly tree': pygame.image.load('Tree_Ugly.png')}
 
-    # These dict values are global, and map the character that appears
-    # in the level file to the Surface object it represents.
+    # These dictionary values are global, and map the character that appear in the level file
     environementMapping = {'x': environementImages['corner'],
-                   '#': environementImages['wall'],
-                   'o': environementImages['inside floor'],
-                   ' ': environementImages['outside floor']}
-    
-    outsideDecoMapping = {'1': environementImages['rock'],
-                          '2': environementImages['short tree'],
-                          '3': environementImages['tall tree'],
-                          '4': environementImages['ugly tree']}
+                           '#': environementImages['wall'],
+                           'o': environementImages['inside floor'],
+                           ' ': environementImages['outside floor']}
+    outsideDecoMapping = { '1': environementImages['rock'],
+                           '2': environementImages['short tree'],
+                           '3': environementImages['tall tree'],
+                           '4': environementImages['ugly tree']}
 
     # characterImages is a list of all possible characters the player can be.
     # currentImage is the index of the player's current player image.
@@ -96,14 +87,12 @@ def main():
 
     showMainMenu() # show the title screen until the user presses a key
 
-    # Read in the levels from the text file. See the readLevelsFile() for
-    # details on the format of this file and how to make your own levels.
+    # Read in the levels from the text file. See the readLevelsFile() for details on the format of this file
     levels = readLevelsFile('Levels/CoastalDive.lvl')
     currentLevelIndex = 0
 
-    # The main game loop. This loop runs a single level, when the user
-    # finishes that level, the next/previous level is loaded.
-    while True: # main game loop
+    # The main game loop. This loop runs a single level, when the user finishes that level, the next/previous level is loaded.
+    while True:
         # Run the level to actually start playing the game:
         result = runLevel(levels, currentLevelIndex)
 
@@ -125,6 +114,7 @@ def main():
 
 def runLevel(levels, levelNum):
     global currentImage
+    # level initialisations
     levelObj = levels[levelNum]
     mapObj = decorateMap(levelObj['mapObj'], levelObj['startState']['player'])
     gameStateObj = copy.deepcopy(levelObj['startState'])
@@ -136,8 +126,8 @@ def runLevel(levels, levelNum):
     mapHeight = (len(mapObj[0]) - 1) * tileFloorHeight + tileHeight
     Max_Cam_X_Pan = abs(halfWindowHeight - int(mapHeight / 2)) + tileWidth
     Max_Cam_Y_Pan = abs(halfWindowWidth - int(mapWidth / 2)) + tileHeight
-
     levelIsComplete = False
+
     # Track how much the camera has moved:
     cameraOffsetX = 0
     cameraOffsetY = 0
@@ -277,18 +267,18 @@ def writeText(aText, aColour, aBackgroundColour, aTop, aLeft):
 # creates a health bar
 def drawHealthBar(currentDiverHealth):
     for c in range(currentDiverHealth): # draw the red health bars
-        pygame.draw.rect(displaySurf, colourRed, (5, 20 + (10 * maxHealthDiver) - c * 10, 20, 10))
+        pygame.draw.rect(displaySurf, colourRed, (15, 25 + (10 * maxHealthDiver) - c * 10, 20, 10))
     for m in range(maxHealthDiver):
-        pygame.draw.rect(displaySurf, colourBlack, (5, 20 + (10 * maxHealthDiver) - m * 10, 20, 10), 1)
+        pygame.draw.rect(displaySurf, colourBlack, (15, 25 + (10 * maxHealthDiver) - m * 10, 20, 10), 1)
     healthBarSurf, healthBarRect = writeText('H', colourGreen, colourBlue, 5, 5)
     healthBarSurf.blit(healthBarSurf, healthBarRect)
 
 # creates a oxygen bar
 def drawOxygenBar(currentDiverOxygen):
     for c in range(currentDiverOxygen): # draw the blue oxygen bars 
-        pygame.draw.rect(displaySurf, colourBlue, (30, 20 + (10 * maxOxygenDiver) - c * 10, 20, 10))
+        pygame.draw.rect(displaySurf, colourBlue, (windowWidth - 35, 25 + (10 * maxOxygenDiver) - c * 10, 20, 10))
     for m in range(maxOxygenDiver):
-        pygame.draw.rect(displaySurf, colourBlack, (30, 20 + (10 * maxOxygenDiver) - m * 10, 20, 10), 1)
+        pygame.draw.rect(displaySurf, colourBlack, (windowWidth - 35, 25 + (10 * maxOxygenDiver) - m * 10, 20, 10), 1)
     oxygenBarSurf, oxygenBarRect = writeText('O', colourGreen, colourBlue, 20, 20)
     oxygenBarSurf.blit(oxygenBarSurf, oxygenBarRect)
 
