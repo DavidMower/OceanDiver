@@ -52,8 +52,8 @@ def main():
     # create surface object
     pygame.init()
     fpsClock = pygame.time.Clock()
-    windowWidth = 1024
-    windowHeight = 768
+    windowWidth = 1000
+    windowHeight = 800
     displaySurf = pygame.display.set_mode((windowWidth, windowHeight))
     pygame.display.set_caption('Scuba Diver')
     defaultFont = pygame.font.Font('freesansbold.ttf', defaultFontSize)
@@ -143,6 +143,8 @@ def runGameLoop():
     diverImg = pygame.image.load('Images/ScubaDiver.png')
     diverx = 310
     divery = 310
+    newDiverX = None
+    newDiverY = None
     direction = RIGHT
     diverCoords = {'x': diverx, 'y': divery} # a dictionary to hold the divers current position
 
@@ -158,9 +160,6 @@ def runGameLoop():
         #soundObj.play()
         #time.sleep(1) # let the sound play for 1 second
         #soundObj.stop()
-
-        # copy diverImg to displaySurf with coordinates
-        displaySurf.blit(diverImg, (diverx, divery))
 
         for event in pygame.event.get():
             # if event is quit by closing the window or pressing esc, terminate the program
@@ -180,26 +179,27 @@ def runGameLoop():
                 elif event.key == K_ESCAPE:
                     terminate()
 
-        # check if diver has hit the edge of the screen
-        #if (diverCoords['x'] <= -1 or diverCoords['x'] >= windowWidth) or (diverCoords['y'] <= -1 or diverCoords['y'] >= windowHeight):
-        #    print("Diver hit the edge of the screen!") # add code to stop the diver here
-        #    print(diverCoords)
+            # move the diver in the correct direction
+            if event.type == KEYDOWN:
+                if direction == UP and not diverCoords['y'] == 0: #checking if top of screen has been hit
+                    newDiverY = diverCoords.get('y') - 10
+                elif direction == DOWN and not diverCoords['y'] == windowHeight: #checking if boyyom of screen has been hit
+                    newDiverY = diverCoords.get('y') + 10
+                elif direction == LEFT and not diverCoords['x'] == 0: #checking if left of screen has been hit:
+                    newDiverX = diverCoords.get('x') - 10
+                elif direction == RIGHT and not diverCoords['y'] == windowWidth: #checking if right of screen has been hit:
+                    newDiverX = diverCoords.get('x') + 10      
+                if newDiverX is not None:
+                    diverCoords['x'] = newDiverX
+                if newDiverY is not None:
+                    diverCoords['y'] = newDiverY
 
-        # move the diver in the right direction
-        if direction == UP:
-            newDiverX = diverCoords.get('x')
-            newDiverY = diverCoords.get('y') - 1
-        elif direction == DOWN:
-            newDiverX = diverCoords.get('x')
-            newDiverY = diverCoords.get('y') + 1
-        elif direction == LEFT:
-            newDiverX = diverCoords.get('x') - 1
-            newDiverY = diverCoords.get('y')
-        elif direction == RIGHT:
-            newDiverX = diverCoords.get('x') + 1
-            newDiverY = diverCoords.get('y')
-        diverCoords['x'] = newDiverX
-        diverCoords['y'] = newDiverY
+        # copy diverImg to displaySurf with coordinates
+        displaySurf.blit(diverImg, (diverCoords['x'], diverCoords['y']))
+
+        # reset the diver movement variable
+        newDiverX is None
+        newDiverY is None
 
         # redraw the surface object and wait a clock tick
         pygame.display.update()
