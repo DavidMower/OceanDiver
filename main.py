@@ -52,7 +52,7 @@ def main():
     # create surface object
     pygame.init()
     fpsClock = pygame.time.Clock()
-    windowWidth = 1000
+    windowWidth = 1200
     windowHeight = 800
     displaySurf = pygame.display.set_mode((windowWidth, windowHeight))
     pygame.display.set_caption('Scuba Diver')
@@ -141,8 +141,8 @@ def showLevelMenu():
 def runGameLoop():
     # create the scuba diver character
     diverImg = pygame.image.load('Images/ScubaDiver.png')
-    diverx = 310
-    divery = 310
+    diverx = 560
+    divery = 380
     newDiverX = None
     newDiverY = None
     direction = RIGHT
@@ -168,31 +168,33 @@ def runGameLoop():
                 terminate()
             # update direction of diver if correct key is pressed
             elif event.type == KEYDOWN:
-                if (event.key == K_LEFT or event.key == K_a) and direction != RIGHT:
+                if (event.key == K_LEFT or event.key == K_a):
                     direction = LEFT
-                elif (event.key == K_RIGHT or event.key == K_d) and direction != LEFT:
+                elif (event.key == K_RIGHT or event.key == K_d):
                     direction = RIGHT
-                elif (event.key == K_UP or event.key == K_w) and direction != DOWN:
+                elif (event.key == K_UP or event.key == K_w):
                     direction = UP
-                elif (event.key == K_DOWN or event.key == K_s) and direction != UP:
+                elif (event.key == K_DOWN or event.key == K_s):
                     direction = DOWN
                 elif event.key == K_ESCAPE:
                     terminate()
 
             # move the diver in the correct direction
             if event.type == KEYDOWN:
-                if direction == UP and not diverCoords['y'] == 0: #checking if top of screen has been hit
+                if direction == UP and not diverCoords['y'] == 0: # checks if top of screen has been hit
                     newDiverY = diverCoords.get('y') - 10
-                elif direction == DOWN and not diverCoords['y'] == windowHeight: #checking if boyyom of screen has been hit
+                elif direction == DOWN and not diverCoords['y'] == (windowHeight - 60): # checks if bottom of screen has been hit
                     newDiverY = diverCoords.get('y') + 10
-                elif direction == LEFT and not diverCoords['x'] == 0: #checking if left of screen has been hit:
+                elif direction == LEFT and not diverCoords['x'] == 0: # checks if left of screen has been hit
                     newDiverX = diverCoords.get('x') - 10
-                elif direction == RIGHT and not diverCoords['y'] == windowWidth: #checking if right of screen has been hit:
+                elif direction == RIGHT and not diverCoords['x'] == (windowWidth - 50): # checks if right of screen has been hit
                     newDiverX = diverCoords.get('x') + 10      
                 if newDiverX is not None:
                     diverCoords['x'] = newDiverX
+                    print(newDiverX)
                 if newDiverY is not None:
                     diverCoords['y'] = newDiverY
+                    print(newDiverY)
 
         # copy diverImg to displaySurf with coordinates
         displaySurf.blit(diverImg, (diverCoords['x'], diverCoords['y']))
