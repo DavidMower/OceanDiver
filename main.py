@@ -57,13 +57,13 @@ def main():
     environementImages = {'uncovered goal': pygame.image.load('RedSelector.png'),
                   'covered goal': pygame.image.load('Selector.png'),
                   'star': pygame.image.load('Star.png'),
-                  'corner': pygame.image.load('Wall_Block_Tall.png'),
-                  'wall': pygame.image.load('Wood_Block_Tall.png'),
-                  'inside floor': pygame.image.load('Plain_Block.png'),
-                  'outside floor': pygame.image.load('Grass_Block.png'),
+                  'corner': pygame.image.load('Images/Dark_Rock_Block.png'),
+                  'wall': pygame.image.load('Images/Rock_Block.png'),
+                  'inside floor': pygame.image.load('Images/Sand_Block.png'),
+                  'outside floor': pygame.image.load('Images/Ocean_Block.png'),
                   'title': pygame.image.load('star_title.png'),
                   'solved': pygame.image.load('star_solved.png'),
-                  'princess': pygame.image.load('princess.png'),
+                  'princess': pygame.image.load('Images/Scuba_Diver.png'),
                   'boy': pygame.image.load('boy.png'),
                   'catgirl': pygame.image.load('catgirl.png'),
                   'horngirl': pygame.image.load('horngirl.png'),
@@ -650,19 +650,6 @@ def drawMap(mapObj, gameStateObj, goals):
                 mapSurf.blit(characterImages[currentImage], spaceRect)
 
     return mapSurf
-
-# creates the scuba diver character
-def makeNewDiver():
-    global playerObj, diverCoords
-    playerObj = {'diverImg': characterImages['boy'],
-                'diverX': 560,
-                'diverY': 380,
-                'health': maxHealthDiver,
-                'oxygen': maxOxygenDiver
-                }
-    direction = RIGHT
-    diverCoords = {'x': playerObj['diverX'], 'y': playerObj['diverY']} # a dictionary to hold the divers current position
-
 
 def isLevelFinished(levelObj, gameStateObj):
     """Returns True if all the goals have stars in them."""
