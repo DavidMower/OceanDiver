@@ -179,6 +179,7 @@ def runLevel(levels, levelNum):
         pygame.display.update() # draw displaySurf to the screen.
         FPSClock.tick()
         
+
 # creates the Surface and Rect objects for some text
 def writeText(aText, aColour, aBackgroundColour, aTop, aLeft):
     textSurf = defaultFont.render(aText, True, aColour, aBackgroundColour)
@@ -186,6 +187,7 @@ def writeText(aText, aColour, aBackgroundColour, aTop, aLeft):
     textRect.topleft = (aTop, aLeft)
     return (textSurf, textRect)
         
+
 # creates a health bar
 def drawHealthBar(currentDiverHealth):
     for c in range(currentDiverHealth): # draw the red health bars
@@ -194,6 +196,7 @@ def drawHealthBar(currentDiverHealth):
         pygame.draw.rect(displaySurf, colourBlack, (15, 20 + (10 * maxHealthDiver) - m * 10, 20, 10), 1)
     healthBarSurf, healthBarRect = writeText('H', colourGreen, colourBlue, 5, 5)
     healthBarSurf.blit(healthBarSurf, healthBarRect)
+
 
 # creates a oxygen bar
 def drawOxygenBar(currentDiverOxygen):
@@ -318,8 +321,6 @@ def checkForKeyPress():
 
 # main menu loop
 def showMainMenu():
-    global newGameSurf, newGameRect, loadGameSurf, loadGameRect, saveGameSurf, saveGameRect, howToPlaySurf, howToPlayRect, optionsSurf, optionsRect, highScoresSurf, highScoresRect, quitSurf, quitRect
-
     while True:
         displaySurf.fill(colourWhite)
 
@@ -357,10 +358,9 @@ def showMainMenu():
         pygame.display.update()
         FPSClock.tick(FPS)
 
+
 # level menu loop
 def showLevelMenu():
-    global menuCoastalSurf, menuCoastalRect, menuCoralReefSurf, menuCoralReefRect, menuWreckSurf, menuWreckRect, menuCaveSurf, menuCaveRect, menuMangroveSurf, menuMangroveRect, menuAntarcticaSurf, menuAntarcticaRect
-
     while True:
         displaySurf.fill(colourWhite)
 
@@ -390,6 +390,7 @@ def showLevelMenu():
             
         pygame.display.update()
         FPSClock.tick(FPS)
+
 
 def readLevelsFile(aFileName):
     assert os.path.exists(aFileName), 'Cannot find the level file: %s' % (aFileName)
@@ -522,11 +523,8 @@ def drawMap(mapObj, gameStateObj):
 
             # Last draw the player on the board.
             if (x, y) == gameStateObj['player']:
-                # Note: The value "currentImage" refers
-                # to a key in "characterImages" which has the
-                # specific player image we want to show.
+                # Note: The value "currentImage" refers to a key in "characterImages" which has the specific player image we want to show.
                 mapSurf.blit(characterImages[currentImage], spaceRect)
-
     return mapSurf
 
 
