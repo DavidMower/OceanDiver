@@ -434,15 +434,6 @@ def showMainMenu():
             pygame.event.get() # clear event queue
             return
 
-    while True: # Main loop for the start screen.
-        for event in pygame.event.get():
-            if event.type == QUIT:
-                terminate()
-            elif event.type == KEYDOWN:
-                if event.key == K_ESCAPE:
-                    terminate()
-                return # user has pressed a key, so return.
-
         pygame.display.update()
         FPSClock.tick(FPS)
 
