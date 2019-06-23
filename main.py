@@ -1,27 +1,16 @@
+# main.py
+
 # Scuba Diver
 # by David Mower (davidmower84@gmail.com)
 # Released under GNU General Public License v3.0 
-import random, sys, copy, os, pygame, object
+import random, sys, copy, os, pygame, settings
 from pygame.locals import *
-
+   
 # Initialisations
-FPS = 60 # frames per second to update the screen
-windowWidth = 1200 # width of the display surface in pixels
-windowHeight = 800 # height of the display surface in pixels
-halfWindowWidth = int(windowWidth / 2)
-halfWindowHeight = int(windowHeight / 2)
 UP = 'up'
 DOWN = 'down'
 LEFT = 'left'
 RIGHT = 'right'
-defaultFontSize= 18
-tileWidth = 50 # The total width and height of each tile in pixels.
-tileHeight = 85
-tileFloorHeight = 40
-cameraMoveSpeed = 5 # how many pixels per frame the camera moves
-maxHealthDiver = 75 # how much health the player starts with
-maxOxygenDiver = 75 # how much oxygen the player starts with
-outsideDecorationPCT = 20 # The percentage of outdoor tiles that have additional decoration on them, such as a tree or rock.
 # create the colours  R    G    B
 colourBlack       = (  0,   0,   0)
 colourBlue        = (  0,   0, 128)
@@ -35,17 +24,13 @@ textColour        = colourWhite
 
 
 def main():
-    global FPSClock, displaySurf, defaultFont
-
     # pygame initialisation
     pygame.init()
-    FPSClock = pygame.time.Clock()
-    displaySurf = pygame.display.set_mode((windowWidth, windowHeight))
+    settings.init()
+    #settings.FPSClock = pygame.time.Clock()
+    #displaySurf = pygame.display.set_mode((windowWidth, windowHeight))
     pygame.display.set_caption('Scuba Diver')
     
-    # font initialisation
-    defaultFont = pygame.font.Font('freesansbold.ttf', defaultFontSize)
-
     showMainMenu() # show the title screen until the user presses a key
 
     # Read in the levels from the text file. See the readLevelsFile() for details on the format of this file
@@ -74,19 +59,18 @@ def main():
 
 
 def runLevel(levels, levelNum):
-    global currentImage
     # level initialisations
     levelObj = levels[levelNum]
     mapObj = decorateMap(levelObj['mapObj'], levelObj['startState']['player'])
     gameStateObj = copy.deepcopy(levelObj['startState'])
     mapNeedsRedraw = True # set to True to call drawMap()
-    levelSurf = defaultFont.render('Level %s of %s' % (levelNum + 1, len(levels)), 1, textColour)
+    levelSurf = settings.defaultFont.render('Level %s of %s' % (levelNum + 1, len(levels)), 1, textColour)
     levelRect = levelSurf.get_rect()
-    levelRect.bottomleft = (20, windowHeight - 35)
-    mapWidth = len(mapObj) * tileWidth
-    mapHeight = (len(mapObj[0]) - 1) * tileFloorHeight + tileHeight
-    Max_Cam_X_Pan = abs(halfWindowHeight - int(mapHeight / 2)) + tileWidth
-    Max_Cam_Y_Pan = abs(halfWindowWidth - int(mapWidth / 2)) + tileHeight
+    levelRect.bottomleft = (20, settings.windowHeight - 35)
+    mapWidth = len(mapObj) * settings.tileWidth
+    mapHeight = (len(mapObj[0]) - 1) * settings.tileFloorHeight + settings.tileHeight
+    Max_Cam_X_Pan = abs(settings.halfWindowHeight - int(mapHeight / 2)) + settings.tileWidth
+    Max_Cam_Y_Pan = abs(settings.halfWindowWidth - int(mapWidth / 2)) + settings.tileHeight
     levelIsComplete = False
 
     # Track how much the camera has moved:
@@ -142,7 +126,7 @@ def runLevel(levels, levelNum):
                 elif event.key == K_p:
                     # Change the player image to the next one.
                     currentImage += 1
-                    if currentImage >= len(characterImages):
+                    if settings.currentImage >= len(settings.characterImages):
                         # After the last player image, use the first one.
                         currentImage = 0
                     mapNeedsRedraw = True
@@ -168,33 +152,33 @@ def runLevel(levels, levelNum):
                 gameStateObj['stepCounter'] += 1
                 mapNeedsRedraw = True
 
-        displaySurf.fill(textBGColour)
+        settings.displaySurf.fill(textBGColour)
 
         if mapNeedsRedraw:
             mapSurf = drawMap(mapObj, gameStateObj)#, levelObj['goals'])
             mapNeedsRedraw = False
 
         if cameraUp and cameraOffsetY < Max_Cam_X_Pan:
-            cameraOffsetY += cameraMoveSpeed
+            cameraOffsetY += settings.cameraMoveSpeed
         elif cameraDown and cameraOffsetY > -Max_Cam_X_Pan:
-            cameraOffsetY -= cameraMoveSpeed
+            cameraOffsetY -= settings.cameraMoveSpeed
         if cameraLeft and cameraOffsetX < Max_Cam_Y_Pan:
-            cameraOffsetX += cameraMoveSpeed
+            cameraOffsetX += settings.cameraMoveSpeed
         elif cameraRight and cameraOffsetX > -Max_Cam_Y_Pan:
-            cameraOffsetX -= cameraMoveSpeed
+            cameraOffsetX -= settings.cameraMoveSpeed
 
         # Adjust mapSurf's Rect object based on the camera offset.
         mapSurfRect = mapSurf.get_rect()
-        mapSurfRect.center = (halfWindowWidth + cameraOffsetX, halfWindowHeight + cameraOffsetY)
+        mapSurfRect.center = (settings.halfWindowWidth + cameraOffsetX, settings.halfWindowHeight + cameraOffsetY)
 
         # Draw mapSurf to the displaySurf Surface object.
-        displaySurf.blit(mapSurf, mapSurfRect)
+        settings.displaySurf.blit(mapSurf, mapSurfRect)
 
-        displaySurf.blit(levelSurf, levelRect)
-        stepSurf = defaultFont.render('Steps: %s' % (gameStateObj['stepCounter']), 1, textColour)
+        settings.displaySurf.blit(levelSurf, levelRect)
+        stepSurf = settings.defaultFont.render('Steps: %s' % (gameStateObj['stepCounter']), 1, textColour)
         stepRect = stepSurf.get_rect()
-        stepRect.bottomleft = (20, windowHeight - 10)
-        displaySurf.blit(stepSurf, stepRect)
+        stepRect.bottomleft = (20, settings.windowHeight - 10)
+        settings.displaySurf.blit(stepSurf, stepRect)
 
         # draw the player health and oxygen bars
         drawHealthBar(gameStateObj['health'])
@@ -203,19 +187,19 @@ def runLevel(levels, levelNum):
         if levelIsComplete:
             # is solved, show the "Solved!" image until the player
             # has pressed a key.
-            solvedRect = object.environementImages['sand'].get_rect()
-            solvedRect.center = (halfWindowWidth, halfWindowHeight)
-            displaySurf.blit(object.environementImages['sand'], solvedRect)
+            solvedRect = settings.environementImages['sand'].get_rect()
+            solvedRect.center = (settings.halfWindowWidth, settings.halfWindowHeight)
+            settings.displaySurf.blit(settings.environementImages['sand'], solvedRect)
 
             if keyPressed:
                 return 'solved'
 
         pygame.display.update() # draw displaySurf to the screen.
-        FPSClock.tick()
+        settings.FPSClock.tick()
         
 # creates the Surface and Rect objects for some text
 def writeText(aText, aColour, aBackgroundColour, aTop, aLeft):
-    textSurf = defaultFont.render(aText, True, aColour, aBackgroundColour)
+    textSurf = settings.defaultFont.render(aText, True, aColour, aBackgroundColour)
     textRect = textSurf.get_rect()
     textRect.topleft = (aTop, aLeft)
     return (textSurf, textRect)
@@ -223,18 +207,18 @@ def writeText(aText, aColour, aBackgroundColour, aTop, aLeft):
 # creates a health bar
 def drawHealthBar(currentDiverHealth):
     for c in range(currentDiverHealth): # draw the red health bars
-        pygame.draw.rect(displaySurf, colourRed, (15, 20 + (10 * maxHealthDiver) - c * 10, 20, 10))
-    for m in range(maxHealthDiver):
-        pygame.draw.rect(displaySurf, colourBlack, (15, 20 + (10 * maxHealthDiver) - m * 10, 20, 10), 1)
+        pygame.draw.rect(settings.displaySurf, colourRed, (15, 20 + (10 * settings.maxHealthDiver) - c * 10, 20, 10))
+    for m in range(settings.maxHealthDiver):
+        pygame.draw.rect(settings.displaySurf, colourBlack, (15, 20 + (10 * settings.maxHealthDiver) - m * 10, 20, 10), 1)
     healthBarSurf, healthBarRect = writeText('H', colourGreen, colourBlue, 5, 5)
     healthBarSurf.blit(healthBarSurf, healthBarRect)
 
 # creates a oxygen bar
 def drawOxygenBar(currentDiverOxygen):
     for c in range(currentDiverOxygen): # draw the blue oxygen bars 
-        pygame.draw.rect(displaySurf, colourBlue, (windowWidth - 35, 25 + (10 * maxOxygenDiver) - c * 10, 20, 10))
-    for m in range(maxOxygenDiver):
-        pygame.draw.rect(displaySurf, colourBlack, (windowWidth - 35, 25 + (10 * maxOxygenDiver) - m * 10, 20, 10), 1)
+        pygame.draw.rect(settings.displaySurf, colourBlue, (settings.windowWidth - 35, 25 + (10 * settings.maxOxygenDiver) - c * 10, 20, 10))
+    for m in range(settings.maxOxygenDiver):
+        pygame.draw.rect(settings.displaySurf, colourBlack, (settings.windowWidth - 35, 25 + (10 * settings.maxOxygenDiver) - m * 10, 20, 10), 1)
     oxygenBarSurf, oxygenBarRect = writeText('O', colourGreen, colourBlue, 20, 20)
     oxygenBarSurf.blit(oxygenBarSurf, oxygenBarRect)
 
@@ -262,6 +246,8 @@ def decorateMap(mapObj, startxy):
 
     # Copy the map object so we don't modify the original passed
     mapObjCopy = copy.deepcopy(mapObj)
+    print (mapObj)
+    print (mapObjCopy)
 
     # Remove the non-wall characters from the map data
     for x in range(len(mapObjCopy)):
@@ -283,8 +269,8 @@ def decorateMap(mapObj, startxy):
                    (isWall(mapObjCopy, x-1, y) and isWall(mapObjCopy, x, y-1)):
                     mapObjCopy[x][y] = 'x'
 
-            elif mapObjCopy[x][y] == ' ' and random.randint(0, 99) < outsideDecorationPCT:
-                mapObjCopy[x][y] = random.choice(list(object.outsideDecoMapping.keys()))
+            elif mapObjCopy[x][y] == ' ' and random.randint(0, 99) < settings.outsideDecorationPCT:
+                mapObjCopy[x][y] = random.choice(list(settings.outsideDecoMapping.keys()))
 
     return mapObjCopy
 
@@ -356,31 +342,31 @@ def showMainMenu():
     global newGameSurf, newGameRect, loadGameSurf, loadGameRect, saveGameSurf, saveGameRect, howToPlaySurf, howToPlayRect, optionsSurf, optionsRect, highScoresSurf, highScoresRect, quitSurf, quitRect
 
     while True:
-        displaySurf.fill(colourWhite)
+        settings.displaySurf.fill(colourWhite)
 
         # start playing main-menu music
         pygame.mixer.music.load('Sounds/MainMenu.flac')
         pygame.mixer.music.play(-1, 0.0)
 
         # draw the main menu title text
-        mainTitleSurf, mainTitleRect = writeText('Scuba Diver', colourGreen, colourBlue, windowWidth - 612, windowHeight - 620)
-        displaySurf.blit(mainTitleSurf, mainTitleRect)
+        mainTitleSurf, mainTitleRect = writeText('Scuba Diver', colourGreen, colourBlue, settings.windowWidth - 612, settings.windowHeight - 620)
+        settings.displaySurf.blit(mainTitleSurf, mainTitleRect)
 
         # draw the main menu buttons
-        newGameSurf, newGameRect       = writeText('Start New Game', colourBlack, colourWhite, windowWidth - 612, windowHeight - 520)
-        displaySurf.blit(newGameSurf, newGameRect)
-        loadGameSurf, loadGameRect     = writeText(  'Load Game',    colourBlack, colourWhite, windowWidth - 612, windowHeight - 470)
-        displaySurf.blit(loadGameSurf, loadGameRect)
-        saveGameSurf, saveGameRect     = writeText(  'Save Game',    colourBlack, colourWhite, windowWidth - 612, windowHeight - 420)
-        displaySurf.blit(saveGameSurf, saveGameRect)
-        howToPlaySurf, howToPlayRect   = writeText( 'How to Play',   colourBlack, colourWhite, windowWidth - 612, windowHeight - 370)
-        displaySurf.blit(howToPlaySurf, howToPlayRect)
-        optionsSurf, optionsRect       = writeText(   'Options',     colourBlack, colourWhite, windowWidth - 612, windowHeight - 320)
-        displaySurf.blit(optionsSurf, optionsRect)
-        highScoresSurf, highScoresRect = writeText( 'High Scores',   colourBlack, colourWhite, windowWidth - 612, windowHeight - 270)
-        displaySurf.blit(highScoresSurf, highScoresRect)
-        quitSurf, quitRect             = writeText(    'Quit',       colourBlack, colourWhite, windowWidth - 612, windowHeight - 220)
-        displaySurf.blit(quitSurf, quitRect)
+        newGameSurf, newGameRect       = writeText('Start New Game', colourBlack, colourWhite, settings.windowWidth - 612, settings.windowHeight - 520)
+        settings.displaySurf.blit(newGameSurf, newGameRect)
+        loadGameSurf, loadGameRect     = writeText(  'Load Game',    colourBlack, colourWhite, settings.windowWidth - 612, settings.windowHeight - 470)
+        settings.displaySurf.blit(loadGameSurf, loadGameRect)
+        saveGameSurf, saveGameRect     = writeText(  'Save Game',    colourBlack, colourWhite, settings.windowWidth - 612, settings.windowHeight - 420)
+        settings.displaySurf.blit(saveGameSurf, saveGameRect)
+        howToPlaySurf, howToPlayRect   = writeText( 'How to Play',   colourBlack, colourWhite, settings.windowWidth - 612, settings.windowHeight - 370)
+        settings.displaySurf.blit(howToPlaySurf, howToPlayRect)
+        optionsSurf, optionsRect       = writeText(   'Options',     colourBlack, colourWhite, settings.windowWidth - 612, settings.windowHeight - 320)
+        settings.displaySurf.blit(optionsSurf, optionsRect)
+        highScoresSurf, highScoresRect = writeText( 'High Scores',   colourBlack, colourWhite, settings.windowWidth - 612, settings.windowHeight - 270)
+        settings.displaySurf.blit(highScoresSurf, highScoresRect)
+        quitSurf, quitRect             = writeText(    'Quit',       colourBlack, colourWhite, settings.windowWidth - 612, settings.windowHeight - 220)
+        settings.displaySurf.blit(quitSurf, quitRect)
 
         # temp loop so I can test the menu
         if checkForKeyPress():
@@ -390,32 +376,32 @@ def showMainMenu():
             return
 
         pygame.display.update()
-        FPSClock.tick(FPS)
+        settings.FPSClock.tick(settings.FPS)
 
 # level menu loop
 def showLevelMenu():
     global menuCoastalSurf, menuCoastalRect, menuCoralReefSurf, menuCoralReefRect, menuWreckSurf, menuWreckRect, menuCaveSurf, menuCaveRect, menuMangroveSurf, menuMangroveRect, menuAntarcticaSurf, menuAntarcticaRect
 
     while True:
-        displaySurf.fill(colourWhite)
+        settings.displaySurf.fill(colourWhite)
 
         # draw the level menu title text
-        levelMenuTitleSurf, levelMenuTitleRect = writeText('Level select', colourGreen, colourBlue, windowWidth - 612, windowHeight - 620)
-        displaySurf.blit(levelMenuTitleSurf, levelMenuTitleRect)
+        levelMenuTitleSurf, levelMenuTitleRect = writeText('Level select', colourGreen, colourBlue, settings.windowWidth - 612, settings.windowHeight - 620)
+        settings.displaySurf.blit(levelMenuTitleSurf, levelMenuTitleRect)
 
         # draw the level menu buttons
-        menuCoastalSurf, menuCoastalRect       = writeText('  (1) Coastal Dive',   colourBlack, colourWhite, windowWidth - 612, windowHeight - 520)
-        displaySurf.blit(menuCoastalSurf, menuCoastalRect)
-        menuCoralReefSurf, menuCoralReefRect   = writeText(' (2) Coral Reef Dive', colourBlack, colourWhite, windowWidth - 612, windowHeight - 470)
-        displaySurf.blit(menuCoralReefSurf, menuCoralReefRect)
-        menuWreckSurf, menuWreckRect           = writeText('   (3) Wreck Dive',    colourBlack, colourWhite, windowWidth - 612, windowHeight - 420)
-        displaySurf.blit(menuWreckSurf, menuWreckRect)
-        menuCaveSurf, menuCaveRect             = writeText('   (4) Cave Dive',     colourBlack, colourWhite, windowWidth - 612, windowHeight - 370)
-        displaySurf.blit(menuCaveSurf, menuCaveRect)
-        menuMangroveSurf, menuMangroveRect     = writeText('  (5) Mangrove Dive',  colourBlack, colourWhite, windowWidth - 612, windowHeight - 320)
-        displaySurf.blit(menuMangroveSurf, menuMangroveRect)
-        menuAntarcticaSurf, menuAntarcticaRect = writeText( '(6) Antarctica Dive', colourBlack, colourWhite, windowWidth - 612, windowHeight - 270)
-        displaySurf.blit(menuAntarcticaSurf, menuAntarcticaRect)
+        menuCoastalSurf, menuCoastalRect       = writeText('  (1) Coastal Dive',   colourBlack, colourWhite, settings.windowWidth - 612, settings.windowHeight - 520)
+        settings.displaySurf.blit(menuCoastalSurf, menuCoastalRect)
+        menuCoralReefSurf, menuCoralReefRect   = writeText(' (2) Coral Reef Dive', colourBlack, colourWhite, settings.windowWidth - 612, settings.windowHeight - 470)
+        settings.displaySurf.blit(menuCoralReefSurf, menuCoralReefRect)
+        menuWreckSurf, menuWreckRect           = writeText('   (3) Wreck Dive',    colourBlack, colourWhite, settings.windowWidth - 612, settings.windowHeight - 420)
+        settings.displaySurf.blit(menuWreckSurf, menuWreckRect)
+        menuCaveSurf, menuCaveRect             = writeText('   (4) Cave Dive',     colourBlack, colourWhite, settings.windowWidth - 612, settings.windowHeight - 370)
+        settings.displaySurf.blit(menuCaveSurf, menuCaveRect)
+        menuMangroveSurf, menuMangroveRect     = writeText('  (5) Mangrove Dive',  colourBlack, colourWhite, settings.windowWidth - 612, settings.windowHeight - 320)
+        settings.displaySurf.blit(menuMangroveSurf, menuMangroveRect)
+        menuAntarcticaSurf, menuAntarcticaRect = writeText( '(6) Antarctica Dive', colourBlack, colourWhite, settings.windowWidth - 612, settings.windowHeight - 270)
+        settings.displaySurf.blit(menuAntarcticaSurf, menuAntarcticaRect)
 
         # temp loop so I can test the menu
         if checkForKeyPress():
@@ -424,7 +410,7 @@ def showLevelMenu():
             return
             
         pygame.display.update()
-        FPSClock.tick(FPS)
+        settings.FPSClock.tick(settings.FPS)
 
 def readLevelsFile(aFileName):
     assert os.path.exists(aFileName), 'Cannot find the level file: %s' % (aFileName)
@@ -495,8 +481,8 @@ def readLevelsFile(aFileName):
             gameStateObj = {'player': (startx, starty),
                             'stepCounter': 0,
                             #'stars': stars,
-                            'health': maxHealthDiver,
-                            'oxygen': maxOxygenDiver}
+                            'health': settings.maxHealthDiver,
+                            'oxygen': settings.maxOxygenDiver}
 
             levelObj = {'width': maxWidth,
                         'height': len(mapObj),
@@ -544,15 +530,15 @@ def drawMap(mapObj, gameStateObj):#, goals):
     # mapSurf will be the single Surface object that the tiles are drawn
     # on, so that it is easy to position the entire map on the displaySurf
     # Surface object. First, the width and height must be calculated.
-    mapSurfWidth = len(mapObj) * tileWidth
-    mapSurfHeight = (len(mapObj[0]) - 1) * tileFloorHeight + tileHeight
+    mapSurfWidth = len(mapObj) * settings.tileWidth
+    mapSurfHeight = (len(mapObj[0]) - 1) * settings.tileFloorHeight + settings.tileHeight
     mapSurf = pygame.Surface((mapSurfWidth, mapSurfHeight))
     mapSurf.fill(textBGColour) # start with a blank color on the surface.
 
     # Draw the tile sprites onto this surface.
     for x in range(len(mapObj)):
         for y in range(len(mapObj[x])):
-            spaceRect = pygame.Rect((x * tileWidth, y * tileFloorHeight, tileWidth, tileHeight))
+            spaceRect = pygame.Rect((x * settings.tileWidth, y * settings.tileFloorHeight, settings.tileWidth, settings.tileHeight))
             if mapObj[x][y] in object.environementMapping:
                 baseTile = object.environementMapping[mapObj[x][y]]
             elif mapObj[x][y] in object.outsideDecoMapping:
