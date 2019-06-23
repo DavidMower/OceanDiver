@@ -207,15 +207,10 @@ def runLevel(levels, levelNum):
                 gameStateObj['stepCounter'] += 1
                 mapNeedsRedraw = True
 
-            if isLevelFinished(levelObj, gameStateObj):
-                # level is solved, we should show the "Solved!" image.
-                levelIsComplete = True
-                keyPressed = False
-
         displaySurf.fill(textBGColour)
 
         if mapNeedsRedraw:
-            mapSurf = drawMap(mapObj, gameStateObj, levelObj['goals'])
+            mapSurf = drawMap(mapObj, gameStateObj)#, levelObj['goals'])
             mapNeedsRedraw = False
 
         if cameraUp and cameraOffsetY < Max_Cam_X_Pan:
@@ -267,9 +262,9 @@ def writeText(aText, aColour, aBackgroundColour, aTop, aLeft):
 # creates a health bar
 def drawHealthBar(currentDiverHealth):
     for c in range(currentDiverHealth): # draw the red health bars
-        pygame.draw.rect(displaySurf, colourRed, (15, 25 + (10 * maxHealthDiver) - c * 10, 20, 10))
+        pygame.draw.rect(displaySurf, colourRed, (15, 20 + (10 * maxHealthDiver) - c * 10, 20, 10))
     for m in range(maxHealthDiver):
-        pygame.draw.rect(displaySurf, colourBlack, (15, 25 + (10 * maxHealthDiver) - m * 10, 20, 10), 1)
+        pygame.draw.rect(displaySurf, colourBlack, (15, 20 + (10 * maxHealthDiver) - m * 10, 20, 10), 1)
     healthBarSurf, healthBarRect = writeText('H', colourGreen, colourBlue, 5, 5)
     healthBarSurf.blit(healthBarSurf, healthBarRect)
 
@@ -359,10 +354,6 @@ def makeMove(mapObj, gameStateObj, playerMoveTo):
     # Make sure the player can move in the direction they want.
     playerx, playery = gameStateObj['player']
 
-    # This variable is "syntactic sugar". Typing "stars" is more
-    # readable than typing "gameStateObj['stars']" in our code.
-    stars = gameStateObj['stars']
-
     # The code for handling each of the directions is so similar aside
     # from adding or subtracting 1 to the x/y coordinates. We can
     # simplify it by using the xOffset and yOffset variables.
@@ -383,14 +374,6 @@ def makeMove(mapObj, gameStateObj, playerMoveTo):
     if isWall(mapObj, playerx + xOffset, playery + yOffset):
         return False
     else:
-        if (playerx + xOffset, playery + yOffset) in stars:
-            # There is a star in the way, see if the player can push it.
-            if not isBlocked(mapObj, gameStateObj, playerx + (xOffset*2), playery + (yOffset*2)):
-                # Move the star.
-                ind = stars.index((playerx + xOffset, playery + yOffset))
-                stars[ind] = (stars[ind][0] + xOffset, stars[ind][1] + yOffset)
-            else:
-                return False
         # Move the player upwards.
         gameStateObj['player'] = (playerx + xOffset, playery + yOffset)
         return True
@@ -529,8 +512,6 @@ def readLevelsFile(aFileName):
             # characters for the starting game state.
             startx = None # The x and y for the player's starting position
             starty = None
-            goals = [] # list of (x, y) tuples for each goal.
-            stars = [] # list of (x, y) for each star's starting position.
             for x in range(maxWidth):
                 for y in range(len(mapObj[x])):
                     if mapObj[x][y] in ('@', '+'):
@@ -539,27 +520,27 @@ def readLevelsFile(aFileName):
                         starty = y
                     if mapObj[x][y] in ('.', '+', '*'):
                         # '.' is goal, '*' is star & goal
-                        goals.append((x, y))
+                        #goals.append((x, y))
+                        pass
                     if mapObj[x][y] in ('$', '*'):
                         # '$' is star
-                        stars.append((x, y))
+                        #stars.append((x, y))
+                        pass
 
             # Basic level design sanity checks:
             assert startx != None and starty != None, 'Level %s (around line %s) in %s is missing a "@" or "+" to mark the start point.' % (levelNum+1, lineNum, aFileName)
-            assert len(goals) > 0, 'Level %s (around line %s) in %s must have at least one goal.' % (levelNum+1, lineNum, aFileName)
-            assert len(stars) >= len(goals), 'Level %s (around line %s) in %s is impossible to solve. It has %s goals but only %s stars.' % (levelNum+1, lineNum, aFileName, len(goals), len(stars))
 
             # Create level object and starting game state object.
             gameStateObj = {'player': (startx, starty),
                             'stepCounter': 0,
-                            'stars': stars,
+                            #'stars': stars,
                             'health': maxHealthDiver,
                             'oxygen': maxOxygenDiver}
 
             levelObj = {'width': maxWidth,
                         'height': len(mapObj),
                         'mapObj': mapObj,
-                        'goals': goals,
+                        #'goals': goals,
                         'startState': gameStateObj}
 
             levels.append(levelObj)
@@ -594,7 +575,7 @@ def floodFill(mapObj, x, y, oldCharacter, newCharacter):
         floodFill(mapObj, x, y-1, oldCharacter, newCharacter) # call up
 
 
-def drawMap(mapObj, gameStateObj, goals):
+def drawMap(mapObj, gameStateObj):#, goals):
     """Draws the map to a Surface object, including the player and
     stars. This function does not call pygame.display.update(), nor
     does it draw the "Level" and "Steps" text in the corner."""
@@ -622,15 +603,6 @@ def drawMap(mapObj, gameStateObj, goals):
             if mapObj[x][y] in outsideDecoMapping:
                 # Draw any tree/rock decorations that are on this tile.
                 mapSurf.blit(outsideDecoMapping[mapObj[x][y]], spaceRect)
-            elif (x, y) in gameStateObj['stars']:
-                if (x, y) in goals:
-                    # A goal AND star are on this space, draw goal first.
-                    mapSurf.blit(environementImages['boy'], spaceRect)
-                # Then draw the star sprite.
-                mapSurf.blit(environementImages['rock'], spaceRect)
-            elif (x, y) in goals:
-                # Draw a goal without a star on it.
-                mapSurf.blit(environementImages['boy'], spaceRect)
 
             # Last draw the player on the board.
             if (x, y) == gameStateObj['player']:
@@ -641,18 +613,12 @@ def drawMap(mapObj, gameStateObj, goals):
 
     return mapSurf
 
-def isLevelFinished(levelObj, gameStateObj):
-    """Returns True if all the goals have stars in them."""
-    for goal in levelObj['goals']:
-        if goal not in gameStateObj['stars']:
-            # Found a space with a goal but no star on it.
-            return False
-    return True
 
 # terminates the game when called
 def terminate():
     pygame.quit()
     sys.exit()
+
 
 # start the main() loop function
 if __name__ == '__main__':
