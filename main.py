@@ -53,6 +53,7 @@ def main():
     pygame.display.set_caption('Scuba Diver')
     defaultFont = pygame.font.Font('freesansbold.ttf', defaultFontSize)
 
+    # launch the main menu
     showMainMenu()
     while True:
         runGameLoop()
@@ -69,8 +70,8 @@ def showMainMenu():
         pygame.mixer.music.play(-1, 0.0)
 
         # draw the main menu title text
-        titleSurf, titleRect = writeText('Scuba Diver', colourGreen, colourBlue, windowWidth - 612, windowHeight - 620)
-        displaySurf.blit(titleSurf, titleRect)
+        mainTitleSurf, mainTitleRect = writeText('Scuba Diver', colourGreen, colourBlue, windowWidth - 612, windowHeight - 620)
+        displaySurf.blit(mainTitleSurf, mainTitleRect)
 
         # draw the main menu buttons
         newGameSurf, newGameRect       = writeText('Start New Game', colourBlack, colourWhite, windowWidth - 612, windowHeight - 520)
@@ -87,6 +88,41 @@ def showMainMenu():
         displaySurf.blit(highScoresSurf, highScoresRect)
         quitSurf, quitRect             = writeText(    'Quit',       colourBlack, colourWhite, windowWidth - 612, windowHeight - 220)
         displaySurf.blit(quitSurf, quitRect)
+
+        # temp loop so I can test the menu
+        if checkForKeyPress():
+            # launch the select level menu
+            showLevelMenu()
+            pygame.event.get() # clear event queue
+            # # stop the main menu background music
+            return
+        pygame.display.update()
+        fpsClock.tick(FPS)
+
+# level menu loop
+def showLevelMenu():
+    global menuCoastalSurf, menuCoastalRect, menuCoralReefSurf, menuCoralReefRect, menuWreckSurf, menuWreckRect, menuCaveSurf, menuCaveRect, menuMangroveSurf, menuMangroveRect, menuAntarcticaSurf, menuAntarcticaRect
+
+    while True:
+        displaySurf.fill(colourWhite)
+
+        # draw the level menu title text
+        levelMenuTitleSurf, levelMenuTitleRect = writeText('Level select', colourGreen, colourBlue, windowWidth - 612, windowHeight - 620)
+        displaySurf.blit(levelMenuTitleSurf, levelMenuTitleRect)
+
+        # draw the level menu buttons
+        menuCoastalSurf, menuCoastalRect       = writeText('  (1) Coastal Dive',   colourBlack, colourWhite, windowWidth - 612, windowHeight - 520)
+        displaySurf.blit(menuCoastalSurf, menuCoastalRect)
+        menuCoralReefSurf, menuCoralReefRect   = writeText(' (2) Coral Reef Dive', colourBlack, colourWhite, windowWidth - 612, windowHeight - 470)
+        displaySurf.blit(menuCoralReefSurf, menuCoralReefRect)
+        menuWreckSurf, menuWreckRect           = writeText('   (3) Wreck Dive',    colourBlack, colourWhite, windowWidth - 612, windowHeight - 420)
+        displaySurf.blit(menuWreckSurf, menuWreckRect)
+        menuCaveSurf, menuCaveRect             = writeText('   (4) Cave Dive',     colourBlack, colourWhite, windowWidth - 612, windowHeight - 370)
+        displaySurf.blit(menuCaveSurf, menuCaveRect)
+        menuMangroveSurf, menuMangroveRect     = writeText('  (5) Mangrove Dive',  colourBlack, colourWhite, windowWidth - 612, windowHeight - 320)
+        displaySurf.blit(menuMangroveSurf, menuMangroveRect)
+        menuAntarcticaSurf, menuAntarcticaRect = writeText( '(6) Antarctica Dive', colourBlack, colourWhite, windowWidth - 612, windowHeight - 270)
+        displaySurf.blit(menuAntarcticaSurf, menuAntarcticaRect)
 
         # temp loop so I can test the menu
         if checkForKeyPress():
