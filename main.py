@@ -4,10 +4,14 @@
 import pygame, sys, time
 from pygame.locals import *
 
-# Init
+# Initialisations
 FPS = 60 # frames per second setting
 assert(FPS <= 0, 'FPS must be a positive integer, for example 30 or 60')
 defaultFontSize = 32 # default font size for text
+UP = 'up' # shorthand for up
+DOWN = 'down' # shorthand for down
+LEFT = 'left' # shorthand for left
+RIGHT = 'right' # shorthand for right
 
 # create the colours  R    G    B
 colourBlack       = (  0,   0,   0)
@@ -21,6 +25,7 @@ colourYellow      = (155, 155,   0)
 def terminate():
     pygame.quit()
     sys.exit()
+
 
 # creates the Surface and Rect objects for some text
 def writeText(aText, aColour, aBackgroundColour, aTop, aLeft):
@@ -138,7 +143,8 @@ def runGameLoop():
     diverImg = pygame.image.load('Images/ScubaDiver.png')
     diverx = 310
     divery = 310
-    direction = 'right'
+    direction = RIGHT
+    diverCoords = {'x': diverx, 'y': divery} # a dictionary to hold the divers current position
 
     # start playing CoastalDive background music
     pygame.mixer.music.load('Sounds/CoastalDive.flac')
@@ -153,32 +159,47 @@ def runGameLoop():
         #time.sleep(1) # let the sound play for 1 second
         #soundObj.stop()
 
-        # loops to keep diver on the move
-        if direction == 'right':
-            diverx += 5
-            if diverx == 725:
-                direction = 'down'
-        elif direction == 'down':
-            divery += 5
-            if divery == 470:
-                direction = 'left'
-        elif direction == 'left':
-            diverx -= 5
-            if diverx == 300:
-                direction = 'up'
-        elif direction == 'up':
-            divery -= 5
-            if divery == 300:
-                direction = 'right'
-
         # copy diverImg to displaySurf with coordinates
         displaySurf.blit(diverImg, (diverx, divery))
 
         for event in pygame.event.get():
             # if event is quit by closing the window or pressing esc, terminate the program
-            if event.type == QUIT or (event.type == KEYUP and event.key == K_ESCAPE):
+            if event.type == QUIT:
                 pygame.mixer.music.stop()
                 terminate()
+            # update direction of diver if correct key is pressed
+            elif event.type == KEYDOWN:
+                if (event.key == K_LEFT or event.key == K_a) and direction != RIGHT:
+                    direction = LEFT
+                elif (event.key == K_RIGHT or event.key == K_d) and direction != LEFT:
+                    direction = RIGHT
+                elif (event.key == K_UP or event.key == K_w) and direction != DOWN:
+                    direction = UP
+                elif (event.key == K_DOWN or event.key == K_s) and direction != UP:
+                    direction = DOWN
+                elif event.key == K_ESCAPE:
+                    terminate()
+
+        # check if diver has hit the edge of the screen
+        #if (diverCoords['x'] <= -1 or diverCoords['x'] >= windowWidth) or (diverCoords['y'] <= -1 or diverCoords['y'] >= windowHeight):
+        #    print("Diver hit the edge of the screen!") # add code to stop the diver here
+        #    print(diverCoords)
+
+        # move the diver in the right direction
+        if direction == UP:
+            newDiverX = diverCoords.get('x')
+            newDiverY = diverCoords.get('y') - 1
+        elif direction == DOWN:
+            newDiverX = diverCoords.get('x')
+            newDiverY = diverCoords.get('y') + 1
+        elif direction == LEFT:
+            newDiverX = diverCoords.get('x') - 1
+            newDiverY = diverCoords.get('y')
+        elif direction == RIGHT:
+            newDiverX = diverCoords.get('x') + 1
+            newDiverY = diverCoords.get('y')
+        diverCoords['x'] = newDiverX
+        diverCoords['y'] = newDiverY
 
         # redraw the surface object and wait a clock tick
         pygame.display.update()
