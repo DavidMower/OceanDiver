@@ -250,6 +250,10 @@ def runLevel(levels, levelNum):
         stepRect.bottomleft = (20, windowHeight - 10)
         displaySurf.blit(stepSurf, stepRect)
 
+        # draw the player health and oxygen bars
+        drawHealthBar(gameStateObj['health'])
+        drawOxygenBar(gameStateObj['oxygen'])
+
         if levelIsComplete:
             # is solved, show the "Solved!" image until the player
             # has pressed a key.
@@ -558,7 +562,10 @@ def readLevelsFile(aFileName):
             # Create level object and starting game state object.
             gameStateObj = {'player': (startx, starty),
                             'stepCounter': 0,
-                            'stars': stars}
+                            'stars': stars,
+                            'health': maxHealthDiver,
+                            'oxygen': maxOxygenDiver}
+
             levelObj = {'width': maxWidth,
                         'height': len(mapObj),
                         'mapObj': mapObj,
