@@ -3,7 +3,7 @@ import pygame
 
 
 # global variable declarations
-global environementImages, environementMapping, outsideDecoMapping, characterImages, currentImage, FPSClock, displaySurf, FPS
+global environmentImages, environmentMapping, outsideDecoMapping, characterImages, currentImage, FPSClock, displaySurf, FPS
 global windowWidth, windowHeight, halfWindowWidth, halfWindowHeight, defaultFontSize, defaultFont, outsideDecorationPCT
 global maxHealthDiver, maxOxygenDiver, tileWidth, tileHeight, tileFloorHeight, cameraMoveSpeed, displaySurf
 
@@ -52,7 +52,7 @@ tileHeight = 85
 tileFloorHeight = 40
 cameraMoveSpeed = 5 # how many pixels per frame the camera moves
 levelIsComplete = False
-currentImage = 0 # currentImage is the index of the player's current player image.
+
 
 # A global dictionary that'll contain all the Pygame Surface objects
 environmentImages = {'corner': pygame.image.load('Images/Dark_Rock_Block.png'),
@@ -77,3 +77,4 @@ outsideDecoMapping = {'1': environmentImages['rock'],
 # characterImages is a list of all possible characters the player can be.
 characterImages = [   environmentImages['diver_female'],
                       environmentImages['diver_male']]
+currentImage = 0 # currentImage is the index of the player's current player image.

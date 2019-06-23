@@ -67,7 +67,7 @@ def runLevel(levels, levelNum):
         # Reset these variables:
         playerMoveTo = None
         keyPressed = False
-
+        
         for event in pygame.event.get(): # event handling loop
             if event.type == QUIT:
                 # Player clicked the "X" at the corner of the window.
@@ -163,9 +163,9 @@ def runLevel(levels, levelNum):
         if levelIsComplete:
             # is solved, show the "Solved!" image until the player
             # has pressed a key.
-            solvedRect = environementImages['sand'].get_rect()
+            solvedRect = environmentImages['sand'].get_rect()
             solvedRect.center = (halfWindowWidth, halfWindowHeight)
-            displaySurf.blit(environementImages['sand'], solvedRect)
+            displaySurf.blit(environmentImages['sand'], solvedRect)
 
             if keyPressed:
                 return 'solved'
