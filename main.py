@@ -48,12 +48,11 @@ def runLevel(levels, levelNum):
     mapNeedsRedraw = True # set to True to call drawMap()
     levelSurf = defaultFont.render('Level %s of %s' % (levelNum + 1, len(levels)), 1, textColour)
     levelRect = levelSurf.get_rect()
-    levelRect.bottomleft = (20, windowHeight - 35)
+    levelRect.bottomleft = (60, 30) # position of level text
     mapWidth = len(mapObj) * tileWidth
     mapHeight = (len(mapObj[0]) - 1) * tileFloorHeight + tileHeight
     Max_Cam_X_Pan = abs(halfWindowHeight - int(mapHeight / 2)) + tileWidth
     Max_Cam_Y_Pan = abs(halfWindowWidth - int(mapWidth / 2)) + tileHeight
-    levelIsComplete = False
 
     # Track how much the camera has moved:
     cameraOffsetX = 0
@@ -137,7 +136,7 @@ def runLevel(levels, levelNum):
         displaySurf.fill(textBGColour)
 
         if mapNeedsRedraw:
-            mapSurf = drawMap(mapObj, gameStateObj)#, levelObj['goals'])
+            mapSurf = drawMap(mapObj, gameStateObj)
             mapNeedsRedraw = False
 
         if cameraUp and cameraOffsetY < Max_Cam_X_Pan:
@@ -153,15 +152,10 @@ def runLevel(levels, levelNum):
         mapSurfRect = mapSurf.get_rect()
         mapSurfRect.center = (halfWindowWidth + cameraOffsetX, halfWindowHeight + cameraOffsetY)
 
-        # Draw mapSurf to the displaySurf Surface object.
+        # draw mapSurf to the display Surf Surface object so the level is displayed in the background
         displaySurf.blit(mapSurf, mapSurfRect)
-
+        # draw levelSurf to display the level indicator
         displaySurf.blit(levelSurf, levelRect)
-        stepSurf = defaultFont.render('Steps: %s' % (gameStateObj['stepCounter']), 1, textColour)
-        stepRect = stepSurf.get_rect()
-        stepRect.bottomleft = (20, windowHeight - 10)
-        displaySurf.blit(stepSurf, stepRect)
-
         # draw the player health and oxygen bars
         drawHealthBar(gameStateObj['health'])
         drawOxygenBar(gameStateObj['oxygen'])
@@ -208,6 +202,7 @@ def drawOxygenBar(currentDiverOxygen):
     oxygenBarSurf.blit(oxygenBarSurf, oxygenBarRect)
 
 
+# checks if object is a wall
 def isWall(mapObj, x, y):
     """Returns True if the (x, y) position on
     the map is a wall, otherwise return False."""
@@ -218,13 +213,12 @@ def isWall(mapObj, x, y):
     return False
 
 
+# corners made, inside/outside seperated and decorations added to the outside
 def decorateMap(mapObj, startxy):
     """Makes a copy of the given map object and modifies it.
-    Here is what is done to it:
         * Walls that are corners are turned into corner pieces.
         * The outside/inside floor tile distinction is made.
         * Tree/rock decorations are randomly added to the outside tiles.
-
     Returns the decorated map object."""
 
     startx, starty = startxy # Syntactic sugar
@@ -253,7 +247,6 @@ def decorateMap(mapObj, startxy):
 
             elif mapObjCopy[x][y] == ' ' and random.randint(0, 99) < outsideDecorationPCT:
                 mapObjCopy[x][y] = random.choice(list(outsideDecoMapping.keys()))
-
     return mapObjCopy
 
 
@@ -273,11 +266,11 @@ def isBlocked(mapObj, gameStateObj, x, y):
     return False
 
 
+# move player if possible
 def makeMove(mapObj, gameStateObj, playerMoveTo):
     """Given a map and game state object, see if it is possible for the
     player to make the given move. If it is, then change the player's
     position (and the position of any pushed star). If not, do nothing.
-
     Returns True if the player moved, otherwise False."""
 
     # Make sure the player can move in the direction they want.
@@ -509,10 +502,10 @@ def drawMap(mapObj, gameStateObj):
     for x in range(len(mapObj)):
         for y in range(len(mapObj[x])):
             spaceRect = pygame.Rect((x * tileWidth, y * tileFloorHeight, tileWidth, tileHeight))
-            if mapObj[x][y] in environementMapping:
-                baseTile = environementMapping[mapObj[x][y]]
+            if mapObj[x][y] in environmentMapping:
+                baseTile = environmentMapping[mapObj[x][y]]
             elif mapObj[x][y] in outsideDecoMapping:
-                baseTile = environementMapping[' ']
+                baseTile = environmentMapping[' ']
 
             # First draw the base ground/wall tile.
             mapSurf.blit(baseTile, spaceRect)
