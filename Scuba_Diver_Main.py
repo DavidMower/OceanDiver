@@ -1,7 +1,7 @@
 # Scuba Diver
 # by David Mower (davidmower84@gmail.com)
 # Released under GNU General Public License v3.0 
-import random, sys, copy, os, pygame
+import random, sys, copy, os, pygame, object
 from pygame.locals import *
 
 # Initialisations
@@ -35,7 +35,7 @@ textColour        = colourWhite
 
 
 def main():
-    global FPSClock, displaySurf, environementImages, environementMapping, outsideDecoMapping, defaultFont, characterImages, currentImage
+    global FPSClock, displaySurf, defaultFont
 
     # pygame initialisation
     pygame.init()
@@ -45,45 +45,6 @@ def main():
     
     # font initialisation
     defaultFont = pygame.font.Font('freesansbold.ttf', defaultFontSize)
-
-    # A global dictionary that'll contain all the Pygame Surface objects
-    environementImages = {'uncovered goal': pygame.image.load('RedSelector.png'),
-                          'covered goal': pygame.image.load('Selector.png'),
-                          'star': pygame.image.load('Star.png'),
-                          'corner': pygame.image.load('Images/Dark_Rock_Block.png'),
-                          'wall': pygame.image.load('Images/Rock_Block.png'),
-                          'inside floor': pygame.image.load('Images/Sand_Block.png'),
-                          'outside floor': pygame.image.load('Images/Ocean_Block.png'),
-                          'title': pygame.image.load('star_title.png'),
-                          'solved': pygame.image.load('star_solved.png'),
-                          'princess': pygame.image.load('Images/Scuba_Diver.png'),
-                          'boy': pygame.image.load('boy.png'),
-                          'catgirl': pygame.image.load('catgirl.png'),
-                          'horngirl': pygame.image.load('horngirl.png'),
-                          'pinkgirl': pygame.image.load('pinkgirl.png'),
-                          'rock': pygame.image.load('Rock.png'),
-                          'short tree': pygame.image.load('Tree_Short.png'),
-                          'tall tree': pygame.image.load('Tree_Tall.png'),
-                          'ugly tree': pygame.image.load('Tree_Ugly.png')}
-
-    # These dictionary values are global, and map the character that appear in the level file
-    environementMapping = {'x': environementImages['corner'],
-                           '#': environementImages['wall'],
-                           'o': environementImages['inside floor'],
-                           ' ': environementImages['outside floor']}
-    outsideDecoMapping = { '1': environementImages['rock'],
-                           '2': environementImages['short tree'],
-                           '3': environementImages['tall tree'],
-                           '4': environementImages['ugly tree']}
-
-    # characterImages is a list of all possible characters the player can be.
-    # currentImage is the index of the player's current player image.
-    currentImage = 0
-    characterImages = [environementImages['princess'],
-                       environementImages['boy'],
-                       environementImages['catgirl'],
-                       environementImages['horngirl'],
-                       environementImages['pinkgirl']]
 
     showMainMenu() # show the title screen until the user presses a key
 
@@ -242,9 +203,9 @@ def runLevel(levels, levelNum):
         if levelIsComplete:
             # is solved, show the "Solved!" image until the player
             # has pressed a key.
-            solvedRect = environementImages['sand'].get_rect()
+            solvedRect = object.environementImages['sand'].get_rect()
             solvedRect.center = (halfWindowWidth, halfWindowHeight)
-            displaySurf.blit(environementImages['sand'], solvedRect)
+            displaySurf.blit(object.environementImages['sand'], solvedRect)
 
             if keyPressed:
                 return 'solved'
@@ -323,7 +284,7 @@ def decorateMap(mapObj, startxy):
                     mapObjCopy[x][y] = 'x'
 
             elif mapObjCopy[x][y] == ' ' and random.randint(0, 99) < outsideDecorationPCT:
-                mapObjCopy[x][y] = random.choice(list(outsideDecoMapping.keys()))
+                mapObjCopy[x][y] = random.choice(list(object.outsideDecoMapping.keys()))
 
     return mapObjCopy
 
@@ -592,24 +553,24 @@ def drawMap(mapObj, gameStateObj):#, goals):
     for x in range(len(mapObj)):
         for y in range(len(mapObj[x])):
             spaceRect = pygame.Rect((x * tileWidth, y * tileFloorHeight, tileWidth, tileHeight))
-            if mapObj[x][y] in environementMapping:
-                baseTile = environementMapping[mapObj[x][y]]
-            elif mapObj[x][y] in outsideDecoMapping:
-                baseTile = environementMapping[' ']
+            if mapObj[x][y] in object.environementMapping:
+                baseTile = object.environementMapping[mapObj[x][y]]
+            elif mapObj[x][y] in object.outsideDecoMapping:
+                baseTile = object.environementMapping[' ']
 
             # First draw the base ground/wall tile.
             mapSurf.blit(baseTile, spaceRect)
 
-            if mapObj[x][y] in outsideDecoMapping:
+            if mapObj[x][y] in object.outsideDecoMapping:
                 # Draw any tree/rock decorations that are on this tile.
-                mapSurf.blit(outsideDecoMapping[mapObj[x][y]], spaceRect)
+                mapSurf.blit(object.outsideDecoMapping[mapObj[x][y]], spaceRect)
 
             # Last draw the player on the board.
             if (x, y) == gameStateObj['player']:
                 # Note: The value "currentImage" refers
                 # to a key in "characterImages" which has the
                 # specific player image we want to show.
-                mapSurf.blit(characterImages[currentImage], spaceRect)
+                mapSurf.blit(object.characterImages[object.currentImage], spaceRect)
 
     return mapSurf
 
