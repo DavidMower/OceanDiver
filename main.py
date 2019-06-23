@@ -13,8 +13,8 @@ DOWN = 'down' # shorthand for down
 LEFT = 'left' # shorthand for left
 RIGHT = 'right' # shorthand for right
 moveFrequency = 0.15 # threshold to trigger key held down status
-maxHealthDiver = 100 # how much health the player starts with
-maxOxygenDiver = 100 # how much oxygen the player starts with
+maxHealthDiver = 75 # how much health the player starts with
+maxOxygenDiver = 75 # how much oxygen the player starts with
 
 # create the colours  R    G    B
 colourBlack       = (  0,   0,   0)
@@ -48,19 +48,35 @@ def checkForKeyPress():
         terminate()
     return keyUpEvents[0].key
 
+# creates the scuba diver character
+def makeNewDiver():
+    global playerObj, diverCoords
+    playerObj = {'diverImg': pygame.image.load('Images/ScubaDiver.png'),
+                'diverX': 560,
+                'diverY': 380,
+                'health': maxHealthDiver,
+                'oxygen': maxOxygenDiver
+                }
+    direction = RIGHT
+    diverCoords = {'x': playerObj['diverX'], 'y': playerObj['diverY']} # a dictionary to hold the divers current position
+
 # creates a health bar
 def drawHealthBar(currentDiverHealth):
     for c in range(currentDiverHealth): # draw the red health bars
-        pygame.draw.rect(displaySurf, colourRed, (5, 0 + (10 * maxHealthDiver) - c * 10, 20, 10))
+        pygame.draw.rect(displaySurf, colourRed, (5, 20 + (10 * maxHealthDiver) - c * 10, 20, 10))
     for m in range(maxHealthDiver):
-        pygame.draw.rect(displaySurf, colourWhite, (5, 0 + (10 * maxHealthDiver) - m * 10, 20, 10), 1)
+        pygame.draw.rect(displaySurf, colourBlack, (5, 20 + (10 * maxHealthDiver) - m * 10, 20, 10), 1)
+    healthBarSurf, healthBarRect = writeText('Hasdasdassfsdfsdfsfasdfasdf', colourGreen, colourBlue, 5, 5)
+    healthBarSurf.blit(healthBarSurf, healthBarRect)
 
 # creates a oxygen bar
 def drawOxygenBar(currentDiverOxygen):
-    for c in range(currentDiverOxygen): # draw the blue oxygen bars
-        pygame.draw.rect(displaySurf, colourBlue, (30, 0 + (10 * maxOxygenDiver) - c * 10, 20, 10))
+    for c in range(currentDiverOxygen): # draw the blue oxygen bars 
+        pygame.draw.rect(displaySurf, colourBlue, (30, 20 + (10 * maxOxygenDiver) - c * 10, 20, 10))
     for m in range(maxOxygenDiver):
-        pygame.draw.rect(displaySurf, colourWhite, (30, 0 + (10 * maxOxygenDiver) - m * 10, 20, 10), 1)
+        pygame.draw.rect(displaySurf, colourBlack, (30, 20 + (10 * maxOxygenDiver) - m * 10, 20, 10), 1)
+    oxygenBarSurf, oxygenBarRect = writeText('Osfasdgdfhgddfghfhfgfgh', colourGreen, colourBlue, 20, 20)
+    oxygenBarSurf.blit(oxygenBarSurf, oxygenBarRect)
 
 # main loop
 def main():
@@ -156,17 +172,10 @@ def showLevelMenu():
 
 # main in-game loop
 def runGameLoop():
-    # creates the scuba diver character
-    playerObj = {'diverImg': pygame.image.load('Images/ScubaDiver.png'),
-                'diverX': 560,
-                'diverY': 380,
-                'health': maxHealthDiver,
-                'oxygen': maxOxygenDiver
-                }
+    # create a new scuba diver
+    makeNewDiver()
     newDiverX = None
     newDiverY = None
-    direction = RIGHT
-    diverCoords = {'x': playerObj['diverX'], 'y': playerObj['diverY']} # a dictionary to hold the divers current position
 
     # start playing CoastalDive background music
     pygame.mixer.music.load('Sounds/CoastalDive.flac')
