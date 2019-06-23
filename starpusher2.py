@@ -31,8 +31,8 @@ colourRed         = (155,   0,   0)
 colourWhite       = (255, 255, 255)
 colourYellow      = (155, 155,   0)
 colourBrightBlue  = (  0, 170, 255)
-textBGColour      = colourBrightBlue
-textColour        = colourWhite
+textBGColour = colourBrightBlue
+textColour = colourWhite
 
 
 def main():
@@ -54,31 +54,18 @@ def main():
 
     # A global dict value that will contain all the Pygame
     # Surface objects returned by pygame.image.load().
-    environementImages = {'uncovered goal': pygame.image.load('RedSelector.png'),
-                  'covered goal': pygame.image.load('Selector.png'),
-                  'star': pygame.image.load('Star.png'),
-                  'corner': pygame.image.load('Wall_Block_Tall.png'),
-                  'wall': pygame.image.load('Wood_Block_Tall.png'),
-                  'inside floor': pygame.image.load('Plain_Block.png'),
-                  'outside floor': pygame.image.load('Grass_Block.png'),
-                  'title': pygame.image.load('star_title.png'),
-                  'solved': pygame.image.load('star_solved.png'),
-                  'princess': pygame.image.load('princess.png'),
-                  'boy': pygame.image.load('boy.png'),
-                  'catgirl': pygame.image.load('catgirl.png'),
-                  'horngirl': pygame.image.load('horngirl.png'),
-                  'pinkgirl': pygame.image.load('pinkgirl.png'),
-                  'rock': pygame.image.load('Rock.png'),
-                  'short tree': pygame.image.load('Tree_Short.png'),
-                  'tall tree': pygame.image.load('Tree_Tall.png'),
-                  'ugly tree': pygame.image.load('Tree_Ugly.png')}
+    environementImages = {'coral_1': pygame.image.load('Images/Coral_1.png'),
+                  'coral_2': pygame.image.load('Images/Coral_2.png'),
+                  'coral_3': pygame.image.load('Images/Coral_3.png'),
+                  'sand': pygame.image.load('Images/Sand.png'),
+                  'scuba_diver': pygame.image.load('Images/ScubaDiver.png')}
 
     # These dict values are global, and map the character that appears
     # in the level file to the Surface object it represents.
-    environementMapping = {'x': environementImages['corner'],
-                   '#': environementImages['wall'],
-                   'o': environementImages['inside floor'],
-                   ' ': environementImages['outside floor']}
+    environementMapping = {'x': environementImages['coral_1'],
+                   '#': environementImages['coral_2'],
+                   'o': environementImages['coral_3'],
+                   's': environementImages['sand']}
     
     outsideDecoMapping = {'1': environementImages['rock'],
                           '2': environementImages['short tree'],
@@ -88,11 +75,7 @@ def main():
     # characterImages is a list of all possible characters the player can be.
     # currentImage is the index of the player's current player image.
     currentImage = 0
-    characterImages = [environementImages['princess'],
-                       environementImages['boy'],
-                       environementImages['catgirl'],
-                       environementImages['horngirl'],
-                       environementImages['pinkgirl']]
+    characterImages = [environementImages['scuba_diver']]
 
     showMainMenu() # show the title screen until the user presses a key
 
@@ -253,9 +236,9 @@ def runLevel(levels, levelNum):
         if levelIsComplete:
             # is solved, show the "Solved!" image until the player
             # has pressed a key.
-            solvedRect = environementImages['sand'].get_rect()
+            solvedRect = environementImages['solved'].get_rect()
             solvedRect.center = (halfWindowWidth, halfWindowHeight)
-            displaySurf.blit(environementImages['sand'], solvedRect)
+            displaySurf.blit(environementImages['solved'], solvedRect)
 
             if keyPressed:
                 return 'solved'
@@ -401,18 +384,6 @@ def makeMove(mapObj, gameStateObj, playerMoveTo):
         gameStateObj['player'] = (playerx + xOffset, playery + yOffset)
         return True
 
-# waits for any key to be pressed
-def checkForKeyPress():
-    if len(pygame.event.get(QUIT)) > 0:
-        terminate()
-
-    keyUpEvents = pygame.event.get(KEYUP)
-    if len(keyUpEvents) == 0:
-        return None
-    if keyUpEvents[0].key == K_ESCAPE:
-        terminate()
-    return keyUpEvents[0].key
-
 # main menu loop
 def showMainMenu():
     global newGameSurf, newGameRect, loadGameSurf, loadGameRect, saveGameSurf, saveGameRect, howToPlaySurf, howToPlayRect, optionsSurf, optionsRect, highScoresSurf, highScoresRect, quitSurf, quitRect
@@ -451,8 +422,17 @@ def showMainMenu():
             pygame.event.get() # clear event queue
             return
 
+    while True: # Main loop for the start screen.
+        for event in pygame.event.get():
+            if event.type == QUIT:
+                terminate()
+            elif event.type == KEYDOWN:
+                if event.key == K_ESCAPE:
+                    terminate()
+                return # user has pressed a key, so return.
+
         pygame.display.update()
-        FPSClock.tick(FPS)
+        fpsClock.tick(FPS)
 
 # level menu loop
 def showLevelMenu():
@@ -486,11 +466,11 @@ def showLevelMenu():
             return
             
         pygame.display.update()
-        FPSClock.tick(FPS)
+        fpsClock.tick(FPS)
 
-def readLevelsFile(aFileName):
-    assert os.path.exists(aFileName), 'Cannot find the level file: %s' % (aFileName)
-    mapFile = open(aFileName, 'r')
+def readLevelsFile(filename):
+    assert os.path.exists(filename), 'Cannot find the level file: %s' % (filename)
+    mapFile = open(filename, 'r')
     # Each level must end with a blank line
     content = mapFile.readlines() + ['\r\n']
     mapFile.close()
@@ -551,9 +531,9 @@ def readLevelsFile(aFileName):
                         stars.append((x, y))
 
             # Basic level design sanity checks:
-            assert startx != None and starty != None, 'Level %s (around line %s) in %s is missing a "@" or "+" to mark the start point.' % (levelNum+1, lineNum, aFileName)
-            assert len(goals) > 0, 'Level %s (around line %s) in %s must have at least one goal.' % (levelNum+1, lineNum, aFileName)
-            assert len(stars) >= len(goals), 'Level %s (around line %s) in %s is impossible to solve. It has %s goals but only %s stars.' % (levelNum+1, lineNum, aFileName, len(goals), len(stars))
+            assert startx != None and starty != None, 'Level %s (around line %s) in %s is missing a "@" or "+" to mark the start point.' % (levelNum+1, lineNum, filename)
+            assert len(goals) > 0, 'Level %s (around line %s) in %s must have at least one goal.' % (levelNum+1, lineNum, filename)
+            assert len(stars) >= len(goals), 'Level %s (around line %s) in %s is impossible to solve. It has %s goals but only %s stars.' % (levelNum+1, lineNum, filename, len(goals), len(stars))
 
             # Create level object and starting game state object.
             gameStateObj = {'player': (startx, starty),
@@ -628,12 +608,12 @@ def drawMap(mapObj, gameStateObj, goals):
             elif (x, y) in gameStateObj['stars']:
                 if (x, y) in goals:
                     # A goal AND star are on this space, draw goal first.
-                    mapSurf.blit(environementImages['boy'], spaceRect)
+                    mapSurf.blit(environementImages['covered goal'], spaceRect)
                 # Then draw the star sprite.
-                mapSurf.blit(environementImages['rock'], spaceRect)
+                mapSurf.blit(environementImages['star'], spaceRect)
             elif (x, y) in goals:
                 # Draw a goal without a star on it.
-                mapSurf.blit(environementImages['boy'], spaceRect)
+                mapSurf.blit(environementImages['uncovered goal'], spaceRect)
 
             # Last draw the player on the board.
             if (x, y) == gameStateObj['player']:
@@ -647,7 +627,7 @@ def drawMap(mapObj, gameStateObj, goals):
 # creates the scuba diver character
 def makeNewDiver():
     global playerObj, diverCoords
-    playerObj = {'diverImg': characterImages['boy'],
+    playerObj = {'diverImg': characterImages['scuba_diver'],
                 'diverX': 560,
                 'diverY': 380,
                 'health': maxHealthDiver,

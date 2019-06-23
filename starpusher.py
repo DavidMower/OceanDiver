@@ -1,60 +1,58 @@
-# Scuba Diver
-# by David Mower (davidmower84@gmail.com)
-# Released under GNU General Public License v3.0 
+# Star Pusher (a Sokoban clone)
+# By Al Sweigart al@inventwithpython.com
+# http://inventwithpython.com/pygame
+# Released under a "Simplified BSD" license
+
 import random, sys, copy, os, pygame
 from pygame.locals import *
 
-# Initialisations
-FPS = 60 # frames per second to update the screen
-windowWidth = 1200 # width of the program's window, in pixels
-windowHeight = 800 # height in pixels
-halfWindowWidth = int(windowWidth / 2)
-halfWindowHeight = int(windowHeight / 2)
+FPS = 30 # frames per second to update the screen
+WINWIDTH = 800 # width of the program's window, in pixels
+WINHEIGHT = 600 # height in pixels
+HALF_WINWIDTH = int(WINWIDTH / 2)
+HALF_WINHEIGHT = int(WINHEIGHT / 2)
+
+# The total width and height of each tile in pixels.
+TILEWIDTH = 50
+TILEHEIGHT = 85
+TILEFLOORHEIGHT = 40
+
+CAM_MOVE_SPEED = 5 # how many pixels per frame the camera moves
+
+# The percentage of outdoor tiles that have additional
+# decoration on them, such as a tree or rock.
+OUTSIDE_DECORATION_PCT = 20
+
+BRIGHTBLUE = (  0, 170, 255)
+WHITE      = (255, 255, 255)
+BGCOLOR = BRIGHTBLUE
+TEXTCOLOR = WHITE
+
 UP = 'up'
 DOWN = 'down'
 LEFT = 'left'
 RIGHT = 'right'
-defaultFontSize= 18
-tileWidth = 50 # The total width and height of each tile in pixels.
-tileHeight = 85
-tileFloorHeight = 40
-cameraMoveSpeed = 5 # how many pixels per frame the camera moves
-maxHealthDiver = 75 # how much health the player starts with
-maxOxygenDiver = 75 # how much oxygen the player starts with
-outsideDecorationPCT = 20 # The percentage of outdoor tiles that have additional decoration on them, such as a tree or rock.
-
-# create the colours  R    G    B
-colourBlack       = (  0,   0,   0)
-colourBlue        = (  0,   0, 128)
-colourGreen       = (  0, 255,   0)
-colourRed         = (155,   0,   0)
-colourWhite       = (255, 255, 255)
-colourYellow      = (155, 155,   0)
-colourBrightBlue  = (  0, 170, 255)
-textBGColour      = colourBrightBlue
-textColour        = colourWhite
 
 
 def main():
-    global FPSClock, displaySurf, environementImages, environementMapping, outsideDecoMapping, defaultFont, characterImages, currentImage
+    global FPSCLOCK, DISPLAYSURF, IMAGESDICT, TILEMAPPING, OUTSIDEDECOMAPPING, BASICFONT, PLAYERIMAGES, currentImage
 
     # Pygame initialization and basic set up of the global variables.
     pygame.init()
-    FPSClock = pygame.time.Clock()
+    FPSCLOCK = pygame.time.Clock()
 
-    # Because the Surface object stored in displaySurf was returned
+    # Because the Surface object stored in DISPLAYSURF was returned
     # from the pygame.display.set_mode() function, this is the
     # Surface object that is drawn to the actual computer screen
     # when pygame.display.update() is called.
-    displaySurf = pygame.display.set_mode((windowWidth, windowHeight))
-    pygame.display.set_caption('Scuba Diver')
-    
-    # set the default fonts
-    defaultFont = pygame.font.Font('freesansbold.ttf', defaultFontSize)
+    DISPLAYSURF = pygame.display.set_mode((WINWIDTH, WINHEIGHT))
+
+    pygame.display.set_caption('Star Pusher')
+    BASICFONT = pygame.font.Font('freesansbold.ttf', 18)
 
     # A global dict value that will contain all the Pygame
     # Surface objects returned by pygame.image.load().
-    environementImages = {'uncovered goal': pygame.image.load('RedSelector.png'),
+    IMAGESDICT = {'uncovered goal': pygame.image.load('RedSelector.png'),
                   'covered goal': pygame.image.load('Selector.png'),
                   'star': pygame.image.load('Star.png'),
                   'corner': pygame.image.load('Wall_Block_Tall.png'),
@@ -75,30 +73,29 @@ def main():
 
     # These dict values are global, and map the character that appears
     # in the level file to the Surface object it represents.
-    environementMapping = {'x': environementImages['corner'],
-                   '#': environementImages['wall'],
-                   'o': environementImages['inside floor'],
-                   ' ': environementImages['outside floor']}
-    
-    outsideDecoMapping = {'1': environementImages['rock'],
-                          '2': environementImages['short tree'],
-                          '3': environementImages['tall tree'],
-                          '4': environementImages['ugly tree']}
+    TILEMAPPING = {'x': IMAGESDICT['corner'],
+                   '#': IMAGESDICT['wall'],
+                   'o': IMAGESDICT['inside floor'],
+                   ' ': IMAGESDICT['outside floor']}
+    OUTSIDEDECOMAPPING = {'1': IMAGESDICT['rock'],
+                          '2': IMAGESDICT['short tree'],
+                          '3': IMAGESDICT['tall tree'],
+                          '4': IMAGESDICT['ugly tree']}
 
-    # characterImages is a list of all possible characters the player can be.
+    # PLAYERIMAGES is a list of all possible characters the player can be.
     # currentImage is the index of the player's current player image.
     currentImage = 0
-    characterImages = [environementImages['princess'],
-                       environementImages['boy'],
-                       environementImages['catgirl'],
-                       environementImages['horngirl'],
-                       environementImages['pinkgirl']]
+    PLAYERIMAGES = [IMAGESDICT['princess'],
+                    IMAGESDICT['boy'],
+                    IMAGESDICT['catgirl'],
+                    IMAGESDICT['horngirl'],
+                    IMAGESDICT['pinkgirl']]
 
-    showMainMenu() # show the title screen until the user presses a key
+    startScreen() # show the title screen until the user presses a key
 
     # Read in the levels from the text file. See the readLevelsFile() for
     # details on the format of this file and how to make your own levels.
-    levels = readLevelsFile('Levels/CoastalDive.lvl')
+    levels = readLevelsFile('starPusherLevels.txt')
     currentLevelIndex = 0
 
     # The main game loop. This loop runs a single level, when the user
@@ -129,13 +126,13 @@ def runLevel(levels, levelNum):
     mapObj = decorateMap(levelObj['mapObj'], levelObj['startState']['player'])
     gameStateObj = copy.deepcopy(levelObj['startState'])
     mapNeedsRedraw = True # set to True to call drawMap()
-    levelSurf = defaultFont.render('Level %s of %s' % (levelNum + 1, len(levels)), 1, textColour)
+    levelSurf = BASICFONT.render('Level %s of %s' % (levelNum + 1, len(levels)), 1, TEXTCOLOR)
     levelRect = levelSurf.get_rect()
-    levelRect.bottomleft = (20, windowHeight - 35)
-    mapWidth = len(mapObj) * tileWidth
-    mapHeight = (len(mapObj[0]) - 1) * tileFloorHeight + tileHeight
-    Max_Cam_X_Pan = abs(halfWindowHeight - int(mapHeight / 2)) + tileWidth
-    Max_Cam_Y_Pan = abs(halfWindowWidth - int(mapWidth / 2)) + tileHeight
+    levelRect.bottomleft = (20, WINHEIGHT - 35)
+    mapWidth = len(mapObj) * TILEWIDTH
+    mapHeight = (len(mapObj[0]) - 1) * TILEFLOORHEIGHT + TILEHEIGHT
+    MAX_CAM_X_PAN = abs(HALF_WINHEIGHT - int(mapHeight / 2)) + TILEWIDTH
+    MAX_CAM_Y_PAN = abs(HALF_WINWIDTH - int(mapWidth / 2)) + TILEHEIGHT
 
     levelIsComplete = False
     # Track how much the camera has moved:
@@ -191,7 +188,7 @@ def runLevel(levels, levelNum):
                 elif event.key == K_p:
                     # Change the player image to the next one.
                     currentImage += 1
-                    if currentImage >= len(characterImages):
+                    if currentImage >= len(PLAYERIMAGES):
                         # After the last player image, use the first one.
                         currentImage = 0
                     mapNeedsRedraw = True
@@ -222,71 +219,46 @@ def runLevel(levels, levelNum):
                 levelIsComplete = True
                 keyPressed = False
 
-        displaySurf.fill(textBGColour)
+        DISPLAYSURF.fill(BGCOLOR)
 
         if mapNeedsRedraw:
             mapSurf = drawMap(mapObj, gameStateObj, levelObj['goals'])
             mapNeedsRedraw = False
 
-        if cameraUp and cameraOffsetY < Max_Cam_X_Pan:
-            cameraOffsetY += cameraMoveSpeed
-        elif cameraDown and cameraOffsetY > -Max_Cam_X_Pan:
-            cameraOffsetY -= cameraMoveSpeed
-        if cameraLeft and cameraOffsetX < Max_Cam_Y_Pan:
-            cameraOffsetX += cameraMoveSpeed
-        elif cameraRight and cameraOffsetX > -Max_Cam_Y_Pan:
-            cameraOffsetX -= cameraMoveSpeed
+        if cameraUp and cameraOffsetY < MAX_CAM_X_PAN:
+            cameraOffsetY += CAM_MOVE_SPEED
+        elif cameraDown and cameraOffsetY > -MAX_CAM_X_PAN:
+            cameraOffsetY -= CAM_MOVE_SPEED
+        if cameraLeft and cameraOffsetX < MAX_CAM_Y_PAN:
+            cameraOffsetX += CAM_MOVE_SPEED
+        elif cameraRight and cameraOffsetX > -MAX_CAM_Y_PAN:
+            cameraOffsetX -= CAM_MOVE_SPEED
 
         # Adjust mapSurf's Rect object based on the camera offset.
         mapSurfRect = mapSurf.get_rect()
-        mapSurfRect.center = (halfWindowWidth + cameraOffsetX, halfWindowHeight + cameraOffsetY)
+        mapSurfRect.center = (HALF_WINWIDTH + cameraOffsetX, HALF_WINHEIGHT + cameraOffsetY)
 
-        # Draw mapSurf to the displaySurf Surface object.
-        displaySurf.blit(mapSurf, mapSurfRect)
+        # Draw mapSurf to the DISPLAYSURF Surface object.
+        DISPLAYSURF.blit(mapSurf, mapSurfRect)
 
-        displaySurf.blit(levelSurf, levelRect)
-        stepSurf = defaultFont.render('Steps: %s' % (gameStateObj['stepCounter']), 1, textColour)
+        DISPLAYSURF.blit(levelSurf, levelRect)
+        stepSurf = BASICFONT.render('Steps: %s' % (gameStateObj['stepCounter']), 1, TEXTCOLOR)
         stepRect = stepSurf.get_rect()
-        stepRect.bottomleft = (20, windowHeight - 10)
-        displaySurf.blit(stepSurf, stepRect)
+        stepRect.bottomleft = (20, WINHEIGHT - 10)
+        DISPLAYSURF.blit(stepSurf, stepRect)
 
         if levelIsComplete:
             # is solved, show the "Solved!" image until the player
             # has pressed a key.
-            solvedRect = environementImages['sand'].get_rect()
-            solvedRect.center = (halfWindowWidth, halfWindowHeight)
-            displaySurf.blit(environementImages['sand'], solvedRect)
+            solvedRect = IMAGESDICT['solved'].get_rect()
+            solvedRect.center = (HALF_WINWIDTH, HALF_WINHEIGHT)
+            DISPLAYSURF.blit(IMAGESDICT['solved'], solvedRect)
 
             if keyPressed:
                 return 'solved'
 
-        pygame.display.update() # draw displaySurf to the screen.
-        FPSClock.tick()
-        
-# creates the Surface and Rect objects for some text
-def writeText(aText, aColour, aBackgroundColour, aTop, aLeft):
-    textSurf = defaultFont.render(aText, True, aColour, aBackgroundColour)
-    textRect = textSurf.get_rect()
-    textRect.topleft = (aTop, aLeft)
-    return (textSurf, textRect)
-        
-# creates a health bar
-def drawHealthBar(currentDiverHealth):
-    for c in range(currentDiverHealth): # draw the red health bars
-        pygame.draw.rect(displaySurf, colourRed, (5, 20 + (10 * maxHealthDiver) - c * 10, 20, 10))
-    for m in range(maxHealthDiver):
-        pygame.draw.rect(displaySurf, colourBlack, (5, 20 + (10 * maxHealthDiver) - m * 10, 20, 10), 1)
-    healthBarSurf, healthBarRect = writeText('H', colourGreen, colourBlue, 5, 5)
-    healthBarSurf.blit(healthBarSurf, healthBarRect)
-
-# creates a oxygen bar
-def drawOxygenBar(currentDiverOxygen):
-    for c in range(currentDiverOxygen): # draw the blue oxygen bars 
-        pygame.draw.rect(displaySurf, colourBlue, (30, 20 + (10 * maxOxygenDiver) - c * 10, 20, 10))
-    for m in range(maxOxygenDiver):
-        pygame.draw.rect(displaySurf, colourBlack, (30, 20 + (10 * maxOxygenDiver) - m * 10, 20, 10), 1)
-    oxygenBarSurf, oxygenBarRect = writeText('O', colourGreen, colourBlue, 20, 20)
-    oxygenBarSurf.blit(oxygenBarSurf, oxygenBarRect)
+        pygame.display.update() # draw DISPLAYSURF to the screen.
+        FPSCLOCK.tick()
 
 
 def isWall(mapObj, x, y):
@@ -333,8 +305,8 @@ def decorateMap(mapObj, startxy):
                    (isWall(mapObjCopy, x-1, y) and isWall(mapObjCopy, x, y-1)):
                     mapObjCopy[x][y] = 'x'
 
-            elif mapObjCopy[x][y] == ' ' and random.randint(0, 99) < outsideDecorationPCT:
-                mapObjCopy[x][y] = random.choice(list(outsideDecoMapping.keys()))
+            elif mapObjCopy[x][y] == ' ' and random.randint(0, 99) < OUTSIDE_DECORATION_PCT:
+                mapObjCopy[x][y] = random.choice(list(OUTSIDEDECOMAPPING.keys()))
 
     return mapObjCopy
 
@@ -401,96 +373,59 @@ def makeMove(mapObj, gameStateObj, playerMoveTo):
         gameStateObj['player'] = (playerx + xOffset, playery + yOffset)
         return True
 
-# waits for any key to be pressed
-def checkForKeyPress():
-    if len(pygame.event.get(QUIT)) > 0:
-        terminate()
 
-    keyUpEvents = pygame.event.get(KEYUP)
-    if len(keyUpEvents) == 0:
-        return None
-    if keyUpEvents[0].key == K_ESCAPE:
-        terminate()
-    return keyUpEvents[0].key
+def startScreen():
+    """Display the start screen (which has the title and instructions)
+    until the player presses a key. Returns None."""
 
-# main menu loop
-def showMainMenu():
-    global newGameSurf, newGameRect, loadGameSurf, loadGameRect, saveGameSurf, saveGameRect, howToPlaySurf, howToPlayRect, optionsSurf, optionsRect, highScoresSurf, highScoresRect, quitSurf, quitRect
+    # Position the title image.
+    titleRect = IMAGESDICT['title'].get_rect()
+    topCoord = 50 # topCoord tracks where to position the top of the text
+    titleRect.top = topCoord
+    titleRect.centerx = HALF_WINWIDTH
+    topCoord += titleRect.height
 
-    while True:
-        displaySurf.fill(colourWhite)
+    # Unfortunately, Pygame's font & text system only shows one line at
+    # a time, so we can't use strings with \n newline characters in them.
+    # So we will use a list with each line in it.
+    instructionText = ['Push the stars over the marks.',
+                       'Arrow keys to move, WASD for camera control, P to change character.',
+                       'Backspace to reset level, Esc to quit.',
+                       'N for next level, B to go back a level.']
 
-        # start playing main-menu music
-        pygame.mixer.music.load('Sounds/MainMenu.flac')
-        pygame.mixer.music.play(-1, 0.0)
+    # Start with drawing a blank color to the entire window:
+    DISPLAYSURF.fill(BGCOLOR)
 
-        # draw the main menu title text
-        mainTitleSurf, mainTitleRect = writeText('Scuba Diver', colourGreen, colourBlue, windowWidth - 612, windowHeight - 620)
-        displaySurf.blit(mainTitleSurf, mainTitleRect)
+    # Draw the title image to the window:
+    DISPLAYSURF.blit(IMAGESDICT['title'], titleRect)
 
-        # draw the main menu buttons
-        newGameSurf, newGameRect       = writeText('Start New Game', colourBlack, colourWhite, windowWidth - 612, windowHeight - 520)
-        displaySurf.blit(newGameSurf, newGameRect)
-        loadGameSurf, loadGameRect     = writeText(  'Load Game',    colourBlack, colourWhite, windowWidth - 612, windowHeight - 470)
-        displaySurf.blit(loadGameSurf, loadGameRect)
-        saveGameSurf, saveGameRect     = writeText(  'Save Game',    colourBlack, colourWhite, windowWidth - 612, windowHeight - 420)
-        displaySurf.blit(saveGameSurf, saveGameRect)
-        howToPlaySurf, howToPlayRect   = writeText( 'How to Play',   colourBlack, colourWhite, windowWidth - 612, windowHeight - 370)
-        displaySurf.blit(howToPlaySurf, howToPlayRect)
-        optionsSurf, optionsRect       = writeText(   'Options',     colourBlack, colourWhite, windowWidth - 612, windowHeight - 320)
-        displaySurf.blit(optionsSurf, optionsRect)
-        highScoresSurf, highScoresRect = writeText( 'High Scores',   colourBlack, colourWhite, windowWidth - 612, windowHeight - 270)
-        displaySurf.blit(highScoresSurf, highScoresRect)
-        quitSurf, quitRect             = writeText(    'Quit',       colourBlack, colourWhite, windowWidth - 612, windowHeight - 220)
-        displaySurf.blit(quitSurf, quitRect)
+    # Position and draw the text.
+    for i in range(len(instructionText)):
+        instSurf = BASICFONT.render(instructionText[i], 1, TEXTCOLOR)
+        instRect = instSurf.get_rect()
+        topCoord += 10 # 10 pixels will go in between each line of text.
+        instRect.top = topCoord
+        instRect.centerx = HALF_WINWIDTH
+        topCoord += instRect.height # Adjust for the height of the line.
+        DISPLAYSURF.blit(instSurf, instRect)
 
-        # temp loop so I can test the menu
-        if checkForKeyPress():
-            # launch the select level menu
-            showLevelMenu()
-            pygame.event.get() # clear event queue
-            return
+    while True: # Main loop for the start screen.
+        for event in pygame.event.get():
+            if event.type == QUIT:
+                terminate()
+            elif event.type == KEYDOWN:
+                if event.key == K_ESCAPE:
+                    terminate()
+                return # user has pressed a key, so return.
 
+        # Display the DISPLAYSURF contents to the actual screen.
         pygame.display.update()
-        FPSClock.tick(FPS)
+        FPSCLOCK.tick()
 
-# level menu loop
-def showLevelMenu():
-    global menuCoastalSurf, menuCoastalRect, menuCoralReefSurf, menuCoralReefRect, menuWreckSurf, menuWreckRect, menuCaveSurf, menuCaveRect, menuMangroveSurf, menuMangroveRect, menuAntarcticaSurf, menuAntarcticaRect
 
-    while True:
-        displaySurf.fill(colourWhite)
-
-        # draw the level menu title text
-        levelMenuTitleSurf, levelMenuTitleRect = writeText('Level select', colourGreen, colourBlue, windowWidth - 612, windowHeight - 620)
-        displaySurf.blit(levelMenuTitleSurf, levelMenuTitleRect)
-
-        # draw the level menu buttons
-        menuCoastalSurf, menuCoastalRect       = writeText('  (1) Coastal Dive',   colourBlack, colourWhite, windowWidth - 612, windowHeight - 520)
-        displaySurf.blit(menuCoastalSurf, menuCoastalRect)
-        menuCoralReefSurf, menuCoralReefRect   = writeText(' (2) Coral Reef Dive', colourBlack, colourWhite, windowWidth - 612, windowHeight - 470)
-        displaySurf.blit(menuCoralReefSurf, menuCoralReefRect)
-        menuWreckSurf, menuWreckRect           = writeText('   (3) Wreck Dive',    colourBlack, colourWhite, windowWidth - 612, windowHeight - 420)
-        displaySurf.blit(menuWreckSurf, menuWreckRect)
-        menuCaveSurf, menuCaveRect             = writeText('   (4) Cave Dive',     colourBlack, colourWhite, windowWidth - 612, windowHeight - 370)
-        displaySurf.blit(menuCaveSurf, menuCaveRect)
-        menuMangroveSurf, menuMangroveRect     = writeText('  (5) Mangrove Dive',  colourBlack, colourWhite, windowWidth - 612, windowHeight - 320)
-        displaySurf.blit(menuMangroveSurf, menuMangroveRect)
-        menuAntarcticaSurf, menuAntarcticaRect = writeText( '(6) Antarctica Dive', colourBlack, colourWhite, windowWidth - 612, windowHeight - 270)
-        displaySurf.blit(menuAntarcticaSurf, menuAntarcticaRect)
-
-        # temp loop so I can test the menu
-        if checkForKeyPress():
-            pygame.event.get() # clear event queue
-            pygame.mixer.music.stop() # stop the main menu background music
-            return
-            
-        pygame.display.update()
-        FPSClock.tick(FPS)
-
-def readLevelsFile(aFileName):
-    assert os.path.exists(aFileName), 'Cannot find the level file: %s' % (aFileName)
-    mapFile = open(aFileName, 'r')
+def readLevelsFile(filename):
+    assert os.path.exists(filename), 'Cannot find the level file: %s' % (filename)
+    mapFile = open(filename, 'r')
     # Each level must end with a blank line
     content = mapFile.readlines() + ['\r\n']
     mapFile.close()
@@ -551,9 +486,9 @@ def readLevelsFile(aFileName):
                         stars.append((x, y))
 
             # Basic level design sanity checks:
-            assert startx != None and starty != None, 'Level %s (around line %s) in %s is missing a "@" or "+" to mark the start point.' % (levelNum+1, lineNum, aFileName)
-            assert len(goals) > 0, 'Level %s (around line %s) in %s must have at least one goal.' % (levelNum+1, lineNum, aFileName)
-            assert len(stars) >= len(goals), 'Level %s (around line %s) in %s is impossible to solve. It has %s goals but only %s stars.' % (levelNum+1, lineNum, aFileName, len(goals), len(stars))
+            assert startx != None and starty != None, 'Level %s (around line %s) in %s is missing a "@" or "+" to mark the start point.' % (levelNum+1, lineNum, filename)
+            assert len(goals) > 0, 'Level %s (around line %s) in %s must have at least one goal.' % (levelNum+1, lineNum, filename)
+            assert len(stars) >= len(goals), 'Level %s (around line %s) in %s is impossible to solve. It has %s goals but only %s stars.' % (levelNum+1, lineNum, filename, len(goals), len(stars))
 
             # Create level object and starting game state object.
             gameStateObj = {'player': (startx, starty),
@@ -603,58 +538,46 @@ def drawMap(mapObj, gameStateObj, goals):
     does it draw the "Level" and "Steps" text in the corner."""
 
     # mapSurf will be the single Surface object that the tiles are drawn
-    # on, so that it is easy to position the entire map on the displaySurf
+    # on, so that it is easy to position the entire map on the DISPLAYSURF
     # Surface object. First, the width and height must be calculated.
-    mapSurfWidth = len(mapObj) * tileWidth
-    mapSurfHeight = (len(mapObj[0]) - 1) * tileFloorHeight + tileHeight
+    mapSurfWidth = len(mapObj) * TILEWIDTH
+    mapSurfHeight = (len(mapObj[0]) - 1) * TILEFLOORHEIGHT + TILEHEIGHT
     mapSurf = pygame.Surface((mapSurfWidth, mapSurfHeight))
-    mapSurf.fill(textBGColour) # start with a blank color on the surface.
+    mapSurf.fill(BGCOLOR) # start with a blank color on the surface.
 
     # Draw the tile sprites onto this surface.
     for x in range(len(mapObj)):
         for y in range(len(mapObj[x])):
-            spaceRect = pygame.Rect((x * tileWidth, y * tileFloorHeight, tileWidth, tileHeight))
-            if mapObj[x][y] in environementMapping:
-                baseTile = environementMapping[mapObj[x][y]]
-            elif mapObj[x][y] in outsideDecoMapping:
-                baseTile = environementMapping[' ']
+            spaceRect = pygame.Rect((x * TILEWIDTH, y * TILEFLOORHEIGHT, TILEWIDTH, TILEHEIGHT))
+            if mapObj[x][y] in TILEMAPPING:
+                baseTile = TILEMAPPING[mapObj[x][y]]
+            elif mapObj[x][y] in OUTSIDEDECOMAPPING:
+                baseTile = TILEMAPPING[' ']
 
             # First draw the base ground/wall tile.
             mapSurf.blit(baseTile, spaceRect)
 
-            if mapObj[x][y] in outsideDecoMapping:
+            if mapObj[x][y] in OUTSIDEDECOMAPPING:
                 # Draw any tree/rock decorations that are on this tile.
-                mapSurf.blit(outsideDecoMapping[mapObj[x][y]], spaceRect)
+                mapSurf.blit(OUTSIDEDECOMAPPING[mapObj[x][y]], spaceRect)
             elif (x, y) in gameStateObj['stars']:
                 if (x, y) in goals:
                     # A goal AND star are on this space, draw goal first.
-                    mapSurf.blit(environementImages['boy'], spaceRect)
+                    mapSurf.blit(IMAGESDICT['covered goal'], spaceRect)
                 # Then draw the star sprite.
-                mapSurf.blit(environementImages['rock'], spaceRect)
+                mapSurf.blit(IMAGESDICT['star'], spaceRect)
             elif (x, y) in goals:
                 # Draw a goal without a star on it.
-                mapSurf.blit(environementImages['boy'], spaceRect)
+                mapSurf.blit(IMAGESDICT['uncovered goal'], spaceRect)
 
             # Last draw the player on the board.
             if (x, y) == gameStateObj['player']:
                 # Note: The value "currentImage" refers
-                # to a key in "characterImages" which has the
+                # to a key in "PLAYERIMAGES" which has the
                 # specific player image we want to show.
-                mapSurf.blit(characterImages[currentImage], spaceRect)
+                mapSurf.blit(PLAYERIMAGES[currentImage], spaceRect)
 
     return mapSurf
-
-# creates the scuba diver character
-def makeNewDiver():
-    global playerObj, diverCoords
-    playerObj = {'diverImg': characterImages['boy'],
-                'diverX': 560,
-                'diverY': 380,
-                'health': maxHealthDiver,
-                'oxygen': maxOxygenDiver
-                }
-    direction = RIGHT
-    diverCoords = {'x': playerObj['diverX'], 'y': playerObj['diverY']} # a dictionary to hold the divers current position
 
 
 def isLevelFinished(levelObj, gameStateObj):
@@ -665,11 +588,11 @@ def isLevelFinished(levelObj, gameStateObj):
             return False
     return True
 
-# terminates the game when called
+
 def terminate():
     pygame.quit()
     sys.exit()
 
-# start the main() loop function
+
 if __name__ == '__main__':
     main()
