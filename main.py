@@ -1,7 +1,7 @@
 # Scuba Diver
 # by David Mower (davidmower84@gmail.com)
 # Released under GNU General Public License v3.0 
-import pygame, sys, time
+import pygame, sys, time, os
 from pygame.locals import *
 
 # Initialisations
@@ -15,6 +15,9 @@ RIGHT = 'right' # shorthand for right
 moveFrequency = 0.15 # threshold to trigger key held down status
 maxHealthDiver = 75 # how much health the player starts with
 maxOxygenDiver = 75 # how much oxygen the player starts with
+tileWidth = 50 # sprite tile width
+tileHeight = 85 # sprite tile height
+tileFloorHeight = 45 # sprite tile height for max object without decorations etc
 
 # create the colours  R    G    B
 colourBlack       = (  0,   0,   0)
@@ -51,7 +54,7 @@ def checkForKeyPress():
 # creates the scuba diver character
 def makeNewDiver():
     global playerObj, diverCoords
-    playerObj = {'diverImg': pygame.image.load('Images/ScubaDiver.png'),
+    playerObj = {'diverImg': characterImages['scuba_diver'],
                 'diverX': 560,
                 'diverY': 380,
                 'health': maxHealthDiver,
@@ -66,7 +69,7 @@ def drawHealthBar(currentDiverHealth):
         pygame.draw.rect(displaySurf, colourRed, (5, 20 + (10 * maxHealthDiver) - c * 10, 20, 10))
     for m in range(maxHealthDiver):
         pygame.draw.rect(displaySurf, colourBlack, (5, 20 + (10 * maxHealthDiver) - m * 10, 20, 10), 1)
-    healthBarSurf, healthBarRect = writeText('Hasdasdassfsdfsdfsfasdfasdf', colourGreen, colourBlue, 5, 5)
+    healthBarSurf, healthBarRect = writeText('H', colourGreen, colourBlue, 5, 5)
     healthBarSurf.blit(healthBarSurf, healthBarRect)
 
 # creates a oxygen bar
@@ -75,12 +78,69 @@ def drawOxygenBar(currentDiverOxygen):
         pygame.draw.rect(displaySurf, colourBlue, (30, 20 + (10 * maxOxygenDiver) - c * 10, 20, 10))
     for m in range(maxOxygenDiver):
         pygame.draw.rect(displaySurf, colourBlack, (30, 20 + (10 * maxOxygenDiver) - m * 10, 20, 10), 1)
-    oxygenBarSurf, oxygenBarRect = writeText('Osfasdgdfhgddfghfhfgfgh', colourGreen, colourBlue, 20, 20)
+    oxygenBarSurf, oxygenBarRect = writeText('O', colourGreen, colourBlue, 20, 20)
     oxygenBarSurf.blit(oxygenBarSurf, oxygenBarRect)
+
+# Load level's from text file
+def readLevelsFile(aFilename):
+    # capture assertion if level files doesn't exist
+    assert os.path.exists(aFilename), 'Cannot find the level file: %s' % (aFilename)
+    mapFile = open(aFilename, 'r')
+    # each level must end with a blank line
+    content = mapFile.readlines() + ['\r\n']
+    mapFile.close()
+
+    levels = [] # will contain a list of level objects
+    levelNum = 0
+    mapTextLines = [] # contains the lines for a single level's map
+    mapObj = [] # the map object created from the data in mapTextLines
+
+    for lineNum in range(len(content)):
+        # process each line in the level file
+        line = content[lineNum].rstrip('\r\n')
+
+        if ';' in line:
+            # ignore lines containing ; as these are comments only
+            line = line[:line.find(';')]
+
+        if line != '':
+            # this line is part of the map, until an empty line is in the level file
+            mapTextLines.append(line)
+        elif line == '' and len(mapTextLines) > 0:
+            # a blank line in the level file indicates the end of that level
+            maxWidth = -1
+            # gets the longest line of characters and saves as maxWidth
+            for i in range(len(mapTextLines)):
+                if len(mapTextLines[i]) > maxWidth:
+                    maxWidth = len(mapTextLines[i])
+            # adds whitespace to any shorter rows
+            for i in range(len(mapTextLines)):
+                mapTextLines[i] += ' ' * (maxWidth - len(mapTextLines[i]))
+            # convert mapTextLines to a map object
+            for x in range(len(mapTextLines[0])):
+                mapObj.append([])
+            for y in range(len(mapTextLines)):
+                for x in range(maxWidth):
+                    mapObj[x].append(mapTextLines[y][x])
+
+            # loop through the spaces in the map and find the characters for the starting game state
+            startx = None
+            starty = None
+            for x in range(maxWidth):
+                for y in range(len(mapObj[x])):
+                    if mapObj[x][y] in ('@'):
+                        # @ is player
+                        startx = x
+                        starty = y
+
+            # Basic level design sanity checks:
+            assert startx != None and starty != None, 'Level %s (around line %s) in %s is missing a "@" or "+" to mark the start point.' % (levelNum+1, lineNum, aFilename)
+
+
 
 # main loop
 def main():
-    global displaySurf, fpsClock, defaultFont, windowHeight, windowWidth
+    global displaySurf, fpsClock, defaultFont, windowHeight, windowWidth, environementImages, environementMapping, characterImages
     # create surface object
     pygame.init()
     fpsClock = pygame.time.Clock()
@@ -88,10 +148,32 @@ def main():
     windowHeight = 800
     displaySurf = pygame.display.set_mode((windowWidth, windowHeight))
     pygame.display.set_caption('Scuba Diver')
+    
+    # set the default fonts
     defaultFont = pygame.font.Font('freesansbold.ttf', defaultFontSize)
+
+    # A global dictionary that contains all the surface object images
+    environementImages = {'coral_1': pygame.image.load('Images/Coral_1.png'),
+                  'coral_2': pygame.image.load('Images/Coral_2.png'),
+                  'coral_3': pygame.image.load('Images/Coral_3.png'),
+                  'sand': pygame.image.load('Images/Sand.png')}
+
+    # A global dictionary that matches all the chars in the level file to surface objects
+    environementMapping = {'x': environementImages['coral_1'],
+                   '#': environementImages['coral_2'],
+                   'o': environementImages['coral_3'],
+                   's': environementImages['sand']}
+
+    # A global dictionary that contains all the character object images
+    currentCharacterImage = 0
+    characterImages = {'scuba_diver': pygame.image.load('Images/ScubaDiver.png')}
 
     # launch the main menu
     showMainMenu()
+
+    # read in the levels from a text file
+    levels = readLevelsFile('Levels/CoastalDive.lvl')
+
     while True:
         runGameLoop()
         showGameOver()
@@ -218,7 +300,7 @@ def runGameLoop():
                     newDiverY = diverCoords.get('y') - 10
                 elif direction == DOWN and not diverCoords['y'] == (windowHeight - 60): # checks if bottom of screen has been hit
                     newDiverY = diverCoords.get('y') + 10
-                elif direction == LEFT and not diverCoords['x'] == 0: # checks if left of screen has been hit
+                elif direction == LEFT and not diverCoords['x'] == 50: # checks if left of screen has been hit
                     newDiverX = diverCoords.get('x') - 10
                 elif direction == RIGHT and not diverCoords['x'] == (windowWidth - 50): # checks if right of screen has been hit
                     newDiverX = diverCoords.get('x') + 10      
