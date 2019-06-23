@@ -25,8 +25,7 @@ colourYellow      = (155, 155,   0)
 def terminate():
     pygame.quit()
     sys.exit()
-
-
+    
 # creates the Surface and Rect objects for some text
 def writeText(aText, aColour, aBackgroundColour, aTop, aLeft):
     textSurf = defaultFont.render(aText, True, aColour, aBackgroundColour)
@@ -62,6 +61,7 @@ def main():
     showMainMenu()
     while True:
         runGameLoop()
+        showGameOver()
 
 # main menu loop
 def showMainMenu():
@@ -99,8 +99,8 @@ def showMainMenu():
             # launch the select level menu
             showLevelMenu()
             pygame.event.get() # clear event queue
-            # # stop the main menu background music
             return
+
         pygame.display.update()
         fpsClock.tick(FPS)
 
@@ -191,10 +191,8 @@ def runGameLoop():
                     newDiverX = diverCoords.get('x') + 10      
                 if newDiverX is not None:
                     diverCoords['x'] = newDiverX
-                    print(newDiverX)
                 if newDiverY is not None:
                     diverCoords['y'] = newDiverY
-                    print(newDiverY)
 
         # copy diverImg to displaySurf with coordinates
         displaySurf.blit(diverImg, (diverCoords['x'], diverCoords['y']))
@@ -206,6 +204,27 @@ def runGameLoop():
         # redraw the surface object and wait a clock tick
         pygame.display.update()
         fpsClock.tick(FPS)
+
+def showGameOver():
+    gameOverFont = pygame.font.Font('freesansbold.ttf', 150)
+    gameSurf = gameOverFont.render('Game', True, colourWhite)
+    gameRect = gameSurf.get_rect()
+    overSurf = gameOverFont.render('Over', True, colourWhite)
+    overRect = overSurf.get_rect()
+    gameRect.midtop = (screenWidth / 2, 10)
+    overRect.midtop = (screenWidth / 2, gameRect.height + 10 + 25)
+
+    displaySurf.blit(gameSurf, gameRect)
+    displaySurf.blit(overSurf, overRect)
+    drawPressKeyMsg()
+    pygame.display.update()
+    pygame.time.wait(500)
+    checkForKeyPress() # clear out any key presses in the event queue
+
+    while True:
+        if checkForKeyPress():
+            pygame.event.get() # clear event queue
+            return
 
 # start the main() loop function
 main()
