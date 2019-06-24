@@ -44,7 +44,8 @@ UP = 'up'
 DOWN = 'down'
 LEFT = 'left'
 RIGHT = 'right'
-player1 = Player("maleCharacter", 75, 75) # create player1 using Player class (name, health, oxygen)
+player1 = Player("maleCharacter"  , 300, 300, 75, 75) # create player1 using Player class (name, startx, starty, health, oxygen)
+player2 = Player("femaleCharacter", 300, 300, 75, 75) # create player1 using Player class (name, startx, starty, health, oxygen)
 
 # init level
 outsideDecorationPCT = 20 # The percentage of outdoor tiles that have additional decoration on them, such as a tree or rock.

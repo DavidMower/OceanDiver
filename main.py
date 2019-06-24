@@ -6,6 +6,7 @@ import random, sys, copy, os, pygame
 from pygame.locals import *
 from settings import *
 from player import *
+from menus import *
 
 def main():
     # pygame initialisation
@@ -13,6 +14,7 @@ def main():
     pygame.display.set_caption('Scuba Diver')
     
     showMainMenu() # show the title screen until the user presses a key
+    showLevelMenu() # launch the select level menu
 
     # Read in the levels from the text file. See the readLevelsFile() for details on the format of this file
     levels = readLevelsFile('Levels/CoastalDive.lvl')
@@ -219,7 +221,7 @@ def decorateMap(mapObj, startxy):
         * Tree/rock decorations are randomly added to the outside tiles.
     Returns the decorated map object."""
 
-    startx, starty = startxy # Syntactic sugar
+    player1.getStartX, player1.getStartY = startxy # Syntactic sugar
 
     # Copy the map object so we don't modify the original passed
     mapObjCopy = copy.deepcopy(mapObj)
@@ -231,7 +233,7 @@ def decorateMap(mapObj, startxy):
                 mapObjCopy[x][y] = ' '
 
     # Flood fill to determine inside/outside floor tiles
-    floodFill(mapObjCopy, startx, starty, ' ', 'o')
+    floodFill(mapObjCopy, player1.getStartX, player1.getStartY, ' ', 'o')
 
     # Convert the adjoined walls into corner tiles
     for x in range(len(mapObjCopy)):
@@ -305,78 +307,6 @@ def checkForKeyPress():
         terminate()
     return keyUpEvents[0].key
 
-# main menu loop
-def showMainMenu():
-    while True:
-        displaySurf.fill(colourWhite)
-
-        # start playing main-menu music
-        pygame.mixer.music.load('Sounds/MainMenu.flac')
-        pygame.mixer.music.play(-1, 0.0)
-
-        # draw the main menu title text
-        mainTitleSurf, mainTitleRect = writeText('Scuba Diver', colourGreen, colourBlue, windowWidth - 612, windowHeight - 620)
-        displaySurf.blit(mainTitleSurf, mainTitleRect)
-
-        # draw the main menu buttons
-        newGameSurf, newGameRect       = writeText('Start New Game', colourBlack, colourWhite, windowWidth - 612, windowHeight - 520)
-        displaySurf.blit(newGameSurf, newGameRect)
-        loadGameSurf, loadGameRect     = writeText(  'Load Game',    colourBlack, colourWhite, windowWidth - 612, windowHeight - 470)
-        displaySurf.blit(loadGameSurf, loadGameRect)
-        saveGameSurf, saveGameRect     = writeText(  'Save Game',    colourBlack, colourWhite, windowWidth - 612, windowHeight - 420)
-        displaySurf.blit(saveGameSurf, saveGameRect)
-        howToPlaySurf, howToPlayRect   = writeText( 'How to Play',   colourBlack, colourWhite, windowWidth - 612, windowHeight - 370)
-        displaySurf.blit(howToPlaySurf, howToPlayRect)
-        optionsSurf, optionsRect       = writeText(   'Options',     colourBlack, colourWhite, windowWidth - 612, windowHeight - 320)
-        displaySurf.blit(optionsSurf, optionsRect)
-        highScoresSurf, highScoresRect = writeText( 'High Scores',   colourBlack, colourWhite, windowWidth - 612, windowHeight - 270)
-        displaySurf.blit(highScoresSurf, highScoresRect)
-        quitSurf, quitRect             = writeText(    'Quit',       colourBlack, colourWhite, windowWidth - 612, windowHeight - 220)
-        displaySurf.blit(quitSurf, quitRect)
-
-        # temp loop so I can test the menu
-        if checkForKeyPress():
-            # launch the select level menu
-            showLevelMenu()
-            pygame.event.get() # clear event queue
-            return
-
-        pygame.display.update()
-        FPSClock.tick(FPS)
-
-
-# level menu loop
-def showLevelMenu():
-    while True:
-        displaySurf.fill(colourWhite)
-
-        # draw the level menu title text
-        levelMenuTitleSurf, levelMenuTitleRect = writeText('Level select', colourGreen, colourBlue, windowWidth - 612, windowHeight - 620)
-        displaySurf.blit(levelMenuTitleSurf, levelMenuTitleRect)
-
-        # draw the level menu buttons
-        menuCoastalSurf, menuCoastalRect       = writeText('  (1) Coastal Dive',   colourBlack, colourWhite, windowWidth - 612, windowHeight - 520)
-        displaySurf.blit(menuCoastalSurf, menuCoastalRect)
-        menuCoralReefSurf, menuCoralReefRect   = writeText(' (2) Coral Reef Dive', colourBlack, colourWhite, windowWidth - 612, windowHeight - 470)
-        displaySurf.blit(menuCoralReefSurf, menuCoralReefRect)
-        menuWreckSurf, menuWreckRect           = writeText('   (3) Wreck Dive',    colourBlack, colourWhite, windowWidth - 612, windowHeight - 420)
-        displaySurf.blit(menuWreckSurf, menuWreckRect)
-        menuCaveSurf, menuCaveRect             = writeText('   (4) Cave Dive',     colourBlack, colourWhite, windowWidth - 612, windowHeight - 370)
-        displaySurf.blit(menuCaveSurf, menuCaveRect)
-        menuMangroveSurf, menuMangroveRect     = writeText('  (5) Mangrove Dive',  colourBlack, colourWhite, windowWidth - 612, windowHeight - 320)
-        displaySurf.blit(menuMangroveSurf, menuMangroveRect)
-        menuAntarcticaSurf, menuAntarcticaRect = writeText( '(6) Antarctica Dive', colourBlack, colourWhite, windowWidth - 612, windowHeight - 270)
-        displaySurf.blit(menuAntarcticaSurf, menuAntarcticaRect)
-
-        # temp loop so I can test the menu
-        if checkForKeyPress():
-            pygame.event.get() # clear event queue
-            pygame.mixer.music.stop() # stop the main menu background music
-            return
-            
-        pygame.display.update()
-        FPSClock.tick(FPS)
-
 
 def readLevelsFile(aFileName):
     assert os.path.exists(aFileName), 'Cannot find the level file: %s' % (aFileName)
@@ -423,22 +353,22 @@ def readLevelsFile(aFileName):
 
             # Loop through the spaces in the map and find the @, ., and $
             # characters for the starting game state.
-            startx = None # The x and y for the player's starting position
-            starty = None
+            player1.setStartX(None) # The x and y for the player's starting position
+            player1.setStartY(None)
             for x in range(maxWidth):
                 for y in range(len(mapObj[x])):
                     if mapObj[x][y] in ('@', '+'):
                         # '@' is player, '+' is player & goal
-                        startx = x
-                        starty = y
+                        player1.setStartX(x)
+                        player1.setStartY(y)
 
             # Basic level design sanity checks:
-            assert startx != None and starty != None, 'Level %s (around line %s) in %s is missing a "@" or "+" to mark the start point.' % (levelNum+1, lineNum, aFileName)
+            assert player1.getStartX != None and player1.getStartY != None, 'Level %s (around line %s) in %s is missing a "@" or "+" to mark the start point.' % (levelNum+1, lineNum, aFileName)
 
 
-            #gameStateObj = {'player': (player1, starty), 
-            #                'health': player1.getHealth(),
-            #                'oxygen': player1.getOxygen()}
+            gameStateObj = {'player': (player1, player1.getStartY), 
+                            'health': player1.getHealth(),
+                            'oxygen': player1.getOxygen()}
 
             # Create level object
             levelObj = {'width': maxWidth,
@@ -460,7 +390,6 @@ def floodFill(mapObj, x, y, oldCharacter, newCharacter):
     """Changes any values matching oldCharacter on the map object to
     newCharacter at the (x, y) position, and does the same for the
     positions to the left, right, down, and up of (x, y), recursively."""
-
     # In this game, the flood fill algorithm creates the inside/outside
     # floor distinction. This is a "recursive" function.
     # For more info on the Flood Fill algorithm, see:

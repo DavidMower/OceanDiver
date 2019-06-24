@@ -5,7 +5,7 @@
 
 class Player:
     # class contructer for a 'Player' object
-    # a player object contains name, health and oxygen attributes
+    # a player object contains name, startx, starty, health and oxygen attributes
     def __init__(self, aName, aStartX, aStartY, aHealth, aOxygen):
         self.name = aName
         self.startX = aStartX
@@ -30,7 +30,7 @@ class Player:
 
     # setter method for player's starting X coordinate
     # sets the player's startX value to argument value (must be an integer)
-    def setName(self, aStartX):
+    def setStartX(self, aStartX):
        self.startX = aStartX
 
     # getter method for player's starting Y coordinate
