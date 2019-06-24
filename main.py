@@ -1,5 +1,4 @@
 # main.py
-
 # Scuba Diver
 # by David Mower (davidmower84@gmail.com)
 # Released under GNU General Public License v3.0 
@@ -7,7 +6,6 @@ import random, sys, copy, os, pygame
 from pygame.locals import *
 from settings import *
 from player import *
-
 
 def main():
     # pygame initialisation
@@ -130,8 +128,7 @@ def runLevel(levels, levelNum):
             moved = makeMove(mapObj, gameStateObj, playerMoveTo)
 
             if moved:
-                # increment the step counter.
-                gameStateObj['stepCounter'] += 1
+                # the map needs to be redraw if moved
                 mapNeedsRedraw = True
 
         displaySurf.fill(textBGColour)
@@ -158,8 +155,8 @@ def runLevel(levels, levelNum):
         # draw levelSurf to display the level indicator
         displaySurf.blit(levelSurf, levelRect)
         # draw the player health and oxygen bars
-        drawHealthBar(gameStateObj['health'])
-        drawOxygenBar(gameStateObj['oxygen'])
+        drawHealthBar(player1.getHealth)
+        drawOxygenBar(player1.getOxygen)
 
         if levelIsComplete:
             # is solved, show the "Solved!" image until the player
@@ -438,12 +435,12 @@ def readLevelsFile(aFileName):
             # Basic level design sanity checks:
             assert startx != None and starty != None, 'Level %s (around line %s) in %s is missing a "@" or "+" to mark the start point.' % (levelNum+1, lineNum, aFileName)
 
-            # Create level object and starting game state object.
-            gameStateObj = {'player': (startx, starty), 
-                            'stepCounter': 0,
-                            'health': player1.getHealth(),
-                            'oxygen': player1.getOxygen()}
 
+            #gameStateObj = {'player': (player1, starty), 
+            #                'health': player1.getHealth(),
+            #                'oxygen': player1.getOxygen()}
+
+            # Create level object
             levelObj = {'width': maxWidth,
                         'height': len(mapObj),
                         'mapObj': mapObj,

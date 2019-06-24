@@ -1,7 +1,9 @@
 # settings.py
+# Scuba Diver
+# by David Mower (davidmower84@gmail.com)
+# Released under GNU General Public License v3.0 
 import pygame
 from player import *
-
 
 # global variable declarations
 global environmentImages, environmentMapping, outsideDecoMapping, characterImages, currentImage, FPSClock, displaySurf, FPS
