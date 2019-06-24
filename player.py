@@ -3,6 +3,42 @@
 # by David Mower (davidmower84@gmail.com)
 # Released under GNU General Public License v3.0 
 
+
+# move player if possible
+def makeMove(mapObj, gameStateObj, playerMoveTo):
+    """Given a map and game state object, see if it is possible for the
+    player to make the given move. If it is, then change the player's
+    position (and the position of any pushed star). If not, do nothing.
+    Returns True if the player moved, otherwise False."""
+
+    # Make sure the player can move in the direction they want.
+    playerx, playery = gameStateObj['player']
+
+    # The code for handling each of the directions is so similar aside
+    # from adding or subtracting 1 to the x/y coordinates. We can
+    # simplify it by using the xOffset and yOffset variables.
+    if playerMoveTo == UP:
+        xOffset = 0
+        yOffset = -1
+    elif playerMoveTo == RIGHT:
+        xOffset = 1
+        yOffset = 0
+    elif playerMoveTo == DOWN:
+        xOffset = 0
+        yOffset = 1
+    elif playerMoveTo == LEFT:
+        xOffset = -1
+        yOffset = 0
+
+    # See if the player can move in that direction.
+    if isWall(mapObj, playerx + xOffset, playery + yOffset):
+        return False
+    else:
+        # Move the player upwards.
+        gameStateObj['player'] = (playerx + xOffset, playery + yOffset)
+        return True
+
+
 class Player:
     # class contructer for a 'Player' object
     # a player object contains name, startx, starty, health and oxygen attributes
