@@ -1,11 +1,12 @@
 # settings.py
 import pygame
+from player import *
 
 
 # global variable declarations
 global environmentImages, environmentMapping, outsideDecoMapping, characterImages, currentImage, FPSClock, displaySurf, FPS
 global windowWidth, windowHeight, halfWindowWidth, halfWindowHeight, defaultFontSize, defaultFont, outsideDecorationPCT
-global maxHealthDiver, maxOxygenDiver, tileWidth, tileHeight, tileFloorHeight, cameraMoveSpeed, displaySurf
+global tileWidth, tileHeight, tileFloorHeight, cameraMoveSpeed, displaySurf
 
 
 # init screen
@@ -41,9 +42,7 @@ UP = 'up'
 DOWN = 'down'
 LEFT = 'left'
 RIGHT = 'right'
-maxHealthDiver = 75 # how much health the player starts with
-maxOxygenDiver = 75 # how much oxygen the player starts with
-
+player1 = Player("maleCharacter", 75, 75) # create player1 using Player class (name, health, oxygen)
 
 # init level
 outsideDecorationPCT = 20 # The percentage of outdoor tiles that have additional decoration on them, such as a tree or rock.

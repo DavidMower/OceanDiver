@@ -6,6 +6,7 @@
 import random, sys, copy, os, pygame
 from pygame.locals import *
 from settings import *
+from player import *
 
 
 def main():
@@ -183,21 +184,21 @@ def writeText(aText, aColour, aBackgroundColour, aTop, aLeft):
         
 
 # creates a health bar
-def drawHealthBar(currentDiverHealth):
-    for c in range(currentDiverHealth): # draw the red health bars
-        pygame.draw.rect(displaySurf, colourRed, (15, 20 + (10 * maxHealthDiver) - c * 10, 20, 10))
-    for m in range(maxHealthDiver):
-        pygame.draw.rect(displaySurf, colourBlack, (15, 20 + (10 * maxHealthDiver) - m * 10, 20, 10), 1)
+def drawHealthBar(aPlayerHealth):
+    for c in range(aPlayerHealth): # draw the red health bars
+        pygame.draw.rect(displaySurf, colourRed, (15, 20 + (10 * player1.getHealth()) - c * 10, 20, 10))
+    for m in range(player1.getHealth()):
+        pygame.draw.rect(displaySurf, colourBlack, (15, 20 + (10 * player1.getHealth()) - m * 10, 20, 10), 1)
     healthBarSurf, healthBarRect = writeText('H', colourGreen, colourBlue, 5, 5)
     healthBarSurf.blit(healthBarSurf, healthBarRect)
 
 
 # creates a oxygen bar
-def drawOxygenBar(currentDiverOxygen):
-    for c in range(currentDiverOxygen): # draw the blue oxygen bars 
-        pygame.draw.rect(displaySurf, colourBlue, (windowWidth - 35, 25 + (10 * maxOxygenDiver) - c * 10, 20, 10))
-    for m in range(maxOxygenDiver):
-        pygame.draw.rect(displaySurf, colourBlack, (windowWidth - 35, 25 + (10 * maxOxygenDiver) - m * 10, 20, 10), 1)
+def drawOxygenBar(aPlayerHealth):
+    for c in range(aPlayerHealth): # draw the blue oxygen bars 
+        pygame.draw.rect(displaySurf, colourBlue, (windowWidth - 35, 25 + (10 * player1.getOxygen()) - c * 10, 20, 10))
+    for m in range(player1.getOxygen()):
+        pygame.draw.rect(displaySurf, colourBlack, (windowWidth - 35, 25 + (10 * player1.getOxygen()) - m * 10, 20, 10), 1)
     oxygenBarSurf, oxygenBarRect = writeText('O', colourGreen, colourBlue, 20, 20)
     oxygenBarSurf.blit(oxygenBarSurf, oxygenBarRect)
 
@@ -256,13 +257,8 @@ def isBlocked(mapObj, gameStateObj, x, y):
 
     if isWall(mapObj, x, y):
         return True
-
     elif x < 0 or x >= len(mapObj) or y < 0 or y >= len(mapObj[x]):
         return True # x and y aren't actually on the map.
-
-    elif (x, y) in gameStateObj['stars']:
-        return True # a star is blocking
-
     return False
 
 
@@ -443,10 +439,10 @@ def readLevelsFile(aFileName):
             assert startx != None and starty != None, 'Level %s (around line %s) in %s is missing a "@" or "+" to mark the start point.' % (levelNum+1, lineNum, aFileName)
 
             # Create level object and starting game state object.
-            gameStateObj = {'player': (startx, starty),
+            gameStateObj = {'player': (startx, starty), 
                             'stepCounter': 0,
-                            'health': maxHealthDiver,
-                            'oxygen': maxOxygenDiver}
+                            'health': player1.getHealth(),
+                            'oxygen': player1.getOxygen()}
 
             levelObj = {'width': maxWidth,
                         'height': len(mapObj),
