@@ -7,12 +7,13 @@ from settings import *
 from main import *
 
 
-# main menu loop
+# create main menu
 def showMainMenu():
     while True:
+        #Fill the screen with a colour to create a background for the menu
         displaySurf.fill(colourWhite)
 
-        # start playing main-menu music
+        # start playing main-menu background music
         pygame.mixer.music.load('Sounds/MainMenu.flac')
         pygame.mixer.music.play(-1, 0.0)
 
@@ -36,18 +37,20 @@ def showMainMenu():
         quitSurf, quitRect             = writeText(    'Quit',       colourBlack, colourWhite, windowWidth - 612, windowHeight - 220)
         displaySurf.blit(quitSurf, quitRect)
 
-        # temp loop so I can test the menu
+        # temp loop to wait for a key press, so I can test the menu
         if checkForKeyPress():
             pygame.event.get() # clear event queue
             return
 
+        # draw these objects on the display and process to next clock tick
         pygame.display.update()
         FPSClock.tick(FPS)
 
 
-# level menu loop
+# create level selection menu
 def showLevelMenu():
     while True:
+        #Fill the screen with a colour to create a background for the menu
         displaySurf.fill(colourWhite)
 
         # draw the level menu title text
@@ -68,11 +71,12 @@ def showLevelMenu():
         menuAntarcticaSurf, menuAntarcticaRect = writeText( '(6) Antarctica Dive', colourBlack, colourWhite, windowWidth - 612, windowHeight - 270)
         displaySurf.blit(menuAntarcticaSurf, menuAntarcticaRect)
 
-        # temp loop so I can test the menu
+        # temp loop to wait for a key press, so I can test the menu
         if checkForKeyPress():
             pygame.event.get() # clear event queue
             pygame.mixer.music.stop() # stop the main menu background music
             return
             
+        # draw these objects on the display and process to next clock tick
         pygame.display.update()
         FPSClock.tick(FPS)
