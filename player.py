@@ -1,47 +1,13 @@
 # player.py
 # Scuba Diver
 # by David Mower (davidmower84@gmail.com)
-# Released under GNU General Public License v3.0 
+# Released under GNU General Public License v3.0
+from level import *
 
-
-# move player if possible
-def makeMove(mapObj, gameStateObj, playerMoveTo):
-    """Given a map and game state object, see if it is possible for the
-    player to make the given move. If it is, then change the player's
-    position (and the position of any pushed star). If not, do nothing.
-    Returns True if the player moved, otherwise False."""
-
-    # Make sure the player can move in the direction they want.
-    playerx, playery = gameStateObj['player']
-
-    # The code for handling each of the directions is so similar aside
-    # from adding or subtracting 1 to the x/y coordinates. We can
-    # simplify it by using the xOffset and yOffset variables.
-    if playerMoveTo == UP:
-        xOffset = 0
-        yOffset = -1
-    elif playerMoveTo == RIGHT:
-        xOffset = 1
-        yOffset = 0
-    elif playerMoveTo == DOWN:
-        xOffset = 0
-        yOffset = 1
-    elif playerMoveTo == LEFT:
-        xOffset = -1
-        yOffset = 0
-
-    # See if the player can move in that direction.
-    if isWall(mapObj, playerx + xOffset, playery + yOffset):
-        return False
-    else:
-        # Move the player upwards.
-        gameStateObj['player'] = (playerx + xOffset, playery + yOffset)
-        return True
-
-
+# Player class for the main character
 class Player:
-    # class contructer for a 'Player' object
-    # a player object contains name, startx, starty, health and oxygen attributes
+    # class contructer
+    # a player object must contain a name, startx, starty, health and oxygen attributes
     def __init__(self, aName, aStartX, aStartY, aHealth, aOxygen):
         self.name = aName
         self.startX = aStartX
@@ -98,3 +64,37 @@ class Player:
     # sets the player's oxygen value to argument value (must be an integer)
     def setOxygen(self, aOxygen):
        self.oxygen = aOxygen
+
+
+# move player if possible
+def makeMove(mapObj, gameStateObj, playerMoveTo):
+    """Given a map and game state object, see if it is possible for the
+    player to move. If it is, then change the player's position. If not, do nothing.
+    Returns True if the player moved, otherwise False."""
+
+    # Make sure the player can move in the direction they want.
+    playerx, playery = gameStateObj['player']
+
+    # The code for handling each of the directions
+    # simplified by using the xOffset and yOffset variables.
+    if playerMoveTo == UP:
+        xOffset = 0
+        yOffset = -1
+    elif playerMoveTo == RIGHT:
+        xOffset = 1
+        yOffset = 0
+    elif playerMoveTo == DOWN:
+        xOffset = 0
+        yOffset = 1
+    elif playerMoveTo == LEFT:
+        xOffset = -1
+        yOffset = 0
+
+    # Check if player is trying to move into a wall block
+    if isWall(mapObj, playerx + xOffset, playery + yOffset):
+        # if it's a wall, don't allow the move
+        return False
+    else:
+        # if not a wall, allow the move
+        gameStateObj['player'] = (playerx + xOffset, playery + yOffset)
+        return True
