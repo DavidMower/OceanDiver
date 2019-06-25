@@ -2,7 +2,7 @@
 # Scuba Diver
 # by David Mower (davidmower84@gmail.com)
 # Released under GNU General Public License v3.0 
-import random, sys, copy, os, pygame
+import sys, pygame
 from pygame.locals import *
 from settings import *
 from player import *

@@ -2,7 +2,7 @@
 # Scuba Diver
 # by David Mower (davidmower84@gmail.com)
 # Released under GNU General Public License v3.0
-import pygame
+import pygame, os, random, copy
 from settings import *
 from main import *
 
@@ -64,7 +64,7 @@ def readLevelsFile(aFileName):
             # Basic level design sanity checks:
             assert player1.getStartX != None and player1.getStartY != None, 'Level %s (around line %s) in %s is missing a "@" or "+" to mark the start point.' % (levelNum+1, lineNum, aFileName)
 
-
+            # Create game state object
             gameStateObj = {'player': (player1, player1.getStartY), 
                             'health': player1.getHealth(),
                             'oxygen': player1.getOxygen()}
