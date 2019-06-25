@@ -3,6 +3,7 @@
 # by David Mower (davidmower84@gmail.com)
 # Released under GNU General Public License v3.0
 from level import *
+from settings import *
 
 # Player class for the main character
 class Player:
