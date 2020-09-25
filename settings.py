@@ -1,7 +1,10 @@
-# settings.py
-# Scuba Diver
-# by David Mower (davidmower84@gmail.com)
-# Released under GNU General Public License v3.0 
+#####################################################
+##                   settings.py                   ##
+##                   Scuba Diver                   ##
+##     by David Mower (davidmower84@gmail.com)     ##
+##  Released under GNU General Public License v3.0 ##
+#####################################################
+
 import pygame
 from player import *
 
@@ -9,8 +12,6 @@ from player import *
 global environmentImages, environmentMapping, outsideDecoMapping, characterImages, currentImage, FPSClock, displaySurf, FPS
 global windowWidth, windowHeight, halfWindowWidth, halfWindowHeight, defaultFontSize, defaultFont, outsideDecorationPCT
 global tileWidth, tileHeight, tileFloorHeight, cameraMoveSpeed, displaySurf
-
-
 # init screen
 pygame.init()
 FPS = 60 # frames per second to update the screen
@@ -20,14 +21,9 @@ halfWindowWidth = int(windowWidth / 2)
 halfWindowHeight = int(windowHeight / 2)
 FPSClock = pygame.time.Clock()
 displaySurf = pygame.display.set_mode((windowWidth, windowHeight))
-
-
 # init fonts
 defaultFontSize = 18
-defaultFont = pygame.font.Font('freesansbold.ttf', defaultFontSize) 
-
-
-# init colours       R    G    B
+defaultFont = pygame.font.Font('freesansbold.ttf', defaultFontSize)
 colourBlack      = (  0,   0,   0)
 colourBlue       = (  0,   0, 128)
 colourGreen      = (  0, 255,   0)
@@ -37,8 +33,6 @@ colourYellow     = (155, 155,   0)
 colourBrightBlue = (  0, 170, 255)
 textBGColour     = colourBrightBlue
 textColour       = colourWhite
-
-
 # init player character
 UP = 'up'
 DOWN = 'down'
@@ -46,8 +40,6 @@ LEFT = 'left'
 RIGHT = 'right'
 player1 = Player("maleCharacter"  , 300, 300, 75, 75) # create player1 using Player class (name, startx, starty, health, oxygen)
 player2 = Player("femaleCharacter", 300, 300, 75, 75) # create player1 using Player class (name, startx, starty, health, oxygen)
-
-
 # init level
 outsideDecorationPCT = 20 # The percentage of outdoor tiles that have additional decoration on them, such as a tree or rock.
 tileWidth = 50 # The total width and height of each tile in pixels.
@@ -58,19 +50,17 @@ levelIsComplete = False
 # Read in the levels from the text file. See the readLevelsFile() for details on the format of this file
 levels = readLevelsFile('Levels/CoastalDive.lvl')
 currentLevelIndex = 0
-
-
 # A global dictionary that'll contain all the Pygame Surface objects
-environmentImages = {'corner': pygame.image.load('Images/Dark_Rock_Block.png'),
-                      'wall': pygame.image.load('Images/Rock_Block.png'),
-                      'ocean floor': pygame.image.load('Images/Ocean_Block.png'),
+environmentImages = { 'corner':        pygame.image.load('Images/Dark_Rock_Block.png'),
+                      'wall':          pygame.image.load('Images/Rock_Block.png'),
+                      'ocean floor':   pygame.image.load('Images/Ocean_Block.png'),
                       'outside floor': pygame.image.load('Images/Sand_Block.png'),
-                      'diver_female': pygame.image.load('Images/Scuba_Diver_Female.png'),
-                      'diver_male': pygame.image.load('Images/Scuba_Diver_Male.png'),
-                      'rock': pygame.image.load('Images/Rock.png'),
-                      'short tree': pygame.image.load('Images/Tree_Short.png'),
-                      'tall tree': pygame.image.load('Images/Tree_Tall.png'),
-                      'ugly tree': pygame.image.load('Images/Tree_Ugly.png')}
+                      'diver_female':  pygame.image.load('Images/Scuba_Diver_Female.png'),
+                      'diver_male':    pygame.image.load('Images/Scuba_Diver_Male.png'),
+                      'rock':          pygame.image.load('Images/Rock.png'),
+                      'short tree':    pygame.image.load('Images/Tree_Short.png'),
+                      'tall tree':     pygame.image.load('Images/Tree_Tall.png'),
+                      'ugly tree':     pygame.image.load('Images/Tree_Ugly.png')}
 # These dictionary values are global, and map the character that appear in the level file
 environmentMapping = {'x': environmentImages['corner'],
                       '#': environmentImages['wall'],
@@ -79,7 +69,7 @@ environmentMapping = {'x': environmentImages['corner'],
 outsideDecoMapping = {'1': environmentImages['rock'],
                       '2': environmentImages['short tree'],
                       '3': environmentImages['tall tree'],
-                      '4': environmentImages['ugly tree']}            
+                      '4': environmentImages['ugly tree']}
 # characterImages is a list of all possible characters the player can be.
 characterImages = [   environmentImages['diver_female'],
                       environmentImages['diver_male']]

@@ -1,17 +1,26 @@
-# level.py
-# Scuba Diver
-# by David Mower (davidmower84@gmail.com)
-# Released under GNU General Public License v3.0
-import pygame, os, random, copy
-from settings import *
+#####################################################
+##                    level.py                     ##
+##                   Scuba Diver                   ##
+##     by David Mower (davidmower84@gmail.com)     ##
+##  Released under GNU General Public License v3.0 ##
+#####################################################
+
+import pygame, os, random, copy, settings, player
 from main import *
 
 
 def readLevelsFile(aFileName):
+    """ reads a level text file
+
+    Args:
+        aFileName ([lvl]): [level text file]
+
+    Returns:
+        [levels]: [levels object containing all levels read]
+    """
     assert os.path.exists(aFileName), 'Cannot find the level file: %s' % (aFileName)
     mapFile = open(aFileName, 'r')
-    # Each level must end with a blank line
-    content = mapFile.readlines() + ['\r\n']
+    content = mapFile.readlines() + ['\r\n'] # Each level must end with a blank line
     mapFile.close()
 
     levels = [] # Will contain a list of level objects.
@@ -21,18 +30,15 @@ def readLevelsFile(aFileName):
     for lineNum in range(len(content)):
         # Process each line that was in the level file.
         line = content[lineNum].rstrip('\r\n')
-
         if ';' in line:
             # Ignore the ; lines, they're comments in the level file.
             line = line[:line.find(';')]
-
         if line != '':
             # This line is part of the map.
             mapTextLines.append(line)
         elif line == '' and len(mapTextLines) > 0:
             # A blank line indicates the end of a level's map in the file.
             # Convert the text in mapTextLines into a level object.
-
             # Find the longest row in the map.
             maxWidth = -1
             for i in range(len(mapTextLines)):
@@ -42,41 +48,34 @@ def readLevelsFile(aFileName):
             # ensures the map will be rectangular.
             for i in range(len(mapTextLines)):
                 mapTextLines[i] += ' ' * (maxWidth - len(mapTextLines[i]))
-
             # Convert mapTextLines to a map object.
             for x in range(len(mapTextLines[0])):
                 mapObj.append([])
             for y in range(len(mapTextLines)):
                 for x in range(maxWidth):
                     mapObj[x].append(mapTextLines[y][x])
-
             # Loop through the spaces in the map and find the @, ., and $
             # characters for the starting game state.
-            player1.setStartX(None) # The x and y for the player's starting position
-            player1.setStartY(None)
+            settings.player1.setStartX(None) # The x and y for the player's starting position
+            settings.player1.setStartY(None)
             for x in range(maxWidth):
                 for y in range(len(mapObj[x])):
                     if mapObj[x][y] in ('@', '+'):
                         # '@' is player, '+' is player & goal
-                        player1.setStartX(x)
-                        player1.setStartY(y)
-
+                        settings.player1.setStartX(x)
+                        settings.player1.setStartY(y)
             # Basic level design sanity checks:
-            assert player1.getStartX != None and player1.getStartY != None, 'Level %s (around line %s) in %s is missing a "@" or "+" to mark the start point.' % (levelNum+1, lineNum, aFileName)
-
+            assert settings.player1.getStartX != None and settings.player1.getStartY != None, 'Level %s (around line %s) in %s is missing a "@" or "+" to mark the start point.' % (levelNum+1, lineNum, aFileName)
             # Create game state object
-            gameStateObj = {'player': (player1, player1.getStartY), 
-                            'health': player1.getHealth(),
-                            'oxygen': player1.getOxygen()}
-
+            gameStateObj = {'player': (settings.player1.getStartX(), settings.player1.getStartY()),
+                            'health': settings.player1.getHealth(),
+                            'oxygen': settings.player1.getOxygen()}
             # Create level object
             levelObj = {'width': maxWidth,
                         'height': len(mapObj),
                         'mapObj': mapObj,
                         'startState': gameStateObj}
-
             levels.append(levelObj)
-
             # Reset the variables for reading the next map.
             mapTextLines = []
             mapObj = []
@@ -84,19 +83,21 @@ def readLevelsFile(aFileName):
             levelNum += 1
     return levels
 
-
-# corners made, inside/outside seperated and decorations added to the outside
 def decorateMap(mapObj, startxy):
-    """Makes a copy of the given map object and modifies it.
-        * Walls that are corners are turned into corner pieces.
-        * The outside/inside floor tile distinction is made.
-        * Tree/rock decorations are randomly added to the outside tiles.
-    Returns the decorated map object."""
+    """ Makes a copy of the given map object and modifies it.
+    Walls that are corners are turned into corner pieces.
+    The outside/inside floor tile distinction is made.
+    Tree/rock decorations are randomly added to the outside tiles.
 
-    player1.getStartX, player1.getStartY = startxy # Syntactic sugar
+    Args:
+        mapObj ([mapObj]): [map object]
+        startxy ([startxy]): [start coordinates value including x and y]
 
-    # Copy the map object so we don't modify the original passed
-    mapObjCopy = copy.deepcopy(mapObj)
+    Returns:
+        [map]: [returns the decorated map object.]
+    """
+    settings.player1.getStartX, settings.player1.getStartY = startxy # Syntactic sugar
+    mapObjCopy = copy.deepcopy(mapObj) # Copy the map object so we don't modify the original passed
 
     # Remove the non-wall characters from the map data
     for x in range(len(mapObjCopy)):
@@ -105,7 +106,7 @@ def decorateMap(mapObj, startxy):
                 mapObjCopy[x][y] = ' '
 
     # Flood fill to determine inside/outside floor tiles
-    floodFill(mapObjCopy, player1.getStartX, player1.getStartY, ' ', 'o')
+    floodFill(mapObjCopy, settings.player1.getStartX, settings.player1.getStartY, ' ', 'o')
 
     # Convert the adjoined walls into corner tiles
     for x in range(len(mapObjCopy)):
@@ -117,22 +118,30 @@ def decorateMap(mapObj, startxy):
                    (isWall(mapObjCopy, x-1, y) and isWall(mapObjCopy, x, y-1)):
                     mapObjCopy[x][y] = 'x'
 
-            elif mapObjCopy[x][y] == ' ' and random.randint(0, 99) < outsideDecorationPCT:
-                mapObjCopy[x][y] = random.choice(list(outsideDecoMapping.keys()))
+            elif mapObjCopy[x][y] == ' ' and random.randint(0, 99) < settings.outsideDecorationPCT:
+                mapObjCopy[x][y] = random.choice(list(settings.outsideDecoMapping.keys()))
     return mapObjCopy
 
 
 def floodFill(mapObj, x, y, oldCharacter, newCharacter):
-    """Changes any values matching oldCharacter on the map object to
+    """ Changes any values matching oldCharacter on the map object to
     newCharacter at the (x, y) position, and does the same for the
-    positions to the left, right, down, and up of (x, y), recursively."""
-    # In this game, the flood fill algorithm creates the inside/outside
-    # floor distinction. This is a "recursive" function.
-    # For more info on the Flood Fill algorithm, see:
-    #   http://en.wikipedia.org/wiki/Flood_fill
+    positions to the left, right, down, and up of (x, y), recursively.
+
+    In this game, the flood fill algorithm creates the inside/outside
+    floor distinction. This is a "recursive" function.
+    For more info on the Flood Fill algorithm, see:
+    http://en.wikipedia.org/wiki/Flood_fill
+
+    Args:
+        mapObj ([type]): [description]
+        x ([type]): [description]
+        y ([type]): [description]
+        oldCharacter ([type]): [description]
+        newCharacter ([type]): [description]
+    """
     if mapObj[x][y] == oldCharacter:
         mapObj[x][y] = newCharacter
-
     if x < len(mapObj) - 1 and mapObj[x+1][y] == oldCharacter:
         floodFill(mapObj, x+1, y, oldCharacter, newCharacter) # call right
     if x > 0 and mapObj[x-1][y] == oldCharacter:
@@ -173,33 +182,33 @@ def drawMap(mapObj, gameStateObj):
     # mapSurf will be the single Surface object that the tiles are drawn
     # on, so that it is easy to position the entire map on the displaySurf
     # Surface object. First, the width and height must be calculated.
-    mapSurfWidth = len(mapObj) * tileWidth
-    mapSurfHeight = (len(mapObj[0]) - 1) * tileFloorHeight + tileHeight
+    mapSurfWidth = len(mapObj) * settings.tileWidth
+    mapSurfHeight = (len(mapObj[0]) - 1) * settings.tileFloorHeight + settings.tileHeight
     mapSurf = pygame.Surface((mapSurfWidth, mapSurfHeight))
-    mapSurf.fill(textBGColour) # start with a blank color on the surface.
+    mapSurf.fill(settings.textBGColour) # start with a blank color on the surface.
 
     # Draw the tile sprites onto this surface.
     for x in range(len(mapObj)):
         for y in range(len(mapObj[x])):
-            spaceRect = pygame.Rect((x * tileWidth, y * tileFloorHeight, tileWidth, tileHeight))
-            if mapObj[x][y] in environmentMapping:
-                baseTile = environmentMapping[mapObj[x][y]]
-            elif mapObj[x][y] in outsideDecoMapping:
-                baseTile = environmentMapping[' ']
+            spaceRect = pygame.Rect((x * settings.tileWidth, y * settings.tileFloorHeight, settings.tileWidth, settings.tileHeight))
+            if mapObj[x][y] in settings.environmentMapping:
+                baseTile = settings.environmentMapping[mapObj[x][y]]
+            elif mapObj[x][y] in settings.outsideDecoMapping:
+                baseTile = settings.environmentMapping[' ']
 
             # First draw the base ground/wall tile.
             mapSurf.blit(baseTile, spaceRect)
 
-            if mapObj[x][y] in outsideDecoMapping:
+            if mapObj[x][y] in settings.outsideDecoMapping:
                 # Draw any tree/rock decorations that are on this tile.
-                mapSurf.blit(outsideDecoMapping[mapObj[x][y]], spaceRect)
+                mapSurf.blit(settings.outsideDecoMapping[mapObj[x][y]], spaceRect)
 
             # Last draw the player on the board.
             if (x, y) == gameStateObj['player']:
                 # Note: The value "currentImage" refers to a key in "characterImages" which has the specific player image we want to show.
-                mapSurf.blit(characterImages[currentImage], spaceRect)
+                mapSurf.blit(settings.characterImages[settings.currentImage], spaceRect)
     return mapSurf
-    
+
 
 def runLevel(levels, levelNum):
     # level initialisations
@@ -207,14 +216,13 @@ def runLevel(levels, levelNum):
     mapObj = decorateMap(levelObj['mapObj'], levelObj['startState']['player'])
     gameStateObj = copy.deepcopy(levelObj['startState'])
     mapNeedsRedraw = True # set to True to call drawMap()
-    levelSurf = defaultFont.render('Level %s of %s' % (levelNum + 1, len(levels)), 1, textColour)
+    levelSurf = settings.defaultFont.render('Level %s of %s' % (levelNum + 1, len(levels)), 1, settings.textColour)
     levelRect = levelSurf.get_rect()
     levelRect.bottomleft = (60, 30) # position of level text
-    mapWidth = len(mapObj) * tileWidth
-    mapHeight = (len(mapObj[0]) - 1) * tileFloorHeight + tileHeight
-    Max_Cam_X_Pan = abs(halfWindowHeight - int(mapHeight / 2)) + tileWidth
-    Max_Cam_Y_Pan = abs(halfWindowWidth - int(mapWidth / 2)) + tileHeight
-
+    mapWidth = len(mapObj) * settings.tileWidth
+    mapHeight = (len(mapObj[0]) - 1) * settings.tileFloorHeight + settings.tileHeight
+    Max_Cam_X_Pan = abs(settings.halfWindowHeight - int(mapHeight / 2)) + settings.tileWidth
+    Max_Cam_Y_Pan = abs(settings.halfWindowWidth - int(mapWidth / 2)) + settings.tileHeight
     # Track how much the camera has moved:
     cameraOffsetX = 0
     cameraOffsetY = 0
@@ -223,29 +231,25 @@ def runLevel(levels, levelNum):
     cameraDown = False
     cameraLeft = False
     cameraRight = False
-
     while True: # main game loop
         # Reset these variables:
         playerMoveTo = None
         keyPressed = False
-        
         for event in pygame.event.get(): # event handling loop
             if event.type == QUIT:
                 # Player clicked the "X" at the corner of the window.
                 terminate()
-
             elif event.type == KEYDOWN:
                 # Handle key presses
                 keyPressed = True
                 if event.key == K_LEFT:
-                    playerMoveTo = LEFT
+                    playerMoveTo = settings.LEFT
                 elif event.key == K_RIGHT:
-                    playerMoveTo = RIGHT
+                    playerMoveTo = settings.RIGHT
                 elif event.key == K_UP:
-                    playerMoveTo = UP
+                    playerMoveTo = settings.UP
                 elif event.key == K_DOWN:
-                    playerMoveTo = DOWN
-
+                    playerMoveTo = settings.DOWN
                 # Set the camera move mode.
                 elif event.key == K_a:
                     cameraLeft = True
@@ -255,24 +259,21 @@ def runLevel(levels, levelNum):
                     cameraUp = True
                 elif event.key == K_s:
                     cameraDown = True
-
                 elif event.key == K_n:
                     return 'next'
                 elif event.key == K_b:
                     return 'back'
-
                 elif event.key == K_ESCAPE:
                     terminate() # Esc key quits.
                 elif event.key == K_BACKSPACE:
                     return 'reset' # Reset the level.
                 elif event.key == K_p:
                     # Change the player image to the next one.
-                    currentImage += 1
-                    if currentImage >= len(characterImages):
+                    settings.currentImage += 1
+                    if settings.currentImage >= len(settings.characterImages):
                         # After the last player image, use the first one.
-                        currentImage = 0
+                        settings.currentImage = 0
                     mapNeedsRedraw = True
-
             elif event.type == KEYUP:
                 # Unset the camera move mode.
                 if event.key == K_a:
@@ -283,52 +284,44 @@ def runLevel(levels, levelNum):
                     cameraUp = False
                 elif event.key == K_s:
                     cameraDown = False
-
-        if playerMoveTo != None and not levelIsComplete:
+        if playerMoveTo != None and not settings.levelIsComplete:
             # If the player pushed a key to move, make the move
             # (if possible) and push any stars that are pushable.
-            moved = makeMove(mapObj, gameStateObj, playerMoveTo)
-
+            moved = player.makeMove(mapObj, gameStateObj, playerMoveTo)
             if moved:
                 # the map needs to be redraw if moved
                 mapNeedsRedraw = True
-
-        displaySurf.fill(textBGColour)
-
+        settings.displaySurf.fill(settings.textBGColour)
         if mapNeedsRedraw:
             mapSurf = drawMap(mapObj, gameStateObj)
             mapNeedsRedraw = False
-
         if cameraUp and cameraOffsetY < Max_Cam_X_Pan:
-            cameraOffsetY += cameraMoveSpeed
+            cameraOffsetY += settings.cameraMoveSpeed
         elif cameraDown and cameraOffsetY > -Max_Cam_X_Pan:
-            cameraOffsetY -= cameraMoveSpeed
+            cameraOffsetY -= settings.cameraMoveSpeed
         if cameraLeft and cameraOffsetX < Max_Cam_Y_Pan:
-            cameraOffsetX += cameraMoveSpeed
+            cameraOffsetX += settings.cameraMoveSpeed
         elif cameraRight and cameraOffsetX > -Max_Cam_Y_Pan:
-            cameraOffsetX -= cameraMoveSpeed
-
+            cameraOffsetX -= settings.cameraMoveSpeed
         # Adjust mapSurf's Rect object based on the camera offset.
         mapSurfRect = mapSurf.get_rect()
-        mapSurfRect.center = (halfWindowWidth + cameraOffsetX, halfWindowHeight + cameraOffsetY)
-
+        mapSurfRect.center = (settings.halfWindowWidth + cameraOffsetX, settings.halfWindowHeight + cameraOffsetY)
         # draw mapSurf to the display Surf Surface object so the level is displayed in the background
-        displaySurf.blit(mapSurf, mapSurfRect)
+        settings.displaySurf.blit(mapSurf, mapSurfRect)
         # draw levelSurf to display the level indicator
-        displaySurf.blit(levelSurf, levelRect)
+        settings.displaySurf.blit(levelSurf, levelRect)
         # draw the player health and oxygen bars
-        drawHealthBar(player1.getHealth)
-        drawOxygenBar(player1.getOxygen)
-
-        if levelIsComplete:
+        #print("players health is " + str(settings.player1.getHealth()))
+        drawHealthBar(settings.player1.getHealth())
+        #print("players oxygen is " + str(settings.player1.getOxygen()))
+        drawOxygenBar(settings.player1.getOxygen())
+        if settings.levelIsComplete:
             # is solved, show the "Solved!" image until the player
             # has pressed a key.
-            solvedRect = environmentImages['sand'].get_rect()
-            solvedRect.center = (halfWindowWidth, halfWindowHeight)
-            displaySurf.blit(environmentImages['sand'], solvedRect)
-
+            solvedRect = settings.environmentImages['sand'].get_rect()
+            solvedRect.center = (settings.halfWindowWidth, settings.halfWindowHeight)
+            displaySurf.blit(settings.environmentImages['sand'], solvedRect)
             if keyPressed:
                 return 'solved'
-
         pygame.display.update() # draw displaySurf to the screen.
-        FPSClock.tick()
+        settings.FPSClock.tick()

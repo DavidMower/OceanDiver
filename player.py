@@ -1,101 +1,149 @@
-# player.py
-# Scuba Diver
-# by David Mower (davidmower84@gmail.com)
-# Released under GNU General Public License v3.0
+#####################################################
+##                    player.py                    ##
+##                   Scuba Diver                   ##
+##     by David Mower (davidmower84@gmail.com)     ##
+##  Released under GNU General Public License v3.0 ##
+#####################################################
+
 from level import *
 from settings import *
 
-# Player class for the main character
+
 class Player:
-    # class contructer
-    # a player object must contain a name, startx, starty, health and oxygen attributes
+    """ Player class for the main character.
+
+    Returns:
+        [type]: [description]
+    """
+
     def __init__(self, aName, aStartX, aStartY, aHealth, aOxygen):
+        """ Class contructer
+        A player object must contain a name, startx, starty, health and oxygen attributes.
+
+        Args:
+            aName ([string]): [player character name]
+            aStartX ([int]): [coordinate value for starting position from left]
+            aStartY ([int]): [coordinate value for starting position from top]
+            aHealth ([int]): [players starting health]
+            aOxygen ([int]): [players starting oxygen]
+        """
         self.name = aName
         self.startX = aStartX
         self.startY = aStartY
         self.health = aHealth
         self.oxygen = aOxygen
 
-    # getter method for player's name
-    # gets the player's current name value and returns as an string
     def getName(self):
+        """ getter method for player's name
+
+        Returns:
+            [string]: [player's current name]
+        """
         return self.name
 
-    # setter method for player's name
-    # sets the player's name value to argument value (must be a string)
     def setName(self, aName):
-       self.name = aName
+        """ setter method for player's name
 
-    # getter method for player's starting X coordinate
-    # gets the player's current startX value and returns as an integer
+        Args:
+            aName ([string]): [player's new name value]
+        """
+        self.name = aName
+
     def getStartX(self):
+        """ Getter method for player's starting X coordinate
+
+        Returns:
+            [int]: [player's current startX value]
+        """
         return self.startX
 
-    # setter method for player's starting X coordinate
-    # sets the player's startX value to argument value (must be an integer)
     def setStartX(self, aStartX):
-       self.startX = aStartX
+        """ Setter method for player's starting X coordinate
 
-    # getter method for player's starting Y coordinate
-    # gets the player's current startY value and returns as an integer
+        Args:
+            aStartX ([int]): [player's new startX value]
+        """
+        self.startX = aStartX
+
     def getStartY(self):
+        """[Getter method for player's starting Y coordinate]
+
+        Returns:
+            [int]: [player's current startY value]
+        """
         return self.startY
 
-    # setter method for player's starting Y coordinate
-    # sets the player's startY value to argument value (must be an integer)
     def setStartY(self, aStartY):
-       self.startY = aStartY
+        """[Setter method for player's starting Y coordinate]
 
-    # getter method for player's health
-    # gets the player's current health value and returns as an integer
+        Args:
+            aStartY ([type]): [description]
+        """
+        self.startY = aStartY
+
     def getHealth(self):
+        """ Getter method for player's health
+
+        Returns:
+            [int]: [player's current health value]
+        """
         return self.health
 
-    # setter method for player's health
-    # sets the player's health value to argument value (must be an integer)
     def setHealth(self, aHealth):
-       self.health = aHealth
+        """ Setter method for player's health
 
-    # getter method for player's oxygen
-    # gets the player's current oxygen value and returns as an integer
+        Args:
+            aHealth ([type]): [player's new health value]
+        """
+        self.health = aHealth
+
     def getOxygen(self):
+        """[Getter method for player's oxygen]
+
+        Returns:
+            [int]: [player's current oxygen value]
+        """
         return self.oxygen
 
-    # setter method for player's oxygen
-    # sets the player's oxygen value to argument value (must be an integer)
     def setOxygen(self, aOxygen):
-       self.oxygen = aOxygen
+        """Setter method for player's oxygen
+
+        Args:
+            aOxygen ([int]): [player's new oxygen value]
+        """
+        self.oxygen = aOxygen
 
 
 # move player if possible
 def makeMove(mapObj, gameStateObj, playerMoveTo):
-    """Given a map and game state object, see if it is possible for the
-    player to move. If it is, then change the player's position. If not, do nothing.
-    Returns True if the player moved, otherwise False."""
+    """ Check if it is possible for the player to move.
+    If yes, then change the player's position. If not, do nothing.
 
-    # Make sure the player can move in the direction they want.
+    Args:
+        mapObj ([mapObj]): [map object]
+        gameStateObj ([gameStateObj]): [game state object]
+        playerMoveTo ([type]): [description]
+
+    Returns:
+        [boolean]: [Returns True if the player moved, otherwise False.]
+    """
     playerx, playery = gameStateObj['player']
-
-    # The code for handling each of the directions
-    # simplified by using the xOffset and yOffset variables.
-    if playerMoveTo == UP:
+    # The code for handling each of the directions. Simplified by using the xOffset and yOffset variables.
+    if playerMoveTo == settings.UP:
         xOffset = 0
         yOffset = -1
-    elif playerMoveTo == RIGHT:
+    elif playerMoveTo == settings.RIGHT:
         xOffset = 1
         yOffset = 0
-    elif playerMoveTo == DOWN:
+    elif playerMoveTo == settings.DOWN:
         xOffset = 0
         yOffset = 1
-    elif playerMoveTo == LEFT:
+    elif playerMoveTo == settings.LEFT:
         xOffset = -1
         yOffset = 0
-
     # Check if player is trying to move into a wall block
-    if isWall(mapObj, playerx + xOffset, playery + yOffset):
-        # if it's a wall, don't allow the move
+    if isWall(mapObj, playerx + xOffset, playery + yOffset): # if it's a wall, don't allow the move
         return False
     else:
-        # if not a wall, allow the move
-        gameStateObj['player'] = (playerx + xOffset, playery + yOffset)
+        gameStateObj['player'] = (playerx + xOffset, playery + yOffset) # If not a wall, allow the move
         return True
