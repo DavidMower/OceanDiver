@@ -31,7 +31,7 @@
 - [Sounds and Music](#soundmusic)
 - [Usage](#usage)
 - [Built Using](#built_using)
-- [TODO](../TODO.md)
+- [TODO](#todo)
 - [Contributing](../CONTRIBUTING.md)
 - [Authors](#authors)
 - [Acknowledgments](#acknowledgement)
@@ -89,6 +89,11 @@ The diver has health and oxygen bars, that if either reaches zero, the diver wil
 The diver has gold coins, treasure chests, ancient artefacts values which increase with every discovery. There’re also several plastic objects removed from the ocean.
 
 ## 🧐 Level Design <a name = "leveldesign"></a>
+
+<p align="center">
+  <a href="" rel="noopener">
+ <img width=458px height=256px src="https://i.imgur.com/hIykKIH.jpg" alt="World map of level locations"></a>
+</p>
 
 Themes
 Coastal Dive
@@ -272,6 +277,10 @@ Add additional notes about how to deploy this on a live system.
 - [VueJs](https://vuejs.org/) - Web Framework
 - [NodeJs](https://nodejs.org/en/) - Server Environment
 
+## ✍️ TODO <a name = "todo"></a>
+1.	Enchancement - Animation at the start/end of each level to show the diver either launching from the boat or the beach.
+2.	Enchancement - Archways that the diver swims underneath in the Cave Dive level.
+
 ## ✍️ Authors <a name = "authors"></a>
 
 - [@davidmower](https://github.com/DavidMower) - Game design and developer
@@ -279,18 +288,4 @@ Add additional notes about how to deploy this on a live system.
 
 ## 🎉 Acknowledgements <a name = "acknowledgement"></a>
 
-- Hat tip to anyone whose code was used
-- Inspiration
-- References
-
-
-
-
-
-
-
-
-
-Enhancement Requests / Known Bugs
-1.	Enchancement - Animation at the start/end of each level to show the diver either launching from the boat or the beach.
-2.	Enchancement - Archways that the diver swims underneath in the Cave Dive level.
+- All images in this documentation are hosted here https://davidmower.imgur.com/all/?third_party=1.
