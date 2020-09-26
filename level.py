@@ -238,67 +238,45 @@ def runLevel(levels, levelNum):
     cameraRight = False
     while True: # main game loop
         playerMoveTo = None # ensure this is always reset
-        #keepGoing = False # ensure this is always reset
         for event in pygame.event.get(): # event handling loop
-            #keystate = pygame.key.get_pressed()
             keyPressed  = False
             cameraLeft  = False
             cameraRight = False
             cameraUp    = False
             cameraDown  = False
-            if event.type == QUIT:
-                # Player clicked the "X" at the corner of the window.
+            if event.type == QUIT: # Player clicked the "X" at the corner of the window.
                 terminate()
             elif event.type == KEYDOWN:
-                #keepGoing = True # a key is currently being pressed
-                #if keystate[K_LEFT]:
                 if event.key == K_LEFT:
                     keyPressed = True
                     playerMoveTo = settings.LEFT
                     cameraLeft  = True
                     drawCharacterNextImage()
-                #elif keystate[K_RIGHT]:
                 elif event.key == K_RIGHT:
                     keyPressed = True
                     playerMoveTo = settings.RIGHT
                     cameraRight  = True
                     drawCharacterNextImage()
-                #elif keystate[K_UP]:
                 elif event.key == K_UP:
                     keyPressed = True
                     playerMoveTo = settings.UP
                     cameraUp  = True
                     drawCharacterNextImage()
-                #elif keystate[K_DOWN]:
                 elif event.key == K_DOWN:
                     keyPressed = True
                     playerMoveTo = settings.DOWN
                     cameraDown  = True
                     drawCharacterNextImage()
-                #elif keystate[K_n]:
                 elif event.key == K_n:
                     return 'next'
-                #elif keystate[K_b]:
                 elif event.key == K_b:
                     return 'back'
-                #elif keystate[K_ESCAPE]:
-                elif event.key == K_ESCAPE:
-                    terminate() # Esc key quits.
-                #elif keystate[K_BACKSPACE]:
-                elif event.key == K_BACKSPACE:
-                    return 'reset' # Reset the level.
+                elif event.key == K_ESCAPE: # Esc key quits
+                    terminate()
+                elif event.key == K_BACKSPACE: # Reset the level
+                    return 'reset'
                 else: # to cover if no key is now being pressed
-                    #keepGoing   = False
                     keyPressed  = False
-                # camera movement
-                #if event.key == K_a:
-                #    cameraLeft  = True
-                #else: # to cover if no key is now being pressed
-                #    keyPressed  = False
-                #   cameraLeft  = False
-                #    cameraRight = False
-                #    cameraUp    = False
-                #    cameraDown  = False
             elif event.type == KEYUP:
                 if event.key == K_LEFT:
                     keyPressed  = False
@@ -312,7 +290,6 @@ def runLevel(levels, levelNum):
                 elif event.key == K_DOWN:
                     keyPressed  = False
                     cameraDown  = False
-
         if playerMoveTo != None and not settings.levelIsComplete:
             # If the player pushed a key to move, make the move
             # (if possible) and push any objects that are pushable.
@@ -323,6 +300,7 @@ def runLevel(levels, levelNum):
         if mapNeedsRedraw:
             mapSurf = drawMap(mapObj, gameStateObj)
             mapNeedsRedraw = False
+        playerx, playery = gameStateObj['player']
         if cameraUp and cameraOffsetY < Max_Cam_X_Pan:
             cameraOffsetY += settings.cameraMoveSpeed
         elif cameraDown and cameraOffsetY > -Max_Cam_X_Pan:

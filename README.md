@@ -305,6 +305,7 @@ Add additional notes about how to deploy this on a live system.
 - Requirement - Gaming Pad as an alternative to navigate the menu
 - Requirement - Mouse as another alternative to navigate the menu
 - Requirement - Gaming Pad as an alternative to control the Scuba Divers movement.
+- Requirement - Check if player is trying out off the camera view
 - Enchancement - Animation at the start/end of each level to show the diver either launching from the boat or the beach.
 - Enchancement - Archways that the diver swims underneath in the Cave Dive level.
 
