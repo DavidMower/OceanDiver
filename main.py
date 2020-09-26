@@ -77,7 +77,7 @@ def main():
     pygame.mixer.music.load('Sounds/MainMenu.flac')
     pygame.mixer.music.play(-1, 0.0)
     def menu_new_game():
-        """ New game option in main menu
+        """ Start new game option in main menu
         """
         level_menu.mainloop(settings.displaySurf)
     def menu_load_game():
