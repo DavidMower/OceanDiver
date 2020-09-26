@@ -34,20 +34,20 @@ colourBrightBlue = (  0, 170, 255)
 textBGColour     = colourBrightBlue
 textColour       = colourWhite
 # init player character
-UP = 'up'
-DOWN = 'down'
-LEFT = 'left'
-RIGHT = 'right'
+UP      = 'up'
+DOWN    = 'down'
+LEFT    = 'left'
+RIGHT   = 'right'
 player1 = Player("maleCharacter"  , 300, 300, 75, 75) # create player1 using Player class (name, startx, starty, health, oxygen)
 player2 = Player("femaleCharacter", 300, 300, 75, 75) # create player1 using Player class (name, startx, starty, health, oxygen)
 # init level
 outsideDecorationPCT = 20 # The percentage of outdoor tiles that have additional decoration on them, such as a tree or rock.
-tileWidth       = 50 # The total width and height of each tile in pixels.
-tileHeight      = 85
-tileHeightChar  = 300
-tileFloorHeight = 40
-cameraMoveSpeed = 5 # how many pixels per frame the camera moves
-levelIsComplete = False
+tileWidth            = 50 # The total width and height of each tile in pixels.
+tileHeight           = 85
+tileHeightChar       = 300
+tileFloorHeight      = 40
+cameraMoveSpeed      = 40 # how many pixels per frame the camera moves
+levelIsComplete      = False
 # Read in the levels from the text file. See the readLevelsFile() for details on the format of this file
 levels = level.readLevelsFile('Levels/CoastalDive.lvl')
 currentLevelIndex = 0
