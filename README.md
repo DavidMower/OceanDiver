@@ -244,7 +244,8 @@ Level Sounds
 ## ⛏️ Prerequisites
 
 Python 2.7.18 64-bit
-PyGame 1.9.6
+Pygame 1.9.6
+Pygame_menu 3.1.4
 
 ```
 Give examples
@@ -321,3 +322,4 @@ Add additional notes about how to deploy this on a live system.
 - Map of world map to show levels location is based on https://free-images.com/display/map_world.html (marked as Public Domain)
 - Scuba Diver and Sea Turtle sprites created by Fellowship Of the Game https://opengameart.org/users/fellowship-of-the-game under CC licensing
 - Water texture sprite created by Aswin909 https://opengameart.org/content/water under CC licensing
+- Underwater Background image created by Ciera Elizabeth Hoover [SugarMoonWitch] http://sugarmoonwitch.com/ https://opengameart.org/content/underwater-bg under CC licensing 

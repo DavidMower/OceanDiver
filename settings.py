@@ -5,13 +5,14 @@
 ##  Released under GNU General Public License v3.0 ##
 #####################################################
 
-import pygame, level
+import pygame, pygame_menu, os
+import level
 from player import *
 
-# global variable declarations
 global environmentImages, environmentMapping, outsideDecoMapping, characterImages, currentImage, FPSClock, displaySurf, FPS
 global windowWidth, windowHeight, halfWindowWidth, halfWindowHeight, defaultFontSize, defaultFont, outsideDecorationPCT
 global tileWidth, tileHeight, tileFloorHeight, cameraMoveSpeed, displaySurf
+
 # init screen
 pygame.init()
 FPS = 60 # frames per second to update the screen
@@ -92,3 +93,8 @@ characterImages = [ environmentImages['diver_male_01'],
                     environmentImages['diver_male_09'],
                     environmentImages['diver_male_10']]
 currentImage = 0 # currentImage is the index of the player's current player image.
+# menu images
+full_path = os.path.realpath(__file__)
+path, filename = os.path.split(full_path)
+menuUnderwaterBGBlank = os.path.join(os.path.dirname(full_path), 'Images', 'Menu', 'UnderwaterBGBlank.png')
+menuOceanDiver = os.path.join(os.path.dirname(full_path), 'Images', 'Menu', 'oceandiver.jpg')

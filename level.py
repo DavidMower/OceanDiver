@@ -5,7 +5,8 @@
 ##  Released under GNU General Public License v3.0 ##
 #####################################################
 
-import pygame, os, random, copy, time, settings, player
+import pygame, os, random, copy, time
+import settings, player
 from main import *
 
 
