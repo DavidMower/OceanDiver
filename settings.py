@@ -15,9 +15,9 @@ global tileWidth, tileHeight, tileFloorHeight, cameraMoveSpeed, displaySurf
 # init screen
 pygame.init()
 FPS = 60 # frames per second to update the screen
-windowWidth = 1200 # width of the display surface in pixels
-windowHeight = 800 # height of the display surface in pixels
-halfWindowWidth = int(windowWidth / 2)
+windowWidth      = 1200 # width of the display surface in pixels
+windowHeight     = 800 # height of the display surface in pixels
+halfWindowWidth  = int(windowWidth / 2)
 halfWindowHeight = int(windowHeight / 2)
 FPSClock = pygame.time.Clock()
 displaySurf = pygame.display.set_mode((windowWidth, windowHeight))

@@ -244,25 +244,20 @@ def runLevel(levels, levelNum):
             if event.type == QUIT:
                 # Player clicked the "X" at the corner of the window.
                 terminate()
-            elif event.type == KEYDOWN:
-                # Handle key presses
+            elif event.type == pygame.KEYDOWN: # Handle key presses
                 keyPressed = True
                 if event.key == K_LEFT:
                     playerMoveTo = settings.LEFT
                     drawCharacterNextImage()
-                    #cameraLeft = True
                 elif event.key == K_RIGHT:
                     playerMoveTo = settings.RIGHT
                     drawCharacterNextImage()
-                    #cameraRight = True
                 elif event.key == K_UP:
                     playerMoveTo = settings.UP
                     drawCharacterNextImage()
-                    #cameraUp = True
                 elif event.key == K_DOWN:
                     playerMoveTo = settings.DOWN
                     drawCharacterNextImage()
-                    #cameraDown = True
                 # Set the camera move mode.
                 elif event.key == K_a:
                     cameraLeft = True
@@ -280,7 +275,16 @@ def runLevel(levels, levelNum):
                     terminate() # Esc key quits.
                 elif event.key == K_BACKSPACE:
                     return 'reset' # Reset the level.
-            elif event.type == KEYUP:
+            elif event.type == KEYUP: # handle key releases as well
+                keyPressed = False
+                if event.key == K_LEFT:
+                    playerMoveTo == None
+                elif event.key == K_RIGHT:
+                    playerMoveTo == None
+                elif event.key == K_UP:
+                    playerMoveTo == None
+                elif event.key == K_DOWN:
+                    playerMoveTo == None
                 # Unset the camera move mode.
                 if event.key == K_a:
                     cameraLeft = False
@@ -292,7 +296,7 @@ def runLevel(levels, levelNum):
                     cameraDown = False
         if playerMoveTo != None and not settings.levelIsComplete:
             # If the player pushed a key to move, make the move
-            # (if possible) and push any stars that are pushable.
+            # (if possible) and push any objects that are pushable.
             moved = player.makeMove(mapObj, gameStateObj, playerMoveTo)
             if moved:
                 # the map needs to be redraw if moved
