@@ -1,6 +1,6 @@
 <p align="center">
   <a href="" rel="noopener">
- <img width=200px height=200px src="https://i.imgur.com/lWQkOUo.jpg" alt="Ocean Diver project logo"></a>
+ <img width=266px height=78px src="https://i.imgur.com/lWQkOUo.jpg" alt="Ocean Diver project logo"></a>
 </p>
 
 <h3 align="center">OceanDiver</h3>
@@ -8,8 +8,8 @@
 <div align="center">
 
 [![Status](https://img.shields.io/badge/status-active-success.svg)]()
-[![GitHub Issues](https://img.shields.io/github/issues/davidmower/The-Documentation-Compendium.svg)](https://github.com/davidmower/The-Documentation-Compendium/issues)
-[![GitHub Pull Requests](https://img.shields.io/github/issues-pr/davidmower/The-Documentation-Compendium.svg)](https://github.com/davidmower/The-Documentation-Compendium/pulls)
+[![GitHub Issues](https://img.shields.io/github/issues/davidmower/OceanDiver.svg)](https://github.com/davidmower/OceanDiver/issues)
+[![GitHub Pull Requests](https://img.shields.io/github/issues-pr/davidmower/OceanDiver.svg)](https://github.com/davidmower/OceanDiver/pulls)
 [![License](https://img.shields.io/badge/license-GNU-blue.svg)](/LICENSE)
 
 </div>
