@@ -8,8 +8,8 @@
 <div align="center">
 
 [![Status](https://img.shields.io/badge/status-active-success.svg)]()
-[![GitHub Issues](https://img.shields.io/github/issues/davidmower/OceanDiver.svg)](https://github.com/davidmower/OceanDiver/issues)
-[![GitHub Pull Requests](https://img.shields.io/github/issues-pr/davidmower/OceanDiver.svg)](https://github.com/davidmower/OceanDiver/pulls)
+[![GitHub Issues](https://img.shields.io/github/issues/DavidMower/OceanDiver.svg)](https://github.com/DavidMower/OceanDiver/issues)
+[![GitHub Pull Requests](https://img.shields.io/github/issues-pr/DavidMower/OceanDiver.svg)](https://github.com/DavidMower/OceanDiver/pulls)
 [![License](https://img.shields.io/badge/license-GNU-blue.svg)](/LICENSE)
 
 </div>
@@ -274,7 +274,8 @@ Add additional notes about how to deploy this on a live system.
 
 ## ✍️ Authors <a name = "authors"></a>
 
-- [@davidmower](https://github.com/DavidMower) - Sole developer
+- [@davidmower](https://github.com/DavidMower) - Game design and developer
+- [@donnamower](https://github.com/DonnaMower) - Game design contributor
 
 ## 🎉 Acknowledgements <a name = "acknowledgement"></a>
 
