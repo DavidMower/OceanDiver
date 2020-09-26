@@ -1,8 +1,41 @@
-# OceanDiver
-2D Platform Game - Ocean Diver
+<p align="center">
+  <a href="" rel="noopener">
+ <img width=200px height=200px src="https://i.imgur.com/6wj0hh6.jpg" alt="Project logo"></a>
+</p>
 
+<h3 align="center">OceanDiver</h3>
 
-Game Design
+<div align="center">
+
+[![Status](https://img.shields.io/badge/status-active-success.svg)]()
+[![GitHub Issues](https://img.shields.io/github/issues/kylelobo/The-Documentation-Compendium.svg)](https://github.com/kylelobo/The-Documentation-Compendium/issues)
+[![GitHub Pull Requests](https://img.shields.io/github/issues-pr/kylelobo/The-Documentation-Compendium.svg)](https://github.com/kylelobo/The-Documentation-Compendium/pulls)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](/LICENSE)
+
+</div>
+
+---
+
+<p align="center"> 2D Platform Game developed using PyGame in Python.
+    <br> 
+</p>
+
+## 📝 Table of Contents
+
+- [Game Design](#gamedesign)
+- [Technical](#technical)
+- [Level Design](#leveldesign)
+- [Game Flow](#gameflow)
+- [Graphics](#graphics)
+- [Asset List](#assetlist)
+- [Usage](#usage)
+- [Built Using](#built_using)
+- [TODO](../TODO.md)
+- [Contributing](../CONTRIBUTING.md)
+- [Authors](#authors)
+- [Acknowledgments](#acknowledgement)
+
+## 🧐 Game Design <a name = "gamedesign"></a>
 
 Summary
 The main character is a scuba diver who wishes to search the oceans to discover and catalogue different species of aquatic life from around the world. There’re also hidden treasures to find and ocean clean-up tasks to complete.
@@ -21,8 +54,7 @@ The player can complete additional tasks such as collecting plastic garbage to c
 Demo
 The demo of the game will show the diver exploring part of the Coastal Dive level and some of the fish the game will have to offer.
 
-
-Technical
+## 🏁 Technical <a name = "technical"></a>
 
 Platform
 Scuba Diver will be a cross-platform game supporting Microsoft Windows, Macintosh computers and Linux systems. The client’s computer would need Python installed to launch this game.
@@ -55,8 +87,7 @@ The diver has a movement speed, ranging from stopped (not moving) to swimming at
 The diver has health and oxygen bars, that if either reaches zero, the diver will have to start the level again. Health of the player can be lowered by certain aquatic life or objects. The diver shows damage if health is below 100%.
 The diver has gold coins, treasure chests, ancient artefacts values which increase with every discovery. There’re also several plastic objects removed from the ocean.
 
-
-Level Design
+## 🏁 Level Design <a name = "leveldesign"></a>
 
 Themes
 Coastal Dive
@@ -99,16 +130,15 @@ Every level contains:
 •	Hazards
 •	Entry / exit point are the same position
 
+## 🏁 Game Flow <a name = "gameflow"></a>
 
-Game Flow
 The user launches the game. The first screen will be the main menu. In the main menu there is a set of options including Start New Game, options and quit for example. Once a game has been started, it can be paused at any time and the main menu will be displayed. The level selector will be displayed first, showing a map where different levels can be selected (in any order of completion).
 Each level will have unique designs along with different underwater life selected specifically for that area. These will include freshwater for River or Lake dives and marine life so ocean dives such as reef or coastal dives. Some levels will include more dangers, such as wrecks and larger aquatic life such as sharks. The player will have a diver’s log when you can log each piece of wildlife or object discovered and keep track by viewing this log at any time.
 Each level will have varying amounts of plastic garbage which can be cleared. Hidden Easter eggs will be artefacts hidden within the sand to be discovered. This won’t be visible to the player, and the sand will have to be searched manually if they wish to discover the Easter eggs.
 Once you start a new level, you will see the diver either next to the dive boast or at the coast where they entered the ocean. The diver can the decent to begin their dive. You control the diver, trying to avoid different harmful objects or creatures to discover the fish they wish to document. The game will indicate when danger appears by presenting a warning sign whenever a hazard or potentially dangerous creature is near the diver. If the player gets hit or attacked then the diver’s health will drop and if the players health is depleted, the player must restart the level. The player can explore all the ocean but is trying to leave the edge of the map, an indicator will pop up to tell the diver they are going too far from the boat/coast.
 The player will have an oxygen level which depletes over time. The oxygen level can be restored by returning to the dive boat or beach periodically to replenish. If the oxygen level reaches zero, then the diver will die, and the level will restart.
 
-
-Graphics
+## 🏁 Graphics <a name = "graphics"></a>
 
 Style Attributes
 Characters and environments are made up of simple 2D shapes. Each level will have a different feel in terms of the number of colours and lighting.
@@ -119,8 +149,7 @@ Simple 2D shapes which can be repeated often without requiring lots of processin
 
 Darker colour scheme to signify the level increased amount of dangers.
 
-
-Asset List
+## 🏁 Asset List <a name = "assetlist"></a>
 
 2D Sprites
 
@@ -180,6 +209,85 @@ Hazard Sounds
 Level Sounds
 •	Boat engine
 •	Waves crashing
+
+### Prerequisites
+
+Python 2.7.18 64-bit
+PyGame 1.9.6
+
+```
+Give examples
+```
+
+### Installing
+
+A step by step series of examples that tell you how to get a development env running.
+
+Say what the step will be
+
+```
+Give the example
+```
+
+And repeat
+
+```
+until finished
+```
+
+End with an example of getting some data out of the system or using it for a little demo.
+
+## 🔧 Running the tests <a name = "tests"></a>
+
+Explain how to run the automated tests for this system.
+
+### Break down into end to end tests
+
+Explain what these tests test and why
+
+```
+Give an example
+```
+
+### And coding style tests
+
+Explain what these tests test and why
+
+```
+Give an example
+```
+
+## 🎈 Usage <a name="usage"></a>
+
+Add notes about how to use the system.
+
+## 🚀 Deployment <a name = "deployment"></a>
+
+Add additional notes about how to deploy this on a live system.
+
+## ⛏️ Built Using <a name = "built_using"></a>
+
+- [MongoDB](https://www.mongodb.com/) - Database
+- [Express](https://expressjs.com/) - Server Framework
+- [VueJs](https://vuejs.org/) - Web Framework
+- [NodeJs](https://nodejs.org/en/) - Server Environment
+
+## ✍️ Authors <a name = "authors"></a>
+
+- [@davidmower](https://github.com/DavidMower) - Sole developer
+
+## 🎉 Acknowledgements <a name = "acknowledgement"></a>
+
+- Hat tip to anyone whose code was used
+- Inspiration
+- References
+
+
+
+
+
+
+
 
 
 Enhancement Requests / Known Bugs
