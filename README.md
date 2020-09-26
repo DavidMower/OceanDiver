@@ -1,6 +1,6 @@
 <p align="center">
   <a href="" rel="noopener">
- <img width=200px height=200px src="https://i.imgur.com/6wj0hh6.jpg" alt="Project logo"></a>
+ <img width=200px height=200px src="https://i.imgur.com/lWQkOUo.jpg" alt="Ocean Diver project logo"></a>
 </p>
 
 <h3 align="center">OceanDiver</h3>
@@ -8,9 +8,9 @@
 <div align="center">
 
 [![Status](https://img.shields.io/badge/status-active-success.svg)]()
-[![GitHub Issues](https://img.shields.io/github/issues/kylelobo/The-Documentation-Compendium.svg)](https://github.com/kylelobo/The-Documentation-Compendium/issues)
-[![GitHub Pull Requests](https://img.shields.io/github/issues-pr/kylelobo/The-Documentation-Compendium.svg)](https://github.com/kylelobo/The-Documentation-Compendium/pulls)
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](/LICENSE)
+[![GitHub Issues](https://img.shields.io/github/issues/davidmower/The-Documentation-Compendium.svg)](https://github.com/davidmower/The-Documentation-Compendium/issues)
+[![GitHub Pull Requests](https://img.shields.io/github/issues-pr/davidmower/The-Documentation-Compendium.svg)](https://github.com/davidmower/The-Documentation-Compendium/pulls)
+[![License](https://img.shields.io/badge/license-GNU-blue.svg)](/LICENSE)
 
 </div>
 
@@ -28,6 +28,7 @@
 - [Game Flow](#gameflow)
 - [Graphics](#graphics)
 - [Asset List](#assetlist)
+- [Sounds and Music](#soundmusic)
 - [Usage](#usage)
 - [Built Using](#built_using)
 - [TODO](../TODO.md)
@@ -54,7 +55,7 @@ The player can complete additional tasks such as collecting plastic garbage to c
 Demo
 The demo of the game will show the diver exploring part of the Coastal Dive level and some of the fish the game will have to offer.
 
-## 🏁 Technical <a name = "technical"></a>
+## 🧐 Technical <a name = "technical"></a>
 
 Platform
 Scuba Diver will be a cross-platform game supporting Microsoft Windows, Macintosh computers and Linux systems. The client’s computer would need Python installed to launch this game.
@@ -87,7 +88,7 @@ The diver has a movement speed, ranging from stopped (not moving) to swimming at
 The diver has health and oxygen bars, that if either reaches zero, the diver will have to start the level again. Health of the player can be lowered by certain aquatic life or objects. The diver shows damage if health is below 100%.
 The diver has gold coins, treasure chests, ancient artefacts values which increase with every discovery. There’re also several plastic objects removed from the ocean.
 
-## 🏁 Level Design <a name = "leveldesign"></a>
+## 🧐 Level Design <a name = "leveldesign"></a>
 
 Themes
 Coastal Dive
@@ -130,7 +131,7 @@ Every level contains:
 •	Hazards
 •	Entry / exit point are the same position
 
-## 🏁 Game Flow <a name = "gameflow"></a>
+## 🧐 Game Flow <a name = "gameflow"></a>
 
 The user launches the game. The first screen will be the main menu. In the main menu there is a set of options including Start New Game, options and quit for example. Once a game has been started, it can be paused at any time and the main menu will be displayed. The level selector will be displayed first, showing a map where different levels can be selected (in any order of completion).
 Each level will have unique designs along with different underwater life selected specifically for that area. These will include freshwater for River or Lake dives and marine life so ocean dives such as reef or coastal dives. Some levels will include more dangers, such as wrecks and larger aquatic life such as sharks. The player will have a diver’s log when you can log each piece of wildlife or object discovered and keep track by viewing this log at any time.
@@ -138,7 +139,7 @@ Each level will have varying amounts of plastic garbage which can be cleared. Hi
 Once you start a new level, you will see the diver either next to the dive boast or at the coast where they entered the ocean. The diver can the decent to begin their dive. You control the diver, trying to avoid different harmful objects or creatures to discover the fish they wish to document. The game will indicate when danger appears by presenting a warning sign whenever a hazard or potentially dangerous creature is near the diver. If the player gets hit or attacked then the diver’s health will drop and if the players health is depleted, the player must restart the level. The player can explore all the ocean but is trying to leave the edge of the map, an indicator will pop up to tell the diver they are going too far from the boat/coast.
 The player will have an oxygen level which depletes over time. The oxygen level can be restored by returning to the dive boat or beach periodically to replenish. If the oxygen level reaches zero, then the diver will die, and the level will restart.
 
-## 🏁 Graphics <a name = "graphics"></a>
+## 🧐 Graphics <a name = "graphics"></a>
 
 Style Attributes
 Characters and environments are made up of simple 2D shapes. Each level will have a different feel in terms of the number of colours and lighting.
@@ -149,7 +150,7 @@ Simple 2D shapes which can be repeated often without requiring lots of processin
 
 Darker colour scheme to signify the level increased amount of dangers.
 
-## 🏁 Asset List <a name = "assetlist"></a>
+## 🧐 Asset List <a name = "assetlist"></a>
 
 2D Sprites
 
@@ -181,8 +182,7 @@ Collectibles
 •	Pearls
 •	Plastic garbage
 
-
-Sound / Music
+## 🧐 Sounds and Music <a name = "soundmusic"></a>
 
 Style Attributes
 •	Coastal Dive
@@ -210,7 +210,7 @@ Level Sounds
 •	Boat engine
 •	Waves crashing
 
-### Prerequisites
+## ⛏️ Prerequisites
 
 Python 2.7.18 64-bit
 PyGame 1.9.6
@@ -219,7 +219,7 @@ PyGame 1.9.6
 Give examples
 ```
 
-### Installing
+## ⛏️ Installing
 
 A step by step series of examples that tell you how to get a development env running.
 
@@ -241,7 +241,7 @@ End with an example of getting some data out of the system or using it for a lit
 
 Explain how to run the automated tests for this system.
 
-### Break down into end to end tests
+## 🔧Break down into end to end tests
 
 Explain what these tests test and why
 
@@ -249,7 +249,7 @@ Explain what these tests test and why
 Give an example
 ```
 
-### And coding style tests
+## 🔧And coding style tests
 
 Explain what these tests test and why
 
