@@ -5,7 +5,7 @@
 ##  Released under GNU General Public License v3.0 ##
 #####################################################
 
-import pygame, os, random, copy, settings, player
+import pygame, os, random, copy, time, settings, player
 from main import *
 
 
@@ -190,25 +190,30 @@ def drawMap(mapObj, gameStateObj):
     # Draw the tile sprites onto this surface.
     for x in range(len(mapObj)):
         for y in range(len(mapObj[x])):
-            spaceRect = pygame.Rect((x * settings.tileWidth, y * settings.tileFloorHeight, settings.tileWidth, settings.tileHeight))
+            spaceRect        = pygame.Rect((x * settings.tileWidth, y * settings.tileFloorHeight, settings.tileWidth, settings.tileHeight))
+            spaceRectForChar = pygame.Rect((x * settings.tileWidth, y * settings.tileFloorHeight, settings.tileWidth, settings.tileHeightChar))
             if mapObj[x][y] in settings.environmentMapping:
                 baseTile = settings.environmentMapping[mapObj[x][y]]
             elif mapObj[x][y] in settings.outsideDecoMapping:
                 baseTile = settings.environmentMapping[' ']
-
             # First draw the base ground/wall tile.
             mapSurf.blit(baseTile, spaceRect)
-
             if mapObj[x][y] in settings.outsideDecoMapping:
                 # Draw any tree/rock decorations that are on this tile.
                 mapSurf.blit(settings.outsideDecoMapping[mapObj[x][y]], spaceRect)
-
             # Last draw the player on the board.
             if (x, y) == gameStateObj['player']:
-                # Note: The value "currentImage" refers to a key in "characterImages" which has the specific player image we want to show.
-                mapSurf.blit(settings.characterImages[settings.currentImage], spaceRect)
+                mapSurf.blit(settings.characterImages[settings.currentImage], spaceRectForChar) # currentImage refers to a key in "characterImages" which has the specific player image
     return mapSurf
 
+def drawCharacterNextImage():
+    """ Change the player image to the next one.
+    After the last player image, use the first one.
+    """
+    settings.currentImage += 1
+    if settings.currentImage >= len(settings.characterImages):
+        settings.currentImage = 0
+    mapNeedsRedraw = True
 
 def runLevel(levels, levelNum):
     # level initialisations
@@ -244,12 +249,20 @@ def runLevel(levels, levelNum):
                 keyPressed = True
                 if event.key == K_LEFT:
                     playerMoveTo = settings.LEFT
+                    drawCharacterNextImage()
+                    #cameraLeft = True
                 elif event.key == K_RIGHT:
                     playerMoveTo = settings.RIGHT
+                    drawCharacterNextImage()
+                    #cameraRight = True
                 elif event.key == K_UP:
                     playerMoveTo = settings.UP
+                    drawCharacterNextImage()
+                    #cameraUp = True
                 elif event.key == K_DOWN:
                     playerMoveTo = settings.DOWN
+                    drawCharacterNextImage()
+                    #cameraDown = True
                 # Set the camera move mode.
                 elif event.key == K_a:
                     cameraLeft = True
@@ -267,13 +280,6 @@ def runLevel(levels, levelNum):
                     terminate() # Esc key quits.
                 elif event.key == K_BACKSPACE:
                     return 'reset' # Reset the level.
-                elif event.key == K_p:
-                    # Change the player image to the next one.
-                    settings.currentImage += 1
-                    if settings.currentImage >= len(settings.characterImages):
-                        # After the last player image, use the first one.
-                        settings.currentImage = 0
-                    mapNeedsRedraw = True
             elif event.type == KEYUP:
                 # Unset the camera move mode.
                 if event.key == K_a:
@@ -320,7 +326,7 @@ def runLevel(levels, levelNum):
             # has pressed a key.
             solvedRect = settings.environmentImages['sand'].get_rect()
             solvedRect.center = (settings.halfWindowWidth, settings.halfWindowHeight)
-            displaySurf.blit(settings.environmentImages['sand'], solvedRect)
+            settings.displaySurf.blit(settings.environmentImages['sand'], solvedRect)
             if keyPressed:
                 return 'solved'
         pygame.display.update() # draw displaySurf to the screen.

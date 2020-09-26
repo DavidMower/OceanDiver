@@ -5,9 +5,7 @@
 ##  Released under GNU General Public License v3.0 ##
 #####################################################
 
-from level import *
-from settings import *
-
+import level, settings
 
 class Player:
     """ Player class for the main character.
@@ -142,7 +140,7 @@ def makeMove(mapObj, gameStateObj, playerMoveTo):
         xOffset = -1
         yOffset = 0
     # Check if player is trying to move into a wall block
-    if isWall(mapObj, playerx + xOffset, playery + yOffset): # if it's a wall, don't allow the move
+    if level.isWall(mapObj, playerx + xOffset, playery + yOffset): # if it's a wall, don't allow the move
         return False
     else:
         gameStateObj['player'] = (playerx + xOffset, playery + yOffset) # If not a wall, allow the move
