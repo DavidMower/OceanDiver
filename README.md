@@ -315,5 +315,6 @@ Add additional notes about how to deploy this on a live system.
 
 ## 🎉 Acknowledgements <a name = "acknowledgement"></a>
 
+- Making Games with Python & Pygame https://inventwithpython.com/pygame/
 - All images in this documentation are hosted here https://davidmower.imgur.com/all/?third_party=1.
 - Map of world map to show levels location is based on https://free-images.com/display/map_world.html (marked as Public Domain)

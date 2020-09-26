@@ -1,9 +1,4 @@
-; Star Pusher (Sokoban clone)
-; http://inventwithpython.com/blog
-; By Al Sweigart al@inventwithpython.com
-;
-; Everything after the ; is a comment and will be ignored by the game that
-; reads in this file.
+; Everything after the ; is a comment and will be ignored by the game that reads in this file.
 ;
 ; The format is described at:
 ; http://sokobano.de/wiki/index.php?title=Level_format
@@ -13,37 +8,36 @@
 ;
 ; Level maps are separated by a blank line (I like to use a ; at the start
 ; of the line since it is more visible.)
-;
-; I tried to use the same format as other people use for their Sokoban games,
-; so that loading new levels is easy. Just place the levels in a text file
-; and name it "starPusherLevels.txt" (after renaming this file, of course).
 
+; Coastal Dive level:
+         ################################################
+ ##########                                             ###
+##                         x                             ##
+##         .                                              ##
+##         o      x                                      xx###
+##         o                                            x   ##
+##         o             x                      xx          ##
+########                                       x            ###
+      ##                                                 xx ##
+    ####       x                                      xxxxx  ##
+    ##                                     x         x xx     ##
+   ##                                    x         xx          ##
+   ##                                 x           xx             ##
+   ##                               x             xx             ##
+   ##                               x             x             ##
+   ##                              x            x               ##
+   ##                             x            x               ##
+   ##                                         x            #####
+   ##                                                         ##
+   ##                                                         ##
+   ##                                                       ###
+   ##                        so   @ $                         ###
+   ##                                                         ###
+   ##                                                         ##
+   #######                                                    ###
+   ############################################################
+   ############################################################
+   ############################################################
+   ############################################################
 
-; Starting demo level:
-         ########
- #########     ##
-##              #
-#         .     ##
-#         o    xx###
-#         o    x   ##
-#         o         # 
-########            #
-       #            ##
-    ####             #
-    #   so   @ $     #
-   ##                #
-   #                 #
-   #                 #
-   #                 #
-   #                 #
-   #                ##
-   ############  #####
-              #  #
-              #  #
-             ##  ##
-   ###########    ##
-   #               #
-   #              ##
-   #            ###
-   #############
 ;
