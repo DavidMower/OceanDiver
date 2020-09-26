@@ -149,9 +149,20 @@ The player will have an oxygen level which depletes over time. The oxygen level 
 Style Attributes
 Characters and environments are made up of simple 2D shapes. Each level will have a different feel in terms of the number of colours and lighting.
 
+<p align="center">
+  <a href="" rel="noopener">
+ <img width=50px height=85px src="https://i.imgur.com/v7VXYaZ.png" alt="Male character for scuba diver"></a>
+ <img width=50px height=85px src="https://i.imgur.com/dgWIpp1.png" alt="Female character for scuba diver"></a>
+</p>
+
 Reference material:
 Simple 2D shapes which can be repeated often without requiring lots of processing power.
 
+<p align="center">
+  <a href="" rel="noopener">
+ <img width=50px height=85px src="https://i.imgur.com/6Q6HdkR.png" alt="Water tile to represent the open ocean"></a>
+ <img width=50px height=85px src="https://i.imgur.com/Md7dPjD.png" alt="Rock tile to represent some shore rocks"></a>
+</p>
 
 Darker colour scheme to signify the level increased amount of dangers.
 
@@ -289,3 +300,4 @@ Add additional notes about how to deploy this on a live system.
 ## 🎉 Acknowledgements <a name = "acknowledgement"></a>
 
 - All images in this documentation are hosted here https://davidmower.imgur.com/all/?third_party=1.
+- map of world map to show levels location is based on https://free-images.com/display/map_world.html (marked as Public Domain)
