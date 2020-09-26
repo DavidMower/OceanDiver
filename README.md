@@ -38,7 +38,7 @@
 
 ## 🧐 Game Design <a name = "gamedesign"></a>
 
-Summary
+<br>Summary</br>
 The main character is a scuba diver who wishes to search the oceans to discover and catalogue different species of aquatic life from around the world. There’re also hidden treasures to find and ocean clean-up tasks to complete.
 
 Gameplay
@@ -300,4 +300,4 @@ Add additional notes about how to deploy this on a live system.
 ## 🎉 Acknowledgements <a name = "acknowledgement"></a>
 
 - All images in this documentation are hosted here https://davidmower.imgur.com/all/?third_party=1.
-- map of world map to show levels location is based on https://free-images.com/display/map_world.html (marked as Public Domain)
+- Map of world map to show levels location is based on https://free-images.com/display/map_world.html (marked as Public Domain)
