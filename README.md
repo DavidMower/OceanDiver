@@ -42,18 +42,15 @@
 The main character is a scuba diver who wishes to search the oceans to discover and catalogue different species of aquatic life from around the world. There’re also hidden treasures to find and ocean clean-up tasks to complete.
 
 <br>Gameplay</br>
-The goal of the game is to explore different underwater environments. The player must avoid dangerous obstacles such as unexploded mines, objects falling from above and potentially dangerous aquatic life if the player wishes to complete their catalogue and discover the hidden treasures.
+The goal of the game is to explore different underwater environments. The player must avoid dangerous obstacles such as unexploded mines, objects falling from above and potentially dangerous aquatic life, if the player wishes to complete their catalogue and discover the hidden treasures.
 
 <br>Mind-set</br>
-Player needs to remain focused and alert to any potential dangers around them, while diving through the level exploring the environment.
+Player needs to remain focused and alert to any potential dangers around them, while diving through the level exploring the environment around them.
 
 <br>Story</br>
 This game is about a scuba diver who wants to dive in different environments to see what underwater life each has to offer. The diver has been sent from a marine conservation group to document as much aquatic life as possible.
 Towards the end of the game, the diver would have explored all the environments and have a catalogue containing full range of aquatic life. The catalogue contains details about each species or object which can be read as an educational element to the game.
 The player can complete additional tasks such as collecting plastic garbage to clean-up the ocean and search for hidden treasure.
-
-<br>Demo</br>
-The demo of the game will show the diver exploring part of the Coastal Dive level and some of the fish the game will have to offer.
 
 ## 🧐 Technical <a name = "technical"></a>
 
@@ -89,7 +86,9 @@ Controls in-game
 
 <br>Mechanics</br>
 The diver has a movement speed, ranging from stopped (not moving) to swimming at full speed. The diver’s proximity to objects and aquatic life around them determines how the diver interacts. Aquatic life can be catalogued by the interact key being pressed which the diver is close enough to interact. The diver cannot swim though the aquatic life or objects within the different dive sites themselves. Colliding with these objects will cause the diver to stop moving.
+
 The diver has health and oxygen bars, that if either reaches zero, the diver will have to start the level again. Health of the player can be lowered by certain aquatic life or objects. The diver shows damage if health is below 100%.
+
 The diver has gold coins, treasure chests, ancient artefacts values which increase with every discovery. There’re also several plastic objects removed from the ocean.
 
 ## 🧐 Level Design <a name = "leveldesign"></a>
@@ -101,48 +100,48 @@ The diver has gold coins, treasure chests, ancient artefacts values which increa
 
 <br>Themes</br>
 Coastal Dive
-•	Based on Egypt’s Red Sea environment
-•	Choppy water near the coast
-•	Enter / exit dive from the beach
-•	High amount of aquatic life
+- Based on Egypt’s Red Sea environment
+- Choppy water near the coast
+- Enter / exit dive from the beach
+- High amount of aquatic life
 
 Coral Reef Dive
-•	Based on Australia’s Great Barrier Reef environment
-•	Bright coloured
-•	Colourful them from the Corals
-•	Enter / exit dive from a boat
-•	High amount of aquatic life
+- Based on Australia’s Great Barrier Reef environment
+- Bright coloured
+- Colourful them from the Corals
+- Enter / exit dive from a boat
+- High amount of aquatic life
 
 Wreck Dive
-•	Based around a World War 2 sunken war ship near France
-•	Dark colours
-•	Unexploded mines and other objects scattered around the sunk war ship
-•	Enter / exit dive from a boat
-•	Medium amount of aquatic life
+- Based around a World War 2 sunken war ship near France
+- Dark colours
+- Unexploded mines and other objects scattered around the sunk war ship
+- Enter / exit dive from a boat
+- Medium amount of aquatic life
 
 Cave Dive
-•	Based on a south American underwater cave
-•	Dark / Dangerous / Narrow feeling
-•	Objects falling around the diver occasionally
-•	Enter / exit dive from a boat
-•	Small amount of aquatic life
+- Based on a south American underwater cave
+- Dark / Dangerous / Narrow feeling
+- Objects falling around the diver occasionally
+- Enter / exit dive from a boat
+- Small amount of aquatic life
 
 Mangrove Dive
-•	Based on a Mangrove forest environment
-•	Murky water
-•	Lots of plants / mangroves
-•	Enter / exit dive from the lakes edge (wooden pier)
-•	Medium amount of aquatic life
+- Based on a Mangrove forest environment
+- Murky water
+- Lots of plants / mangroves
+- Enter / exit dive from the lakes edge (wooden pier)
+- Medium amount of aquatic life
 Antarctica Dive
-•	Enter / exit dive from a boat
-•	Small amount of aquatic life
+- Enter / exit dive from a boat
+- Small amount of aquatic life
 
 <br>Basic object levels</br>
 Every level contains:
-•	Aquatic Life
-•	Collectable items
-•	Hazards
-•	Entry / exit point are the same position
+- Aquatic Life
+- Collectable items
+- Hazards
+- Entry / exit point are the same position
 
 ## 🧐 Game Flow <a name = "gameflow"></a>
 
@@ -153,7 +152,6 @@ Once you start a new level, you will see the diver either next to the dive boast
 The player will have an oxygen level which depletes over time. The oxygen level can be restored by returning to the dive boat or beach periodically to replenish. If the oxygen level reaches zero, then the diver will die, and the level will restart.
 
 ## 🧐 Graphics <a name = "graphics"></a>
-
 <br>Style Attributes</br>
 Characters and environments are made up of simple 2D shapes. Each level will have a different feel in terms of the number of colours and lighting.
 
@@ -175,74 +173,73 @@ Simple 2D shapes which can be repeated often without requiring lots of processin
 Darker colour scheme to signify the level increased amount of dangers.
 
 ## 🧐 Asset List <a name = "assetlist"></a>
-
 <br>2D Sprites</br>
 
 <br>Dynamic Sprites</br>
 
 Characters
-•	Scuba Diver
+- Scuba Diver
 
 Aquatic Life
-•	Egypt – Blue Spotted Stingray, Giant Moray Eel, Snowflake Moray Eel, Lionfish, Red Sea Clownfish, Coral Grouper, Lyretail Anthias, Picasso Trigger Fish, Masked Puffer, Sabre Squirrelfish, Crown Butterfly Fish, Masked Butterfly Fish, Emperor Angelfish, Bluefin Trevally, Blackspotted Sweetlips, Fiveline Cardinalfish, Octopus, Hermit crab, Green Turtle, Dugong, Scalloped Hammerhead shark, Oceanic Whitetip shark, Tiger shark.
-•	Australia – Tusk fish, Manta Rays, Tiger Sharks, Whale Sharks, Damselfish, Butterfly fish, Triggerfish, Cowfish, pufferfish, angelfish, sea horses, scorpion fish, surgeon fish, green turtle, loggerhead turtle, leatherback turtle, sea snakes, humpbacked whale, dugongs, whale shark, sea anemones, jellyfish, coral trout, crocodile, bottlenose dolphins
-•	Wreck Dives – Grey seals, harbour seals, basking sharks, wrasses, Pollock, cod, sea-urchin, starfish, leaf fish, cutell fish, frog fish
-•	Cave Dives – Crabs, Lobsters, Crustaceans
-•	Mangrove Dives – Sea anemones, Brittle starts, sea urchins, fiddler crabs, mud lobster, alligators, crocodiles, lemon shark babies
-•	Antarctica Dive – jellyfish, sea butterflies, dogfish, squat lobsters, crabs, fur seals, leopard seals, penguins, walruses
+- Egypt – Blue Spotted Stingray, Giant Moray Eel, Snowflake Moray Eel, Lionfish, Red Sea Clownfish, Coral Grouper, Lyretail Anthias, Picasso Trigger Fish, Masked Puffer, Sabre Squirrelfish, Crown Butterfly Fish, Masked Butterfly Fish, Emperor Angelfish, Bluefin Trevally, Blackspotted Sweetlips, Fiveline Cardinalfish, Octopus, Hermit crab, Green Turtle, Dugong, Scalloped Hammerhead shark, Oceanic Whitetip shark, Tiger shark.
+- Australia – Tusk fish, Manta Rays, Tiger Sharks, Whale Sharks, Damselfish, Butterfly fish, Triggerfish, Cowfish, pufferfish, angelfish, sea horses, scorpion fish, surgeon fish, green turtle, loggerhead turtle, leatherback turtle, sea snakes, humpbacked whale, dugongs, whale shark, sea anemones, jellyfish, coral trout, crocodile, bottlenose dolphins
+- Wreck Dives – Grey seals, harbour seals, basking sharks, wrasses, Pollock, cod, sea-urchin, starfish, leaf fish, cutell fish, frog fish
+- Cave Dives – Crabs, Lobsters, Crustaceans
+- Mangrove Dives – Sea anemones, Brittle starts, sea urchins, fiddler crabs, mud lobster, alligators, crocodiles, lemon shark babies
+- Antarctica Dive – jellyfish, sea butterflies, dogfish, squat lobsters, crabs, fur seals, leopard seals, penguins, walruses
 
 Hazards
-•	Sea Mines
+- Sea Mines
 
 <br>Static Sprites</br>
 
 Environment
-•	Corals
-•	Rocks
-•	Plants / Mangroves
-•	Crystals
+- Corals
+- Rocks
+- Plants / Mangroves
+- Crystals
 Objects
-•	Sunken shipwreck
-•	Dive boat
+- Sunken shipwreck
+- Dive boat
 Collectibles
-•	Gold coins
-•	Treasure Chest
-•	Ancient Artefact
-•	Pearls
-•	Plastic garbage
+- Gold coins
+- Treasure Chest
+- Ancient Artefact
+- Pearls
+- Plastic garbage
 
 ## 🧐 Sounds and Music <a name = "soundmusic"></a>
 
 Style Attributes
-•	Coastal Dive
-•	Coral Reef Dive
-•	Wreck Dive
-•	Cave Dive
-•	Mangrove Dive
-•	Antarctica Dive
+- Coastal Dive
+- Coral Reef Dive
+- Wreck Dive
+- Cave Dive
+- Mangrove Dive
+- Antarctica Dive
 
 Music
-•	Main menu will have background music of ocean waves crashing.
-•	Each level will have its own background music, with the rhythm/volume based on the amount of danger that level presents.
+- Main menu will have background music of ocean waves crashing.
+- Each level will have its own background music, with the rhythm/volume based on the amount of danger that level presents.
 
 Sound Effects
 
 Scuba Diver Sounds
-•	Bubbles from breathing
-•	Taking damage / pain
-•	Death (health reached zero)
-•	Warning for low amount of oxygen remaining
+- Bubbles from breathing
+- Taking damage / pain
+- Death (health reached zero)
+- Warning for low amount of oxygen remaining
 Collectable Sounds
-•	Collectable picked up
+- Collectable picked up
 
 Hazard Sounds
-•	Object falling
-•	Destructible object changing its state
-•	Mine explosion
+- Object falling
+- Destructible object changing its state
+- Mine explosion
 
 Level Sounds
-•	Boat engine
-•	Waves crashing
+- Boat engine
+- Waves crashing
 
 ## ⛏️ Prerequisites
 
@@ -301,14 +298,15 @@ Add additional notes about how to deploy this on a live system.
 
 ## ⛏️ Built Using <a name = "built_using"></a>
 
-- [MongoDB](https://www.mongodb.com/) - Database
-- [Express](https://expressjs.com/) - Server Framework
-- [VueJs](https://vuejs.org/) - Web Framework
-- [NodeJs](https://nodejs.org/en/) - Server Environment
+- [Python](https://https://www.python.org/) - Programming language
 
 ## ✍️ TODO <a name = "todo"></a>
-1.	Enchancement - Animation at the start/end of each level to show the diver either launching from the boat or the beach.
-2.	Enchancement - Archways that the diver swims underneath in the Cave Dive level.
+
+- Requirement - Gaming Pad as an alternative to navigate the menu
+- Requirement - Mouse as another alternative to navigate the menu
+- Requirement - Gaming Pad as an alternative to control the Scuba Divers movement.
+- Enchancement - Animation at the start/end of each level to show the diver either launching from the boat or the beach.
+- Enchancement - Archways that the diver swims underneath in the Cave Dive level.
 
 ## ✍️ Authors <a name = "authors"></a>
 
