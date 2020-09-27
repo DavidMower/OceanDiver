@@ -11,7 +11,19 @@ from main import *
 
 
 def readLevelsFile(aFileName):
-    """ reads a level text file
+    """ reads a level text file which can contain any of the following characters
+
+    |------------------------------------------------|
+    |  Level element         |  Character            |
+    |------------------------------------------------|
+    |  Wall                  |  #                    |
+    |  Player                |  @                    |
+    |  Player on goal square |  +                    |
+    |  Box                   |  $                    |
+    |  Box on goal square    |  *                    |
+    |  Goal square           |  .                    |
+    |  Floor                 |  (Space)              |
+    |------------------------------------------------|
 
     Args:
         aFileName ([lvl]): [level text file]
@@ -28,14 +40,11 @@ def readLevelsFile(aFileName):
     levelNum = 0
     mapTextLines = [] # contains the lines for a single level's map.
     mapObj = [] # the map object made from the data in mapTextLines
-    for lineNum in range(len(content)):
-        # Process each line that was in the level file.
+    for lineNum in range(len(content)): # Process each line in the level file.
         line = content[lineNum].rstrip('\r\n')
-        if ';' in line:
-            # Ignore the ; lines, they're comments in the level file.
+        if ';' in line: # Ignore the ; lines, they're comments in the level file.
             line = line[:line.find(';')]
-        if line != '':
-            # This line is part of the map.
+        if line != '': # Finding the lines which are part of the map.
             mapTextLines.append(line)
         elif line == '' and len(mapTextLines) > 0:
             # A blank line indicates the end of a level's map in the file.
@@ -45,8 +54,7 @@ def readLevelsFile(aFileName):
             for i in range(len(mapTextLines)):
                 if len(mapTextLines[i]) > maxWidth:
                     maxWidth = len(mapTextLines[i])
-            # Add spaces to the ends of the shorter rows. This
-            # ensures the map will be rectangular.
+            # Add spaces to the ends of the shorter rows. This ensures the map will be rectangular.
             for i in range(len(mapTextLines)):
                 mapTextLines[i] += ' ' * (maxWidth - len(mapTextLines[i]))
             # Convert mapTextLines to a map object.
@@ -57,8 +65,8 @@ def readLevelsFile(aFileName):
                     mapObj[x].append(mapTextLines[y][x])
             # Loop through the spaces in the map and find the @, ., and $
             # characters for the starting game state.
-            settings.player1.setStartX(None) # The x and y for the player's starting position
-            settings.player1.setStartY(None)
+            settings.player1.setStartX(None) # x for the player's starting position
+            settings.player1.setStartY(None) # y for the player's starting position
             for x in range(maxWidth):
                 for y in range(len(mapObj[x])):
                     if mapObj[x][y] in ('@', '+'):
@@ -70,14 +78,15 @@ def readLevelsFile(aFileName):
             # Create game state object
             gameStateObj = {'player': (settings.player1.getStartX(), settings.player1.getStartY()),
                             'health': settings.player1.getHealth(),
-                            'oxygen': settings.player1.getOxygen()}
+                            'oxygen': settings.player1.getOxygen()
+                            }
             # Create level object
-            levelObj = {'width': maxWidth,
-                        'height': len(mapObj),
-                        'mapObj': mapObj,
+            levelObj = {'width'     : maxWidth,
+                        'height'    : len(mapObj),
+                        'mapObj'    : mapObj,
                         'startState': gameStateObj}
             levels.append(levelObj)
-            # Reset the variables for reading the next map.
+            # Finally, reset the variables for reading the next map.
             mapTextLines = []
             mapObj = []
             gameStateObj = {}
@@ -99,16 +108,13 @@ def decorateMap(mapObj, startxy):
     """
     settings.player1.getStartX, settings.player1.getStartY = startxy # Syntactic sugar
     mapObjCopy = copy.deepcopy(mapObj) # Copy the map object so we don't modify the original passed
-
-    # Remove the non-wall characters from the map data
+    # Remove the non-wall characters from the map data as we've already created the level object, we are just decorating that level here
     for x in range(len(mapObjCopy)):
         for y in range(len(mapObjCopy[0])):
             if mapObjCopy[x][y] in ('$', '.', '@', '+', '*'):
                 mapObjCopy[x][y] = ' '
-
     # Flood fill to determine inside/outside floor tiles
     floodFill(mapObjCopy, settings.player1.getStartX, settings.player1.getStartY, ' ', 'o')
-
     # Convert the adjoined walls into corner tiles
     for x in range(len(mapObjCopy)):
         for y in range(len(mapObjCopy[0])):
@@ -118,21 +124,17 @@ def decorateMap(mapObj, startxy):
                    (isWall(mapObjCopy, x, y+1) and isWall(mapObjCopy, x-1, y)) or \
                    (isWall(mapObjCopy, x-1, y) and isWall(mapObjCopy, x, y-1)):
                     mapObjCopy[x][y] = 'x'
-
             elif mapObjCopy[x][y] == ' ' and random.randint(0, 99) < settings.outsideDecorationPCT:
                 mapObjCopy[x][y] = random.choice(list(settings.outsideDecoMapping.keys()))
     return mapObjCopy
-
 
 def floodFill(mapObj, x, y, oldCharacter, newCharacter):
     """ Changes any values matching oldCharacter on the map object to
     newCharacter at the (x, y) position, and does the same for the
     positions to the left, right, down, and up of (x, y), recursively.
 
-    In this game, the flood fill algorithm creates the inside/outside
-    floor distinction. This is a "recursive" function.
-    For more info on the Flood Fill algorithm, see:
-    http://en.wikipedia.org/wiki/Flood_fill
+    The flood fill algorithm creates the inside/outside floor distinction. This is a "recursive" function.
+    For more info on the Flood Fill algorithm, see: http://en.wikipedia.org/wiki/Flood_fill
 
     Args:
         mapObj ([type]): [description]
@@ -153,33 +155,53 @@ def floodFill(mapObj, x, y, oldCharacter, newCharacter):
         floodFill(mapObj, x, y-1, oldCharacter, newCharacter) # call up
 
 
-# checks if object is a wall
 def isWall(mapObj, x, y):
-    """Returns True if the (x, y) position on
-    the map is a wall, otherwise return False."""
+    """ Checks if object is a wall
+
+    Args:
+        mapObj ([mapObj]): [the loaded level in a mapObj]
+        x ([int]): [x position of the character]
+        y ([int]): [y position of the character]
+
+    Returns:
+        [boolean]: [Returns True if the (x, y) position on the map is a wall, otherwise return False.]
+    """
     if x < 0 or x >= len(mapObj) or y < 0 or y >= len(mapObj[x]):
         return False # x and y aren't actually on the map.
     elif mapObj[x][y] in ('#', 'x'):
         return True # wall is blocking
     return False
 
-
 def isBlocked(mapObj, gameStateObj, x, y):
-    """Returns True if the (x, y) position on the map is
-    blocked by a wall or star, otherwise return False."""
+    """ Check if the possible move would be blocked, or not.
 
+    Args:
+        mapObj ([mapObj]): [the loaded level in a mapObj]
+        gameStateObj ([gameStateObj]): [the current game state]
+        x ([int]): [x position of the character]
+        y ([int]): [y position of the character]
+
+    Returns:
+        [boolean]: [Returns True if the (x, y) position on the map is blocked by a wall or star, otherwise return False.]
+    """
     if isWall(mapObj, x, y):
         return True
     elif x < 0 or x >= len(mapObj) or y < 0 or y >= len(mapObj[x]):
         return True # x and y aren't actually on the map.
     return False
 
-
 def drawMap(mapObj, gameStateObj):
-    """Draws the map to a Surface object, including the player and
-    stars. This function does not call pygame.display.update(), nor
-    does it draw the "Level" and "Steps" text in the corner."""
+    """ Draws the map to a Surface object, including the player and stars.
+    This function does not call pygame.display.update(), nor
+    does it draw the "Level" and "Steps" text in the corner.
 
+    Args:
+        mapObj ([mapObj]): [the loaded level in a mapObj]
+        gameStateObj ([gameStateObj]): [the current game state]
+
+    Returns:
+        [mapSurf]: [the single Surface object that the tiles are drawn on]
+    """
     # mapSurf will be the single Surface object that the tiles are drawn
     # on, so that it is easy to position the entire map on the displaySurf
     # Surface object. First, the width and height must be calculated.
@@ -187,7 +209,6 @@ def drawMap(mapObj, gameStateObj):
     mapSurfHeight = (len(mapObj[0]) - 1) * settings.tileFloorHeight + settings.tileHeight
     mapSurf = pygame.Surface((mapSurfWidth, mapSurfHeight))
     mapSurf.fill(settings.textBGColour) # start with a blank color on the surface.
-
     # Draw the tile sprites onto this surface.
     for x in range(len(mapObj)):
         for y in range(len(mapObj[x])):
@@ -217,6 +238,15 @@ def drawCharacterNextImage():
     mapNeedsRedraw = True
 
 def runLevel(levels, levelNum):
+    """ Run a level
+
+    Args:
+        levels ([levels]): [levels object containing all the loaded levels]
+        levelNum ([int]): [level number]
+
+    Returns:
+        [boolean]: [Is the level solved, or not]
+    """
     # level initialisations
     levelObj = levels[levelNum]
     mapObj = decorateMap(levelObj['mapObj'], levelObj['startState']['player'])

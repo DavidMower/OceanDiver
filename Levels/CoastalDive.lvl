@@ -1,43 +1,60 @@
-; Everything after the ; is a comment and will be ignored by the game that reads in this file.
+; Everything after the ; is a comment
+; Level maps are separated by a blank line
 ;
-; The format is described at:
-; http://sokobano.de/wiki/index.php?title=Level_format
-;   @ - The starting position of the player.
-;  (space) - an empty open space.
-;   # - A wall.
+; The format is described at http://sokobano.de/wiki/index.php?title=Level_format
 ;
-; Level maps are separated by a blank line (I like to use a ; at the start
-; of the line since it is more visible.)
+; |------------------------------------------------|
+; |  Level element         |  Character            |
+; |------------------------------------------------|
+; |  Wall                  |  #                    |
+; |  Player                |  @                    |
+; |  Player on goal square |  +                    |
+; |  Box                   |  $                    |
+; |  Box on goal square    |  *                    |
+; |  Goal square           |  .                    |
+; |  Floor                 |  (Space)              |
+; |------------------------------------------------|
+; so? x?
+;
 
-; Coastal Dive level:
-         ################################################
- ##########                                             ###
-##                         x                             ##
-##         .                                              ##
-##         o      x                                      xx###
-##         o                                            x   ##
-##         o             x                      xx          ##
-########                                       x            ###
-      ##                                                 xx ##
-    ####       x                                      xxxxx  ##
-    ##                                     x         x xx     ##
-   ##                                    x         xx          ##
-   ##                                 x           xx             ##
-   ##                               x             xx             ##
-   ##                               x             x             ##
-   ##                              x            x               ##
-   ##                             x            x               ##
-   ##                                         x            #####
-   ##                                                         ##
-   ##                                                         ##
-   ##                                                       ###
-   ##                        so   @ $                         ###
-   ##                                                         ###
-   ##                                                         ##
-   #######                                                    ###
-   ############################################################
-   ############################################################
-   ############################################################
-   ############################################################
+; Coastal Dive
+###############################################################################################
+ ##                                                                                 ###
+  ###                                                                        ########
+    #                                                                      ###
+    ##    #####                                                           ##
+     ######   ####                                                       ##
+                 ####                                                    ##
+                    ###                                                   ###
+                      #####                                   ###           ####
+                          ##                              ##### ##             ##          ###
+           #               #                            ###      ####          ##        ##
+ #       ####              ###                      #####           ###         ##     ##
+  ##   ##  #            ###                        ##                 #####  ####    ##
+    ###    ##           ###                         ##                    ####      #
+            ##           ###                         #                             #
+             ##           ###                        ###                          #
+              #         ####                           ##                      ###
+              ##      ##                     ###        ###                   #
+               #       ###                   # #####      ###                #
+               #         ###   ###           ##    ###      #               #
+                #          ######           ##       ########              #
+                #             ##           ##                         #####
+                #             #            ##                        #
+               #              ##            ###                      #
+               #             ##               ######                #
+                #           ##                  .  ###################
+                #           ##                  ####                  #
+                 #         ##             ### ###                      #
+                 #         #             ## ###                        #
+                  #        #             ##                             #
+                   #       ##             ##                           #
+                    #       ##             ###                        #
+                    #      ##                ####                     #
+                    #      #                    #######              #
+                     ##    #                          ###           #
+                       #   #           @                ####      ##
+                         ############        #####################
+                                    ##########
 
 ;

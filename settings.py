@@ -55,9 +55,8 @@ currentLevelIndex = 0
 # A global dictionary that'll contain all the Pygame Surface objects
 environmentImages = { 'corner':        pygame.image.load('Images/Dark_Rock_Block.png'),
                       'wall':          pygame.image.load('Images/Rock_Block.png'),
-                      'ocean floor':   pygame.image.load('Images/Level/ocean_tile_1.png'),
-                      'outside floor': pygame.image.load('Images/Sand_Block.png'),
-                      'diver_female':  pygame.image.load('Images/Scuba_Diver_Female.png'),
+                      'ocean floor':   pygame.image.load('Images/Levels/CoastalDive/ocean_tile_1.png'),
+                      'outside floor': pygame.image.load('Images/Levels/CoastalDive/sand_block.png'),
                       'diver_male_01': pygame.image.load('Images/Player/diver_male_01.png'),
                       'diver_male_02': pygame.image.load('Images/Player/diver_male_02.png'),
                       'diver_male_03': pygame.image.load('Images/Player/diver_male_03.png'),
