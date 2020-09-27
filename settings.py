@@ -53,8 +53,8 @@ levelIsComplete      = False
 levels = level.readLevelsFile('Levels/CoastalDive.lvl')
 currentLevelIndex = 0
 # A global dictionary that'll contain all the Pygame Surface objects
-environmentImages = { 'corner':        pygame.image.load('Images/Dark_Rock_Block.png'),
-                      'wall':          pygame.image.load('Images/Rock_Block.png'),
+environmentImages = { 'corner':        pygame.image.load('Images/Levels/Decorations/zrpg-tiles/rock2.png'),
+                      'wall':          pygame.image.load('Images/Levels/Decorations/zrpg-tiles/rock1.png'),
                       'ocean floor':   pygame.image.load('Images/Levels/CoastalDive/ocean_tile_1.png'),
                       'outside floor': pygame.image.load('Images/Levels/CoastalDive/sand_block.png'),
                       'diver_male_01': pygame.image.load('Images/Player/diver_male_01.png'),
@@ -67,18 +67,18 @@ environmentImages = { 'corner':        pygame.image.load('Images/Dark_Rock_Block
                       'diver_male_08': pygame.image.load('Images/Player/diver_male_08.png'),
                       'diver_male_09': pygame.image.load('Images/Player/diver_male_09.png'),
                       'diver_male_10': pygame.image.load('Images/Player/diver_male_10.png'),
-                      'rock':          pygame.image.load('Images/Rock.png'),
-                      'short tree':    pygame.image.load('Images/Tree_Short.png'),
-                      'tall tree':     pygame.image.load('Images/Tree_Tall.png'),
-                      'ugly tree':     pygame.image.load('Images/Tree_Ugly.png')}
+                      'rock3':          pygame.image.load('Images/Levels/Decorations/zrpg-tiles/rock3.png'),
+                      'rock4':          pygame.image.load('Images/Levels/Decorations/zrpg-tiles/rock4.png'),
+                      'short tree':    pygame.image.load('Images/Levels/Decorations/Tree_Short.png'),
+                      'ugly tree':     pygame.image.load('Images/Levels/Decorations/Tree_Ugly.png')}
 # These dictionary values are global, and map the character that appear in the level file
 environmentMapping = {'x': environmentImages['corner'],
                       '#': environmentImages['wall'],
                       'o': environmentImages['ocean floor'],
                       ' ': environmentImages['outside floor']}
-outsideDecoMapping = {'1': environmentImages['rock'],
+outsideDecoMapping = {'1': environmentImages['rock3'],
                       '2': environmentImages['short tree'],
-                      '3': environmentImages['tall tree'],
+                      '3': environmentImages['rock4'],
                       '4': environmentImages['ugly tree']}
 # characterImages is a list of all possible characters the player can be.
 characterImages = [ environmentImages['diver_male_01'],
