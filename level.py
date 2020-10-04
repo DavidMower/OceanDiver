@@ -170,7 +170,22 @@ def isWall(mapObj, x, y):
         return False # x and y aren't actually on the map.
     elif mapObj[x][y] in ('#', 'x'):
         return True # wall is blocking
-    return False
+
+def isEdgeOfScreen(mapObj, x, y):
+    """ Checks if player is trying to move of the screen
+
+    Args:
+        mapObj ([mapObj]): [the loaded level in a mapObj]
+        x ([int]): [x position of the character]
+        y ([int]): [y position of the character]
+
+    Returns:
+        [boolean]: [Returns True if the (x, y) position on the map is a the edge of the screen, otherwise return False.]
+    """
+    if x < settings.halfWindowWidth or x > len(mapObj) or y < 0 or y > len(mapObj[x]):
+        return True # x and y aren't actually on the map.
+    else:
+        return False
 
 def isBlocked(mapObj, gameStateObj, x, y):
     """ Check if the possible move would be blocked, or not.
@@ -332,13 +347,13 @@ def runLevel(levels, levelNum):
             mapSurf = drawMap(mapObj, gameStateObj)
             mapNeedsRedraw = False
         playerx, playery = gameStateObj['player']
-        if cameraUp and cameraOffsetY < Max_Cam_X_Pan:
+        if cameraUp and cameraOffsetY < Max_Cam_Y_Pan and cameraOffsetY < settings.player1.getStartY:
             cameraOffsetY += settings.cameraMoveSpeed
-        elif cameraDown and cameraOffsetY > -Max_Cam_X_Pan:
+        elif cameraDown and cameraOffsetY > -Max_Cam_Y_Pan and cameraOffsetY > -settings.player1.getStartY:
             cameraOffsetY -= settings.cameraMoveSpeed
-        if cameraLeft and cameraOffsetX < Max_Cam_Y_Pan:
+        if cameraLeft and cameraOffsetX < Max_Cam_X_Pan and cameraOffsetY < settings.player1.getStartX:
             cameraOffsetX += settings.cameraMoveSpeed
-        elif cameraRight and cameraOffsetX > -Max_Cam_Y_Pan:
+        elif cameraRight and cameraOffsetX > -Max_Cam_X_Pan and cameraOffsetY > -settings.player1.getStartX:
             cameraOffsetX -= settings.cameraMoveSpeed
         # Adjust mapSurf's Rect object based on the camera offset.
         mapSurfRect = mapSurf.get_rect()

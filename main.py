@@ -12,6 +12,7 @@ from pygame.locals import *
 from player import *
 from hud import *
 
+
 def main():
     """ main function
     """

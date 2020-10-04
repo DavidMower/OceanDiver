@@ -143,5 +143,11 @@ def makeMove(mapObj, gameStateObj, playerMoveTo):
     if level.isWall(mapObj, playerx + xOffset, playery + yOffset): # if it's a wall, don't allow the move
         return False
     else:
-        gameStateObj['player'] = (playerx + xOffset, playery + yOffset) # If not a wall, allow the move
+        gameStateObj['player'] = (playerx + xOffset, playery + yOffset)
+        return True
+    # Check to ensure player stays within the screen
+    if level.isEdgeOfScreen(mapObj, playerx + xOffset, playery + yOffset): # if it's the edge of the screen, don't allow the move
+        return False
+    else:
+        gameStateObj['player'] = (playerx + xOffset, playery + yOffset)
         return True
