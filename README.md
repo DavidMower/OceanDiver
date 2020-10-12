@@ -322,5 +322,6 @@ Add additional notes about how to deploy this on a live system.
 - Map of world map to show levels location is based on https://free-images.com/display/map_world.html (marked as Public Domain).
 - Scuba Diver and Sea Turtle sprites created by Fellowship Of the Game https://opengameart.org/users/fellowship-of-the-game under CC licensing.
 - Water texture sprite created by Aswin909 https://opengameart.org/content/water under CC licensing.
+- Rock texture sprite created by sithoious https://opengameart.org/content/rock-tileset under CC licensing.
 - Underwater Background image created by Ciera Elizabeth Hoover [SugarMoonWitch] http://sugarmoonwitch.com/ https://opengameart.org/content/underwater-bg under CC licensing.
 - ZRPG Tiles created by 95% Richard Kettering aka (Jetrel),Zachariah Husiar aka (Zabin), Hyptosis, Sharm and Open Pixel Project. https://opengameart.org/content/zrpg-tiles under CC licensing.

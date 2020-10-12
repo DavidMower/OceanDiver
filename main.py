@@ -25,15 +25,20 @@ class Game:
     def load_data(self):
         self.map = Map(path.join(GAME_FOLDER, 'map2.lvl'))
         self.player_img = IMAGES_TO_LOAD['diver_male_01'].convert_alpha()
+        self.wall_img   = IMAGES_TO_LOAD['rock_01'].convert_alpha()
+        self.turtle_img = IMAGES_TO_LOAD['turtle_01'].convert_alpha()
 
     def new(self):
         # initialize all variables and do all the setup for a new game
         self.all_sprites = pg.sprite.Group()
         self.walls = pg.sprite.Group()
+        self.turtles = pg.sprite.Group()
         for row, tiles in enumerate(self.map.data):
             for col, tile in enumerate(tiles):
                 if tile == '#':
                     Wall(self, col, row)
+                if tile == 'T':
+                    Turtle(self, col, row)
                 if tile == '@':
                     self.player = Player(self, col, row)
         self.camera = Camera(self.map.width, self.map.height)
@@ -63,8 +68,11 @@ class Game:
             pg.draw.line(self.screen, LIGHTGREY, (0, y), (WIDTH, y))
 
     def draw(self):
+        if SHOW_FTP:
+            pg.display.set_caption("{:.2f}".format(self.clock.get_fps()))
         self.screen.fill(BGCOLOR)
-        self.draw_grid()
+        if DRAW_GRID:
+            self.draw_grid()
         for sprite in self.all_sprites:
             self.screen.blit(sprite.image, self.camera.apply(sprite))
         #pg.draw.rect(self.screen, WHITE, self.camera.apply(self.player), 2) # draws players rect used for collisions
