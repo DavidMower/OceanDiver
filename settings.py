@@ -23,6 +23,7 @@ GREEN     = (0  , 255, 0)
 RED       = (255, 0  , 0)
 YELLOW    = (255, 255, 0)
 BLUE      = (0  , 128, 255)
+DARKBLUE   = (0  , 102, 255)
 
 
 # game settings
@@ -36,6 +37,10 @@ BGCOLOR    = BLUE
 TILESIZE   = 64
 GRIDWIDTH  = WIDTH / TILESIZE # this value is how many squares show on the screen
 GRIDHEIGHT = HEIGHT / TILESIZE # this value is how many squares show on the screen
+
+# HUD settings
+BAR_LENGTH = 100
+BAR_HEIGHT = 20
 
 # images settings
 IMAGES_TO_LOAD = {  'diver_male_01': pg.image.load('Images/Player/diver_male_01.png'),
@@ -77,6 +82,8 @@ PLAYER_IMAGES    = [IMAGES_TO_LOAD['diver_male_01'],
                     IMAGES_TO_LOAD['diver_male_09'],
                     IMAGES_TO_LOAD['diver_male_10']
                     ]
+PLAYER_HEALTH = 1000
+PLAYER_OXYGEN = 1000
 
 # map decoration settings
 ROCK_IMAGES =   [IMAGES_TO_LOAD['rock_01']
@@ -98,3 +105,6 @@ TURTLE_IMAGES    = [IMAGES_TO_LOAD['turtle_01'],
                     IMAGES_TO_LOAD['turtle_08'],
                     IMAGES_TO_LOAD['turtle_09']
                     ]
+TURTLE_HEALTH = 5000
+TURTLE_DAMAGE = 1
+TURTLE_KNOCKBACK = 10

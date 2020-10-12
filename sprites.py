@@ -17,18 +17,18 @@ def collide_with_walls(sprite, group, dir):
     if dir == 'x':
         hits = pg.sprite.spritecollide(sprite, group, False, collide_hit_rect)
         if hits:
-            if sprite.vel.x > 0:
+            if hits[0].rect.centerx > sprite.hit_rect.centerx:
                 sprite.pos.x = hits[0].rect.left - (sprite.hit_rect.width / 2) # dividing by 2 because we are using the center
-            if sprite.vel.x < 0:
+            if hits[0].rect.centerx < sprite.hit_rect.centerx:
                 sprite.pos.x = hits[0].rect.right + (sprite.hit_rect.width / 2) # dividing by 2 because we are using the center
             sprite.vel.x = 0
             sprite.hit_rect.centerx = sprite.pos.x
     if dir == 'y':
         hits = pg.sprite.spritecollide(sprite, group, False, collide_hit_rect)
         if hits:
-            if sprite.vel.y > 0:
+            if hits[0].rect.centery > sprite.hit_rect.centery:
                 sprite.pos.y = hits[0].rect.top - (sprite.hit_rect.height / 2) # dividing by 2 because we are using the center
-            if sprite.vel.y < 0:
+            if hits[0].rect.centery < sprite.hit_rect.centery:
                 sprite.pos.y = hits[0].rect.bottom + (sprite.hit_rect.height / 2) # dividing by 2 because we are using the center
             sprite.vel.y = 0
             sprite.hit_rect.centery = sprite.pos.y
@@ -60,6 +60,8 @@ class Player(pg.sprite.Sprite):
         self.pos = vec(x, y) * TILESIZE
         self.rot = 0
         self.count = 0 # used to animate the sprite at a slower speed than the game speed
+        self.health = PLAYER_HEALTH
+        self.oxygen = PLAYER_OXYGEN
 
     def get_keys(self):
         self.rot_speed = 0
@@ -91,6 +93,11 @@ class Player(pg.sprite.Sprite):
         self.hit_rect.centery = self.pos.y # using center because it's the center of the player we want to track
         collide_with_walls(self, self.game.walls, 'y')
         self.rect.center = self.hit_rect.center
+        if self.health <= 0:
+            self.kill() # if health runs out, sprite will die
+        if self.oxygen <= 0:
+            self.health -= 10 # if oxygen runs out, sprite should start to lose health
+
 
 class Turtle(pg.sprite.Sprite):
     def __init__(self, game, x, y):
@@ -109,6 +116,7 @@ class Turtle(pg.sprite.Sprite):
         self.rot = 0 # facing right when it spawns
         self.rot_speed = TURTLE_ROT_SPEED
         self.count = 0 # used to animate the sprite at a slower speed than the game speed
+        self.health = TURTLE_HEALTH
 
     def update(self):
         self.rot = (self.pos - self.game.player.pos).angle_to(vec(1,0))
@@ -126,6 +134,8 @@ class Turtle(pg.sprite.Sprite):
         collide_with_walls(self, self.game.walls, 'y')
         self.rect.center = self.hit_rect.center
         drawCharacterNextImage(self, TURTLE_IMAGES, TURTLE_ANIMATION_SPEED)
+        if self.health <= 0:
+            self.kill() # if health runs out, sprite will die
 
 class Wall(pg.sprite.Sprite):
     def __init__(self, game, x, y):

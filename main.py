@@ -12,6 +12,7 @@ from os import path
 from settings import *
 from sprites import *
 from tilemap import *
+from hud import *
 
 class Game:
     def __init__(self):
@@ -60,6 +61,15 @@ class Game:
         # update portion of the game loop
         self.all_sprites.update()
         self.camera.update(self.player)
+        # turtles hit player
+        hits = pg.sprite.spritecollide(self.player, self.turtles, False, collide_hit_rect)
+        for hit in hits:
+            self.player.health -= TURTLE_DAMAGE
+            hit.vel = vec(0,0)
+            if self.player.health <= 0:
+                self.playing = False
+        if hits:
+            self.player.pos -= vec(TURTLE_KNOCKBACK, 0).rotate(-hits[0].rot)
 
     def draw_grid(self):
         for x in range(0, WIDTH, TILESIZE):
@@ -74,9 +84,13 @@ class Game:
         if DRAW_GRID:
             self.draw_grid()
         for sprite in self.all_sprites:
+            #if isinstance(sprite, Player):
+            #    sprite.draw_health()
             self.screen.blit(sprite.image, self.camera.apply(sprite))
         #pg.draw.rect(self.screen, WHITE, self.camera.apply(self.player), 2) # draws players rect used for collisions
         #pg.draw.rect(self.screen, WHITE, self.player.hit_rect, 2) # draws players hit rect used for collisions
+        draw_player_health(self.screen, 10, 10, self.player.health / PLAYER_HEALTH)
+        draw_player_oxygen(self.screen, 120, 10, self.player.oxygen / PLAYER_OXYGEN)
         pg.display.flip()
 
     def events(self):
