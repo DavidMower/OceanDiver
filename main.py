@@ -90,7 +90,11 @@ class Game:
         #pg.draw.rect(self.screen, WHITE, self.camera.apply(self.player), 2) # draws players rect used for collisions
         #pg.draw.rect(self.screen, WHITE, self.player.hit_rect, 2) # draws players hit rect used for collisions
         draw_player_health(self.screen, 10, 10, self.player.health / PLAYER_HEALTH)
+        health_text_surf, health_text_rect = writeText('Health', WHITE, BLACK, 37, 13)
+        self.screen.blit(health_text_surf, health_text_rect)
         draw_player_oxygen(self.screen, 120, 10, self.player.oxygen / PLAYER_OXYGEN)
+        oxygen_text_surf, oxygen_text_rect = writeText('Oxygen', WHITE, BLACK, 147, 13)
+        self.screen.blit(oxygen_text_surf, oxygen_text_rect)
         pg.display.flip()
 
     def events(self):

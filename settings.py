@@ -42,6 +42,9 @@ GRIDHEIGHT = HEIGHT / TILESIZE # this value is how many squares show on the scre
 BAR_LENGTH = 100
 BAR_HEIGHT = 20
 
+# font settings
+DEFAULT_FONT_SIZE = 14
+
 # images settings
 IMAGES_TO_LOAD = {  'diver_male_01': pg.image.load('Images/Player/diver_male_01.png'),
                     'diver_male_02': pg.image.load('Images/Player/diver_male_02.png'),
