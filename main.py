@@ -19,15 +19,12 @@ class Game:
         self.screen = pg.display.set_mode((WIDTH, HEIGHT))
         pg.display.set_caption(TITLE)
         self.clock = pg.time.Clock()
-        pg.key.set_repeat(500, 100)
+        #pg.key.set_repeat(500, 100)
         self.load_data()
 
     def load_data(self):
-        game_folder       = path.dirname(__file__)
-        img_folder        = path.join(game_folder, 'Images')
-        player_img_folder = path.join(img_folder, 'Player')
-        self.map = Map(path.join(game_folder, 'map2.lvl'))
-        self.player_img = pg.image.load(path.join(player_img_folder, PLAYER_IMG)).convert_alpha()
+        self.map = Map(path.join(GAME_FOLDER, 'map2.lvl'))
+        self.player_img = pg.image.load(path.join(PLAYER_IMG_FOLDER, PLAYER_IMAGES[0])).convert_alpha()
 
     def new(self):
         # initialize all variables and do all the setup for a new game
@@ -70,6 +67,8 @@ class Game:
         self.draw_grid()
         for sprite in self.all_sprites:
             self.screen.blit(sprite.image, self.camera.apply(sprite))
+        #pg.draw.rect(self.screen, WHITE, self.camera.apply(self.player), 2) # draws players rect used for collisions
+        #pg.draw.rect(self.screen, WHITE, self.player.hit_rect, 2) # draws players hit rect used for collisions
         pg.display.flip()
 
     def events(self):
