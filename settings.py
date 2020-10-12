@@ -33,18 +33,31 @@ TILESIZE   = 64
 GRIDWIDTH  = WIDTH / TILESIZE # this value is how many squares show on the screen
 GRIDHEIGHT = HEIGHT / TILESIZE # this value is how many squares show on the screen
 
+# images settings
+IMAGES_TO_LOAD = {  'diver_male_01': pg.image.load('Images/Player/diver_male_01.png'),
+                    'diver_male_02': pg.image.load('Images/Player/diver_male_02.png'),
+                    'diver_male_03': pg.image.load('Images/Player/diver_male_03.png'),
+                    'diver_male_04': pg.image.load('Images/Player/diver_male_04.png'),
+                    'diver_male_05': pg.image.load('Images/Player/diver_male_05.png'),
+                    'diver_male_06': pg.image.load('Images/Player/diver_male_06.png'),
+                    'diver_male_07': pg.image.load('Images/Player/diver_male_07.png'),
+                    'diver_male_08': pg.image.load('Images/Player/diver_male_08.png'),
+                    'diver_male_09': pg.image.load('Images/Player/diver_male_09.png'),
+                    'diver_male_10': pg.image.load('Images/Player/diver_male_10.png')}
+
 # Player settings
-PLAYER_SPEED     = 250 # degrees per second
-PLAYER_ROT_SPEED = 120 # degrees per second
-PLAYER_IMG       = 'diver_male_01.png'
-PLAYER_HIT_RECT  = pg.Rect(0, 0, 90, 90)
-PLAYER_IMAGES    = ['diver_male_01.png',
-                    'diver_male_02.png',
-                    'diver_male_03.png',
-                    'diver_male_04.png',
-                    'diver_male_05.png',
-                    'diver_male_06.png',
-                    'diver_male_07.png',
-                    'diver_male_08.png',
-                    'diver_male_09.png',
-                    'diver_male_10.png']
+PLAYER_SPEED     = 175 # degrees per second
+PLAYER_ROT_SPEED = 80 # degrees per second
+PLAYER_ANIMATION_SPEED = 8
+PLAYER_IMG       = IMAGES_TO_LOAD['diver_male_01'] # sets the initial character image, before any movement
+PLAYER_HIT_RECT  = pg.Rect(0, 0, 80, 80)
+PLAYER_IMAGES    = [IMAGES_TO_LOAD['diver_male_01'],
+                    IMAGES_TO_LOAD['diver_male_02'],
+                    IMAGES_TO_LOAD['diver_male_03'],
+                    IMAGES_TO_LOAD['diver_male_04'],
+                    IMAGES_TO_LOAD['diver_male_05'],
+                    IMAGES_TO_LOAD['diver_male_06'],
+                    IMAGES_TO_LOAD['diver_male_07'],
+                    IMAGES_TO_LOAD['diver_male_08'],
+                    IMAGES_TO_LOAD['diver_male_09'],
+                    IMAGES_TO_LOAD['diver_male_10']]

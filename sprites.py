@@ -7,6 +7,7 @@
 #####################################################
 
 import pygame as pg
+import time
 from os import path
 from settings import *
 from tilemap import *
@@ -25,15 +26,18 @@ class Player(pg.sprite.Sprite):
         self.vel = vec(0, 0)
         self.pos = vec(x, y) * TILESIZE
         self.rot = 0
+        self.count = 0 # used to animate the sprite at a slower speed than the game speed
 
-    #def drawCharacterNextImage(self):
-     #   """ Cycle through the images for this sprite
-     #   """
-     #   pass
-        #self.currentImage += 1
-        #if self.currentImage >= len(PLAYER_IMAGES):
-        #    self.currentImage = 0
-        #self.image = pg.image.load(path.join(PLAYER_IMG_FOLDER, PLAYER_IMAGES[self.currentImage])).convert_alpha()
+    def drawCharacterNextImage(self):
+        """ Cycle through the images for this sprite
+        """
+        self.count += 1
+        if self.currentImage >= len(PLAYER_IMAGES) - 1: # index needs to be 0 to 9, not 1 to 10
+            self.currentImage = 0
+        self.image = PLAYER_IMAGES[self.currentImage].convert_alpha()
+        if self.count > PLAYER_ANIMATION_SPEED:
+            self.currentImage += 1
+            self.count = 0
 
     def get_keys(self):
         self.rot_speed = 0
@@ -41,16 +45,16 @@ class Player(pg.sprite.Sprite):
         keys = pg.key.get_pressed()
         if keys[pg.K_LEFT] or keys[pg.K_a]:
             self.rot_speed = PLAYER_ROT_SPEED
-            #self.drawCharacterNextImage()
+            self.drawCharacterNextImage()
         if keys[pg.K_RIGHT] or keys[pg.K_d]:
             self.rot_speed = -PLAYER_ROT_SPEED
-            #self.drawCharacterNextImage()
+            self.drawCharacterNextImage()
         if keys[pg.K_UP] or keys[pg.K_w]:
             self.vel = vec(PLAYER_SPEED, 0).rotate(-self.rot) # move in the direction we have rotated to
-            #self.drawCharacterNextImage()
+            self.drawCharacterNextImage()
         if keys[pg.K_DOWN] or keys[pg.K_s]:
             self.vel = vec(-PLAYER_SPEED / 4, 0).rotate(-self.rot) # move in the opposite direction we have rotated to
-            #self.drawCharacterNextImage()
+            self.drawCharacterNextImage()
 
     def collide_with_walls(self, dir):
         if dir == 'x':
@@ -75,6 +79,7 @@ class Player(pg.sprite.Sprite):
     def update(self):
         self.get_keys()
         self.rot = (self.rot + self.rot_speed * self.game.dt) % 360 # rotates the player rect
+        self.game.player_img = PLAYER_IMAGES[self.currentImage].convert_alpha()
         self.image = pg.transform.rotate(self.game.player_img, self.rot)
         self.rect = self.image.get_rect() # to center around the new rect
         self.rect.center = self.pos
@@ -84,6 +89,7 @@ class Player(pg.sprite.Sprite):
         self.hit_rect.centery = self.pos.y # using center because it's the center of the player we want to track
         self.collide_with_walls('y')
         self.rect.center = self.hit_rect.center
+
 
 class Wall(pg.sprite.Sprite):
     def __init__(self, game, x, y):
